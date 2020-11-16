@@ -1,0 +1,25 @@
+Package: enrichnets
+Title: What the Package Does (One Line, Title Case)
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Dharmesh D.",
+           family = "Bhuva",
+           role = c("aut", "cre"),
+           email = "bhuva.d@wehi.edu.au",
+           comment = c(ORCID = "0000-0002-6398-9157"))
+Description: What the package does (one paragraph).
+biocViews: Software, GeneExpression, GeneSetEnrichment
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Imports: 
+    igraph,
+    stringr,
+    methods,
+    Matrix,
+    graphics,
+    stats
+URL: https://davislaboratory.github.io/enrichnets
+BugReports: https://github.com/DavisLaboratory/enrichnets/issues
