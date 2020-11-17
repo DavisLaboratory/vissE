@@ -20,6 +20,22 @@ Imports:
     methods,
     Matrix,
     graphics,
-    stats
+    stats,
+    singscore,
+    plyr,
+    ggplot2,
+    ggnewscale,
+    scico,
+    RColorBrewer,
+    tm,
+    ggwordcloud,
+    GSEABase,
+    ggpubr,
+    reshape2,
+    grDevices
 URL: https://davislaboratory.github.io/enrichnets
 BugReports: https://github.com/DavisLaboratory/enrichnets/issues
+Suggests: 
+    testthat
+Depends: 
+    R (>= 2.10)
