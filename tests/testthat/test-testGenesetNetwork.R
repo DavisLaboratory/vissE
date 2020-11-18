@@ -47,11 +47,31 @@ test_that("overlap network computation works", {
   ov = computeMsigOverlap(hgsc)
   ig = computeMsigNetwork(ov, hgsc)
 
-  expect_equal(class(ig), 'igraph')
+  expect_s3_class(ig, 'igraph')
   expect_length(igraph::V(ig), 21)
   expect_length(igraph::E(ig), 14)
   expect_error(computeMsigNetwork(ov, hgsc[1:10]))
   expect_error(computeMsigNetwork(rbind(ov, c('a', 'a','1')), hgsc[1:10]))
+})
+
+test_that("plot functions work", {
+  #hallmark geneset
+  data("hgsc")
+  ov = computeMsigOverlap(hgsc)
+  ig = computeMsigNetwork(ov, hgsc)
+  grps = as.list(V(ig)$name)
+  names(grps) = 1:length(grps)
+
+  expect_warning(plotMsigNetwork(ig, grps))
+  expect_s3_class(plotMsigNetwork(ig, grps[1:3]), 'ggplot')
+  expect_s3_class(plotMsigNetwork(ig, markGroups = list('a' = character())), 'ggplot')
+  expect_error(plotMsigNetwork(ig, nodeSF = 0))
+  expect_error(plotMsigNetwork(ig, nodeSF = -1))
+  expect_error(plotMsigNetwork(ig, edgeSF = 0))
+  expect_error(plotMsigNetwork(ig, edgeSF = -1))
+  expect_error(plotMsigNetwork(ig, lytFunc = data.frame()))
+  expect_error(plotMsigNetwork(ig, markGroups = character()))
+  expect_error(plotMsigNetwork(ig, enrichStat = c(1)))
 })
 
 test_that("geneset neighbourhood works", {
