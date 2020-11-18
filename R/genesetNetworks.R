@@ -130,10 +130,10 @@ computeMsigNetwork <- function(genesetOverlap, msigGsc) {
     'Category' = 'custom',
     'SubCategory' = NA
   )
-  ovNodes$Category[isBroad] = sapply(sapply(msigGsc[isBroad], GSEABase::collectionType),
-                                     GSEABase::bcCategory)
-  ovNodes$SubCategory[isBroad] = sapply(sapply(msigGsc[isBroad], GSEABase::collectionType),
-                                        GSEABase::bcSubCategory)
+  ovNodes$Category[isBroad] = unlist(sapply(sapply(msigGsc[isBroad], GSEABase::collectionType),
+                                     GSEABase::bcCategory))
+  ovNodes$SubCategory[isBroad] = unlist(sapply(sapply(msigGsc[isBroad], GSEABase::collectionType),
+                                        GSEABase::bcSubCategory))
 
   #create igraph
   msig_ig = igraph::graph_from_data_frame(genesetOverlap, directed = FALSE, vertices = ovNodes)
