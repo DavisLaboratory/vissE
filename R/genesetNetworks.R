@@ -1,10 +1,15 @@
+#' @importFrom igraph E V E<- V<-
+NULL
+
 #' Compute gene set overlap
 #'
 #' Compute overlap between gene sets from a GeneSetCollection using the Jaccard
 #' index or the overlap coefficient. These values can then be used to compute a
 #' network of gene set overlaps.
 #'
-#' @param msigGsc a GeneSetCollection object.
+#' @param msigGsc1 a GeneSetCollection object.
+#' @param msigGsc2 a GeneSetCollection object or NULL if pairwise overlaps are
+#'   to be computed.
 #' @param thresh a numeric, specifying the threshold to discard pairs of gene
 #'   sets.
 #' @param measure a character, specifying the similarity measure to use:
@@ -19,50 +24,56 @@
 #' data(hgsc)
 #' ovlap <- computeMsigOverlap(hgsc)
 #'
-computeMsigOverlap <- function(msigGsc, thresh = 0.1, measure = c('jaccard', 'ovlapcoef')) {
+computeMsigOverlap <- function(msigGsc1, msigGsc2 = NULL, thresh = 0.1, measure = c('jaccard', 'ovlapcoef')) {
   stopifnot(thresh >= 0 & thresh <= 1)
   measure = match.arg(measure)
 
   #return empty result if no gene sets are provided
-  if (length(msigGsc) == 0)
+  if (length(msigGsc1) == 0 | !is.null(msigGsc2) & length(msigGsc2) == 0)
     return(data.frame('gs1' = character(), 'gs2' = character(), 'coef' = numeric()))
 
   #filter out very small and very large genesets
-  genes = lapply(msigGsc, GSEABase::geneIds)
-  names(genes) = sapply(msigGsc, GSEABase::setName)
-  alllen = sapply(genes, length)
-  genes = genes[alllen > 10 & alllen < 500]
-  alllen = alllen[alllen > 10 & alllen < 500]
+  genes1 = lapply(msigGsc1, GSEABase::geneIds)
+  names(genes1) = sapply(msigGsc1, GSEABase::setName)
+  len1 = sapply(genes1, length)
+  genes1 = genes1[len1 > 10 & len1 < 500]
+  len1 = len1[len1 > 10 & len1 < 500]
 
   #compute overlap network
-  allg = unique(unlist(genes))
-  gmat = plyr::laply(genes, function(x) as.numeric(allg %in% x))
-  rownames(gmat) = names(genes)
-  colnames(gmat) = allg
-  ovlap = tcrossprod(gmat)
+  if (!is.null(msigGsc2)) {
+    #filter out very small and very large genesets
+    genes2 = lapply(msigGsc2, GSEABase::geneIds)
+    names(genes2) = sapply(msigGsc2, GSEABase::setName)
+    len2 = sapply(genes2, length)
+    genes2 = genes2[len2 > 10 & len2 < 500]
+    len2 = len2[len2 > 10 & len2 < 500]
+  } else {
+    genes2 = NULL
+    len2 = len1
+  }
+  ovlap = intersectSize(genes1, genes2)
 
   #overlap coef
   if (measure %in% 'jaccard') {
-    mat = ovlap / (outer(alllen, alllen, '+') - ovlap)
+    mat = ovlap / (outer(len1, len2, '+') - ovlap)
   } else {
-    mat = ovlap / outer(alllen, alllen, pmin)
+    mat = ovlap / outer(len1, len2, pmin)
   }
 
   #convert to data.frame
-  mat[!lower.tri(mat)] = NA
   mat = reshape2::melt(mat, varnames = c('gs1', 'gs2'), value.name = 'coef')
-  mat = mat[!is.na(mat$coef), , drop = FALSE]
-  mat = mat[mat$coef >= thresh, , drop = FALSE]
-  rownames(mat) = NULL
   mat$gs1 = as.character(mat$gs1)
   mat$gs2 = as.character(mat$gs2)
+  mat = mat[mat$gs1 < mat$gs2 & mat$coef >= thresh, , drop = FALSE]
+  rownames(mat) = NULL
 
   return(mat)
 }
 
 intersectSize <- function(x, y = NULL) {
-  #compute overlap network
   vals = unique(unlist(c(x, y)))
+
+  #compute overlap network
   matx = plyr::laply(x, function(s) as.numeric(vals %in% s))
   rownames(matx) = names(x)
   colnames(matx) = vals
@@ -130,3 +141,33 @@ computeMsigNetwork <- function(genesetOverlap, msigGsc) {
   return(msig_ig)
 }
 
+#' Get similar gene sets from overlap networks
+#'
+#' @param srcsig a character, naming the gene set to begin the search with.
+#' @param ig an igraph object, containing a network of gene set overlaps
+#'   computed using [computeMsigNetwork()].
+#' @param thresh a numeric, specifying the threshold to discard pairs of gene
+#'   sets.
+#'
+#' @return a character, containing the names of gene sets that overlap with the
+#'   source signature.
+#' @export
+#'
+#' @examples
+#'
+#' data("msigOverlapNetwork")
+#' neighours <- getMsigNeighbour('HALLMARK_HYPOXIA', msigOverlapNetwork, 0.4)
+#'
+getMsigNeighbour <- function(srcsig, ig, thresh = 0) {
+  #select surrounding network
+  sub_ig = igraph::induced_subgraph(full_ig, vids = igraph::neighborhood(full_ig, nodes = srcsig)[[1]])
+  if (all(E(sub_ig)$jaccardCoef <= thresh))
+    return(srcsig)
+
+  #extract confident edges
+  sub_ig = subgraph.edges(sub_ig, E(sub_ig)[E(sub_ig)$jaccardCoef > thresh])
+  if (!srcsig %in% V(sub_ig)$name)
+    return(srcsig)
+
+  return(c(neighbors(sub_ig, srcsig)$name))
+}

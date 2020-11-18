@@ -1,3 +1,12 @@
+test_that("geneset intersection computation works", {
+  gs1 = list('a' = 1:5, 'b' = 4:8)
+  gs2 = list('c' = 6:9, 'd' = 9:12)
+
+  expect_equal(intersectSize(gs1)['a', 'b'], 2)
+  expect_equal(intersectSize(gs2)['c', 'd'], 1)
+  expect_equal(intersectSize(gs1, gs2)['b', 'c'], 3)
+})
+
 test_that("geneset overlap computation works", {
   #empty collections
   nullgsc = GSEABase::GeneSetCollection(list())
@@ -18,6 +27,9 @@ test_that("geneset overlap computation works", {
   expect_equal(round(ov_oc[, 3], 3), 0.505)
 
   #hallmark geneset
+  expect_equal(nrow(computeMsigOverlap(hgsc, nullgsc)), 0)
+  expect_equal(ncol(computeMsigOverlap(hgsc, nullgsc)), 3)
+  expect_equal(nrow(computeMsigOverlap(hgsc, estgsc)), 1)
   expect_equal(nrow(computeMsigOverlap(hgsc)), 14)
   expect_equal(nrow(computeMsigOverlap(hgsc, thresh = 0)), 1225)
   expect_equal(nrow(computeMsigOverlap(hgsc, thresh = 1)), 0)

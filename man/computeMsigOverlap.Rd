@@ -4,10 +4,18 @@
 \alias{computeMsigOverlap}
 \title{Compute gene set overlap}
 \usage{
-computeMsigOverlap(msigGsc, thresh = 0.1, measure = c("jaccard", "ovlapcoef"))
+computeMsigOverlap(
+  msigGsc1,
+  msigGsc2 = NULL,
+  thresh = 0.1,
+  measure = c("jaccard", "ovlapcoef")
+)
 }
 \arguments{
-\item{msigGsc}{a GeneSetCollection object.}
+\item{msigGsc1}{a GeneSetCollection object.}
+
+\item{msigGsc2}{a GeneSetCollection object or NULL if pairwise overlaps are
+to be computed.}
 
 \item{thresh}{a numeric, specifying the threshold to discard pairs of gene
 sets.}
