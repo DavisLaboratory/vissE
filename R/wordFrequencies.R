@@ -29,8 +29,9 @@ computeMsigWordFreq <- function(msigGsc, rmwords = getMsigBlacklist()) {
   docs = lapply(docs, function(d) tm::tm_map(d, tm::removePunctuation))
   # Eliminate extra white spaces
   docs = lapply(docs, function(d) tm::tm_map(d, tm::stripWhitespace))
-  # Text stemming
-  # docs <- tm_map(docs, stemDocument)
+  # # Text stemming
+  # docs = lapply(docs, function(d) tm::tm_map(d, tm::stemDocument, language = 'english'))
+  # docs = lapply(docs, function(d) tm::tm_map(d, tm::stemCompletion, dictionary = tm::inspect(d), type = 'shortest'))
 
   #compute frequencies
   dtms = lapply(docs, tm::TermDocumentMatrix)
@@ -82,6 +83,7 @@ getMsigBlacklist <- function(custom = c()) {
     'module',
     'morf',
     'neighborhood',
+    'pathway',
     'reactome',
     'up'
   )
