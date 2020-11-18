@@ -67,7 +67,8 @@ plotMsigWordcloud <-
 #' Plots a network of gene set overlap with overlap computed using the
 #' [computeMsigOverlap()] and a graph created using [computeMsigNetwork()].
 #'
-#' @param ig an igraph object, generated using [computeMsigNetwork()]
+#' @param ig an igraph object, containing a network of gene set overlaps
+#'   computed using [computeMsigNetwork()].
 #' @param lytFunc a function, that computes layouts and returns a matrix with 2
 #'   columns specifying the x and y coordinates of nodes. Layout functions in
 #'   the igraph package can be used here.

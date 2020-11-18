@@ -14,7 +14,8 @@ plotMsigNetwork(
 )
 }
 \arguments{
-\item{ig}{an igraph object, generated using \code{\link[=computeMsigNetwork]{computeMsigNetwork()}}}
+\item{ig}{an igraph object, containing a network of gene set overlaps
+computed using \code{\link[=computeMsigNetwork]{computeMsigNetwork()}}.}
 
 \item{lytFunc}{a function, that computes layouts and returns a matrix with 2
 columns specifying the x and y coordinates of nodes. Layout functions in
@@ -22,7 +23,8 @@ the igraph package can be used here.}
 
 \item{markGroups}{a named list, of character vectors or numeric indices
 specifying node groupings. Each element of the list represent a group and
-contains a character vector with node names.}
+contains a character vector with node names. Up to 12 groups can be
+visualised in the plot.}
 
 \item{nodeSF}{a numeric, indicating the scaling factor to apply to node
 sizes.}
