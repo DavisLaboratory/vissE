@@ -73,7 +73,8 @@ plotMsigWordcloud <-
 #'   the igraph package can be used here.
 #' @param markGroups a named list, of character vectors or numeric indices
 #'   specifying node groupings. Each element of the list represent a group and
-#'   contains a character vector with node names.
+#'   contains a character vector with node names. Up to 12 groups can be
+#'   visualised in the plot.
 #' @param nodeSF a numeric, indicating the scaling factor to apply to node
 #'   sizes.
 #' @param edgeSF a numeric, indicating the scaling factor to apply to edge
@@ -104,6 +105,11 @@ plotMsigNetwork <-
   stopifnot(edgeSF > 0)
   stopifnot(is.function(lytFunc))
   stopifnot(is.null(markGroups) | is.list(markGroups))
+
+  if (length(groups) > 12) {
+    warning("Only the first 12 components will be plot")
+    groups = groups[1:12]
+  }
 
   #remove unconnected nodes
   ig = igraph::induced_subgraph(ig, V(ig)[igraph::degree(ig) > 0])
