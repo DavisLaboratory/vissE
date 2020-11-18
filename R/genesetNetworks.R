@@ -156,18 +156,21 @@ computeMsigNetwork <- function(genesetOverlap, msigGsc) {
 #' @examples
 #'
 #' data("msigOverlapNetwork")
-#' neighours <- getMsigNeighbour('HALLMARK_HYPOXIA', msigOverlapNetwork, 0.4)
+#' neighbours <- getMsigNeighbour('HALLMARK_HYPOXIA', msigOverlapNetwork, 0.1)
 #'
 getMsigNeighbour <- function(srcsig, ig, thresh = 0) {
+  stopifnot(thresh >= 0 & thresh <= 1)
+  stopifnot(srcsig %in% V(ig)$name)
+
   #select surrounding network
-  sub_ig = igraph::induced_subgraph(full_ig, vids = igraph::neighborhood(full_ig, nodes = srcsig)[[1]])
-  if (all(E(sub_ig)$jaccardCoef <= thresh))
-    return(srcsig)
+  sub_ig = igraph::induced_subgraph(ig, vids = igraph::neighborhood(ig, nodes = srcsig)[[1]])
+  if (all(E(sub_ig)$coef <= thresh))
+    return(c())
 
   #extract confident edges
-  sub_ig = subgraph.edges(sub_ig, E(sub_ig)[E(sub_ig)$jaccardCoef > thresh])
+  sub_ig = igraph::subgraph.edges(sub_ig, E(sub_ig)[E(sub_ig)$coef > thresh])
   if (!srcsig %in% V(sub_ig)$name)
-    return(srcsig)
+    return(c())
 
-  return(c(neighbors(sub_ig, srcsig)$name))
+  return(igraph::neighbors(sub_ig, srcsig)$name)
 }

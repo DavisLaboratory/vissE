@@ -25,6 +25,6 @@ Get similar gene sets from overlap networks
 \examples{
 
 data("msigOverlapNetwork")
-neighours <- getMsigNeighbour('HALLMARK_HYPOXIA', msigOverlapNetwork, 0.4)
+neighbours <- getMsigNeighbour('HALLMARK_HYPOXIA', msigOverlapNetwork, 0.1)
 
 }
