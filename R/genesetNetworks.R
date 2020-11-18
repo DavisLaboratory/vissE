@@ -60,6 +60,25 @@ computeMsigOverlap <- function(msigGsc, thresh = 0.1, measure = c('jaccard', 'ov
   return(mat)
 }
 
+intersectSize <- function(x, y = NULL) {
+  #compute overlap network
+  vals = unique(unlist(c(x, y)))
+  matx = plyr::laply(x, function(s) as.numeric(vals %in% s))
+  rownames(matx) = names(x)
+  colnames(matx) = vals
+
+  if (is.null(y)) {
+    ovlap = tcrossprod(matx)
+  } else {
+    maty = plyr::laply(y, function(s) as.numeric(vals %in% s))
+    rownames(maty) = names(y)
+    colnames(maty) = vals
+    ovlap = tcrossprod(matx, maty)
+  }
+
+  return(ovlap)
+}
+
 #' Compute a network using computed gene set overlap
 #'
 #' Computes an igraph object using information on gene sets and gene sets
