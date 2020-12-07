@@ -51,7 +51,7 @@ plotMsigWordcloud <-
   worddf = plyr::ldply(msigGsc_list, function(x) {
     df = computeMsigWordFreq(x, rmwords)[[type]]
     df$col = df$freq / max(df$freq)
-    df = df[1:min(25, nrow(df)), ]
+    df = df[1:min(30, nrow(df)), ]
     df$angle = sample(c(0, 90), nrow(df), replace = TRUE, prob = c(0.65, 0.35))
     return(df)
   }, .id = 'NodeGroup')
