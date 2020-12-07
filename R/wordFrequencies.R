@@ -32,6 +32,8 @@ computeMsigWordFreq <- function(msigGsc, rmwords = getMsigBlacklist()) {
   # # Text stemming
   # docs = lapply(docs, function(d) tm::tm_map(d, tm::stemDocument, language = 'english'))
   # docs = lapply(docs, function(d) tm::tm_map(d, tm::stemCompletion, dictionary = tm::inspect(d), type = 'shortest'))
+  # Remove full numbers
+  docs = lapply(docs, function(d) tm::tm_filter(d, function(x) !grepl('\\b[0-9]+\\b', x)))
 
   #compute frequencies
   dtms = lapply(docs, tm::TermDocumentMatrix)
