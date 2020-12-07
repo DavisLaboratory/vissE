@@ -37,6 +37,7 @@ computeMsigWordFreq <- function(msigGsc, rmwords = getMsigBlacklist()) {
 
   #compute frequencies
   dtms = lapply(docs, tm::TermDocumentMatrix)
+  dtms = lapply(dtms, tm::weightTfIdf)
   v = lapply(dtms, function(x) sort(apply(x, 1, sum), decreasing = TRUE))
   d = lapply(v, function(x) data.frame(word = names(x), freq = x))
 
