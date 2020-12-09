@@ -6,20 +6,17 @@
 \usage{
 plotMsigNetwork(
   ig,
-  lytFunc = igraph::layout_with_graphopt,
   markGroups = NULL,
+  enrichStat = NULL,
   nodeSF = 1,
   edgeSF = 1,
+  lytFunc = igraph::layout_with_graphopt,
   lytParams = list()
 )
 }
 \arguments{
 \item{ig}{an igraph object, containing a network of gene set overlaps
 computed using \code{\link[=computeMsigNetwork]{computeMsigNetwork()}}.}
-
-\item{lytFunc}{a function, that computes layouts and returns a matrix with 2
-columns specifying the x and y coordinates of nodes. Layout functions in
-the igraph package can be used here.}
 
 \item{markGroups}{a named list, of character vectors or numeric indices
 specifying node groupings. Each element of the list represent a group and
@@ -31,6 +28,10 @@ sizes.}
 
 \item{edgeSF}{a numeric, indicating the scaling factor to apply to edge
 widths.}
+
+\item{lytFunc}{a function, that computes layouts and returns a matrix with 2
+columns specifying the x and y coordinates of nodes. Layout functions in
+the igraph package can be used here.}
 
 \item{lytParams}{a named list, containing additional parameters to be passed
 on to the layout function.}

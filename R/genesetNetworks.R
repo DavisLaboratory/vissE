@@ -17,7 +17,7 @@ NULL
 #'   Coefficient.
 #'
 #' @return a data.frame, containing the overlap structure of gene sets
-#'   represented as a network in the simple interaction format (SIF)
+#'   represented as a network in the simple interaction format (SIF).
 #' @export
 #' @examples
 #'
