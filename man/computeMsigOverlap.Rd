@@ -26,7 +26,7 @@ Coefficient.}
 }
 \value{
 a data.frame, containing the overlap structure of gene sets
-represented as a network in the simple interaction format (SIF)
+represented as a network in the simple interaction format (SIF).
 }
 \description{
 Compute overlap between gene sets from a GeneSetCollection using the Jaccard

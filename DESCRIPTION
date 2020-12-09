@@ -1,6 +1,6 @@
 Package: enrichnets
 Title: Network Analysis and Text Mining of Gene Set Enrichment Analysis Results
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: 
     person(given = "Dharmesh D.",
            family = "Bhuva",
@@ -38,4 +38,4 @@ BugReports: https://github.com/DavisLaboratory/enrichnets/issues
 Suggests: 
     testthat
 Depends: 
-    R (>= 2.10)
+    R (>= 4.0)
