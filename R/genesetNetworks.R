@@ -28,6 +28,16 @@ computeMsigOverlap <- function(msigGsc1, msigGsc2 = NULL, thresh = 0.1, measure 
   stopifnot(thresh >= 0 & thresh <= 1)
   measure = match.arg(measure)
 
+  #empty genesets
+  gsc1_lengths = sapply(lapply(msigGsc1, GSEABase::geneIds), length)
+  stopifnot(all(gsc1_lengths > 0))
+
+  if (!is.null(msigGsc2)) {
+    #empty genesets
+    gsc2_lengths = sapply(lapply(msigGsc2, GSEABase::geneIds), length)
+    stopifnot(all(gsc2_lengths > 0))
+  }
+
   #return empty result if no gene sets are provided
   if (length(msigGsc1) == 0 | !is.null(msigGsc2) & length(msigGsc2) == 0)
     return(data.frame('gs1' = character(), 'gs2' = character(), 'coef' = numeric()))
