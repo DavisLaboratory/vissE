@@ -228,8 +228,8 @@ plotMsigNetwork <-
       ggforce::geom_shape(
         aes(x, y, colour = NodeGroup),
         fill = NA,
-        radius = 0.04,
-        expand = 0.02,
+        radius = ggplot2::unit(0.01, 'npc'),
+        expand = ggplot2::unit(0.02, 'npc'),
         data = hulldf
       ) +
       ggplot2::scale_colour_brewer(palette = 'Paired') +
