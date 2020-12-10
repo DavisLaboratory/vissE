@@ -9,7 +9,6 @@ test_that("geneset intersection computation works", {
 
 test_that("geneset overlap computation works", {
   #empty collections
-  #non-empty gscs but empty gene sets
   nullgsc = GSEABase::GeneSetCollection(list())
   ov = computeMsigOverlap(nullgsc)
   expect_equal(nrow(ov), 0)
@@ -17,6 +16,15 @@ test_that("geneset overlap computation works", {
   expect_error(computeMsigOverlap(nullgsc, thresh = 2))
   expect_error(computeMsigOverlap(nullgsc, thresh = -2))
   expect_error(computeMsigOverlap(nullgsc, measure = 'euclidean'))
+
+  #non-empty gscs but empty gene sets
+  emptygsc = GSEABase::GeneSetCollection(GSEABase::GeneSet())
+  expect_error(computeMsigOverlap(emptygsc, thresh = 1))
+
+  emptygsc = GSEABase::GeneSetCollection(GSEABase::GeneSet(setName = 'a'),
+                                         GSEABase::GeneSet(c('1', '2'), setName = 'b'))
+  expect_error(computeMsigOverlap(emptygsc, thresh = 1))
+  expect_error(computeMsigOverlap(emptygsc[2], emptygsc[1], thresh = 1))
 
   #2 geneset
   data("hgsc")

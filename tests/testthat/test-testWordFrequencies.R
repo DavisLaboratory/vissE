@@ -7,6 +7,22 @@ test_that("word frequencies are computed correctly", {
   expect_equal(sapply(freq, ncol), c('Name' = 2, 'Short' = 2))
   expect_equal(sapply(freq, nrow), c('Name' = 0, 'Short' = 0))
 
+  #non-empty gscs but empty gene sets
+  emptygsc = GSEABase::GeneSetCollection(GSEABase::GeneSet())
+  freq = computeMsigWordFreq(emptygsc)
+
+  expect_length(freq, 2)
+  expect_equal(sapply(freq, ncol), c('Name' = 2, 'Short' = 2))
+  expect_equal(sapply(freq, nrow), c('Name' = 0, 'Short' = 0))
+
+  emptygsc = GSEABase::GeneSetCollection(GSEABase::GeneSet(setName = 'a'),
+                                         GSEABase::GeneSet(c('1', '2'), setName = 'b'))
+  freq = computeMsigWordFreq(emptygsc)
+
+  expect_length(freq, 2)
+  expect_equal(sapply(freq, ncol), c('Name' = 2, 'Short' = 2))
+  expect_equal(sapply(freq, nrow), c('Name' = 0, 'Short' = 0))
+
   #non-empty collections
   data(hgsc)
   estgsc = hgsc[grep('ESTROGEN', hgsc)]
