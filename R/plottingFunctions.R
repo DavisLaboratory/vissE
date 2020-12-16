@@ -17,6 +17,9 @@ NULL
 #' @param groups a named list, of character vectors or numeric indices
 #'   specifying node groupings. Each element of the list represent a group and
 #'   contains a character vector with node names.
+#' @param measure a character, specifying how frequencies should be computed.
+#'   "tf" (default) uses term frequencies and "tfidf" applies inverse document
+#'   frequency weights to term frequencies.
 #' @param rmwords a character vector, containing a blacklist of words to discard
 #'   from the analysis.
 #' @param type a character, specifying the source of text mining. Either gene
@@ -34,9 +37,11 @@ NULL
 plotMsigWordcloud <-
   function(msigGsc,
            groups,
+           measure = c('tf', 'tfidf'),
            rmwords = getMsigBlacklist(),
            type = c('Name', 'Short')) {
   stopifnot(is.list(groups))
+  measure = match.arg(measure)
   type = match.arg(type)
 
   #add gene set counts for each group
@@ -49,19 +54,19 @@ plotMsigWordcloud <-
 
   #compute word frequencies
   worddf = plyr::ldply(msigGsc_list, function(x) {
-    df = computeMsigWordFreq(x, rmwords)[[type]]
-    df$col = df$freq / max(df$freq)
+    df = computeMsigWordFreq(x, measure, rmwords)[[type]]
+    df$freq = df$freq / max(df$freq)
     df = df[1:min(30, nrow(df)), ]
     df$angle = sample(c(0, 90), nrow(df), replace = TRUE, prob = c(0.65, 0.35))
     return(df)
   }, .id = 'NodeGroup')
 
   #plot
-  p1 = ggplot(worddf, aes(label = word, size = freq, color = col, angle = angle)) +
+  p1 = ggplot(worddf, aes(label = word, size = freq, color = freq, angle = angle)) +
     ggwordcloud::geom_text_wordcloud(rm_outside = TRUE, shape = 'circle', eccentricity = 0.65) +
     ggplot2::facet_wrap(~ NodeGroup, scales = 'free') +
     scico::scale_colour_scico(palette = 'acton', direction = -1) +
-    ggplot2::scale_size_area(max_size = 12) +
+    ggplot2::scale_size_area(max_size = 6 / log10(1 + length(msigGsc_list))) +
     current_theme()
 
   return(p1)

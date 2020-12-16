@@ -1,4 +1,5 @@
-computeMsigWordFreq <- function(msigGsc, rmwords = getMsigBlacklist()) {
+computeMsigWordFreq <- function(msigGsc, measure = c('tf', 'tfidf'), rmwords = getMsigBlacklist()) {
+  measure = match.arg(measure)
   stopifnot('GeneSetCollection' %in% class(msigGsc))
 
   signames = sapply(msigGsc, GSEABase::setName)
@@ -37,7 +38,11 @@ computeMsigWordFreq <- function(msigGsc, rmwords = getMsigBlacklist()) {
 
   #compute frequencies
   dtms = lapply(docs, tm::TermDocumentMatrix)
-  dtms = lapply(dtms, tm::weightTfIdf)
+  if (measure %in% 'tf') {
+    dtms = lapply(dtms, tm::weightTf)
+  } else{
+    dtms = lapply(dtms, tm::weightTfIdf)
+  }
   v = lapply(dtms, function(x) sort(apply(x, 1, sum), decreasing = TRUE))
   d = lapply(v, function(x) data.frame(word = names(x), freq = x))
 
