@@ -7,6 +7,7 @@
 plotMsigWordcloud(
   msigGsc,
   groups,
+  measure = c("tf", "tfidf"),
   rmwords = getMsigBlacklist(),
   type = c("Name", "Short")
 )
@@ -19,6 +20,10 @@ files downloaded from MSigDB.}
 \item{groups}{a named list, of character vectors or numeric indices
 specifying node groupings. Each element of the list represent a group and
 contains a character vector with node names.}
+
+\item{measure}{a character, specifying how frequencies should be computed.
+"tf" (default) uses term frequencies and "tfidf" applies inverse document
+frequency weights to term frequencies.}
 
 \item{rmwords}{a character vector, containing a blacklist of words to discard
 from the analysis.}
