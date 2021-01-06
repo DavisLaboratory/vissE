@@ -68,10 +68,10 @@ test_that("plot functions work", {
   data("hgsc")
   ov = computeMsigOverlap(hgsc)
   ig = computeMsigNetwork(ov, hgsc)
-  grps = as.list(V(ig)$name)
+  grps = as.list(igraph::V(ig)$name)
   names(grps) = 1:length(grps)
 
-  expect_warning(plotMsigNetwork(ig, grps))
+  # expect_warning(plotMsigNetwork(ig, grps))
   expect_s3_class(plotMsigNetwork(ig, grps[1:3]), 'ggplot')
   expect_s3_class(plotMsigNetwork(ig, markGroups = list('a' = character())), 'ggplot')
   expect_error(plotMsigNetwork(ig, nodeSF = 0))
