@@ -74,7 +74,13 @@ computeMsigOverlap <- function(msigGsc1, msigGsc2 = NULL, thresh = 0.1, measure 
   mat = reshape2::melt(mat, varnames = c('gs1', 'gs2'), value.name = 'coef')
   mat$gs1 = as.character(mat$gs1)
   mat$gs2 = as.character(mat$gs2)
-  mat = mat[mat$gs1 < mat$gs2 & mat$coef >= thresh, , drop = FALSE]
+  mat = mat[mat$coef >= thresh, , drop = FALSE]
+
+  if (is.null(msigGsc2)) {
+    #remove symmetric values
+    mat = mat[mat$gs1 < mat$gs2, , drop = FALSE]
+  }
+
   rownames(mat) = NULL
 
   return(mat)
