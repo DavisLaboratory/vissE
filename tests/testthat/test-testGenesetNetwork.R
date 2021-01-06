@@ -5,6 +5,9 @@ test_that("geneset intersection computation works", {
   expect_equal(intersectSize(gs1)['a', 'b'], 2)
   expect_equal(intersectSize(gs2)['c', 'd'], 1)
   expect_equal(intersectSize(gs1, gs2)['b', 'c'], 3)
+
+  #works for single gene sets
+  expect_equal(intersectSize(gs1[2], gs2)['b', 'c'], 3)
 })
 
 test_that("geneset overlap computation works", {

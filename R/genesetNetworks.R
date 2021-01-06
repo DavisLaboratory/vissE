@@ -84,14 +84,14 @@ intersectSize <- function(x, y = NULL) {
   vals = unique(unlist(c(x, y)))
 
   #compute overlap network
-  matx = plyr::laply(x, function(s) as.numeric(vals %in% s))
+  matx = plyr::laply(x, function(s) as.numeric(vals %in% s), .drop = FALSE)
   rownames(matx) = names(x)
   colnames(matx) = vals
 
   if (is.null(y)) {
     ovlap = tcrossprod(matx)
   } else {
-    maty = plyr::laply(y, function(s) as.numeric(vals %in% s))
+    maty = plyr::laply(y, function(s) as.numeric(vals %in% s), .drop = FALSE)
     rownames(maty) = names(y)
     colnames(maty) = vals
     ovlap = tcrossprod(matx, maty)
@@ -157,7 +157,7 @@ computeMsigNetwork <- function(genesetOverlap, msigGsc) {
 #' @param ig an igraph object, containing a network of gene set overlaps
 #'   computed using [computeMsigNetwork()].
 #' @param thresh a numeric, specifying the threshold to discard pairs of gene
-#'   sets.
+#'   sets (default is 0.1).
 #'
 #' @return a character, containing the names of gene sets that overlap with the
 #'   source signature.
@@ -168,7 +168,7 @@ computeMsigNetwork <- function(genesetOverlap, msigGsc) {
 #' data("msigOverlapNetwork")
 #' neighbours <- getMsigNeighbour('HALLMARK_HYPOXIA', msigOverlapNetwork, 0.1)
 #'
-getMsigNeighbour <- function(srcsig, ig, thresh = 0) {
+getMsigNeighbour <- function(srcsig, ig, thresh = 0.1) {
   stopifnot(thresh >= 0 & thresh <= 1)
   stopifnot(srcsig %in% V(ig)$name)
 
