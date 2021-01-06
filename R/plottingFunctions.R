@@ -32,7 +32,7 @@ NULL
 #'
 #' data("hgsc")
 #' groups <- list('g1' = 1:10, 'g2' = 11:20)
-#' plotMsigWordcloud(hgsc, groups, getMsigBlacklist())
+#' plotMsigWordcloud(hgsc, groups, rmwords = getMsigBlacklist())
 #'
 plotMsigWordcloud <-
   function(msigGsc,
@@ -83,6 +83,9 @@ plotMsigWordcloud <-
 #'   specifying node groupings. Each element of the list represent a group and
 #'   contains a character vector with node names. Up to 12 groups can be
 #'   visualised in the plot.
+#' @param enrichStat a numeric, statistic to project onto the nodes. These could
+#'   be p-values, log fold-changes or gene set score from a singscore-based
+#'   analysis.
 #' @param nodeSF a numeric, indicating the scaling factor to apply to node
 #'   sizes.
 #' @param edgeSF a numeric, indicating the scaling factor to apply to edge
