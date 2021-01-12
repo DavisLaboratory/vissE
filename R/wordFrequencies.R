@@ -9,7 +9,8 @@
 #' @param rmwords a character vector, containing a blacklist of words to discard
 #'   from the analysis.
 #'
-#' @return
+#' @return a list, containing two data.frames summarising the results of the
+#'   frequency analysis on gene set names and short descriptions.
 #' @export
 #'
 #' @examples
