@@ -1,3 +1,22 @@
+#' Compute word frequencies for a single MSigDB collection
+#'
+#' @param msigGsc a GeneSetCollection object, containing gene sets from the
+#'   MSigDB. The [GSEABase::getBroadSets()] function can be used to parse XML
+#'   files downloaded from MSigDB.
+#' @param measure a character, specifying how frequencies should be computed.
+#'   "tf" (default) uses term frequencies and "tfidf" applies inverse document
+#'   frequency weights to term frequencies.
+#' @param rmwords a character vector, containing a blacklist of words to discard
+#'   from the analysis.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#'
+#' data(hgsc)
+#' freq <- computeMsigWordFreq(hgsc, measure = 'tf')
+#'
 computeMsigWordFreq <- function(msigGsc, measure = c('tf', 'tfidf'), rmwords = getMsigBlacklist()) {
   measure = match.arg(measure)
   stopifnot('GeneSetCollection' %in% class(msigGsc))

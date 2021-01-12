@@ -4,7 +4,7 @@
 \alias{getMsigNeighbour}
 \title{Get similar gene sets from overlap networks}
 \usage{
-getMsigNeighbour(srcsig, ig, thresh = 0)
+getMsigNeighbour(srcsig, ig, thresh = 0.1)
 }
 \arguments{
 \item{srcsig}{a character, naming the gene set to begin the search with.}
@@ -13,7 +13,7 @@ getMsigNeighbour(srcsig, ig, thresh = 0)
 computed using \code{\link[=computeMsigNetwork]{computeMsigNetwork()}}.}
 
 \item{thresh}{a numeric, specifying the threshold to discard pairs of gene
-sets.}
+sets (default is 0.1).}
 }
 \value{
 a character, containing the names of gene sets that overlap with the

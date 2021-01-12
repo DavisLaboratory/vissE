@@ -2,7 +2,7 @@
 % Please edit documentation in R/plottingFunctions.R
 \name{plotMsigWordcloud}
 \alias{plotMsigWordcloud}
-\title{Compute word frequencies for MSigDB collections}
+\title{Compute and plot word frequencies for multiple MSigDB collections}
 \usage{
 plotMsigWordcloud(
   msigGsc,

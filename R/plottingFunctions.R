@@ -4,26 +4,20 @@
 #' @import methods
 NULL
 
-#' Compute word frequencies for MSigDB collections
+#' Compute and plot word frequencies for multiple MSigDB collections
 #'
 #' Given a gene set collection, this function computes the word frequency of
 #' gene set names from the Molecular Signatures Database (MSigDB) collection
 #' (split by _). Word frequencies are also computed using short descriptions
 #' attached with each gene set object.
 #'
-#' @param msigGsc a GeneSetCollection object, containing gene sets from the
-#'   MSigDB. The [GSEABase::getBroadSets()] function can be used to parse XML
-#'   files downloaded from MSigDB.
 #' @param groups a named list, of character vectors or numeric indices
 #'   specifying node groupings. Each element of the list represent a group and
 #'   contains a character vector with node names.
-#' @param measure a character, specifying how frequencies should be computed.
-#'   "tf" (default) uses term frequencies and "tfidf" applies inverse document
-#'   frequency weights to term frequencies.
-#' @param rmwords a character vector, containing a blacklist of words to discard
-#'   from the analysis.
 #' @param type a character, specifying the source of text mining. Either gene
 #'   set names (`Name`) or descriptions (`Short`) can be used.
+#'
+#' @inheritParams computeMsigWordFreq
 #'
 #' @return a ggplot object.
 #' @export
