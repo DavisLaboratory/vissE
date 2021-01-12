@@ -24,7 +24,7 @@ set. The network contains relationships between results of the query too.
 \description{
 This function can be used to perform a network-based enrichment analysis of a
 list of genes. The list of genes are characterised based on their similarity
-with gene sets from the MSigDB. A network of similar gene sets is retrived
+with gene sets from the MSigDB. A network of similar gene sets is retrieved
 using this function.
 }
 \examples{

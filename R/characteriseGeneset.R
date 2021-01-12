@@ -2,7 +2,7 @@
 #'
 #' This function can be used to perform a network-based enrichment analysis of a
 #' list of genes. The list of genes are characterised based on their similarity
-#' with gene sets from the MSigDB. A network of similar gene sets is retrived
+#' with gene sets from the MSigDB. A network of similar gene sets is retrieved
 #' using this function.
 #'
 #' @param gs a GeneSet object, representing the list of genes that need to be
