@@ -29,6 +29,7 @@
 #' The molecular signatures database (MSigDB) is a collection of over 25000 gene
 #' expression signatures. Signatures in v7.1 are divided into 8 categories. This
 #' network represents the precomputed overlap between all non-empty signatures
+#' network represents the pre-computed overlap between all non-empty signatures
 #' in the `msigdb` data. The network was computed using [computeMsigOverlap()]
 #' and [computeMsigNetwork()] functions with default parameters.
 #'
