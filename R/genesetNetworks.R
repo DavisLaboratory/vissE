@@ -157,23 +157,6 @@ computeMsigNetwork <- function(genesetOverlap, msigGsc) {
   return(msig_ig)
 }
 
-#' Get similar gene sets from overlap networks
-#'
-#' @param srcsig a character, naming the gene set to begin the search with.
-#' @param ig an igraph object, containing a network of gene set overlaps
-#'   computed using [computeMsigNetwork()].
-#' @param thresh a numeric, specifying the threshold to discard pairs of gene
-#'   sets (default is 0.1).
-#'
-#' @return a character, containing the names of gene sets that overlap with the
-#'   source signature.
-#' @export
-#'
-#' @examples
-#'
-#' data("msigOverlapNetwork")
-#' neighbours <- getMsigNeighbour('HALLMARK_HYPOXIA', msigOverlapNetwork, 0.1)
-#'
 getMsigNeighbour <- function(srcsig, ig, thresh = 0.1) {
   stopifnot(thresh >= 0 & thresh <= 1)
   stopifnot(srcsig %in% V(ig)$name)
