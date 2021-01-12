@@ -61,7 +61,7 @@ plotMsigWordcloud <-
     ggplot2::facet_wrap(~ NodeGroup, scales = 'free') +
     scico::scale_colour_scico(palette = 'acton', direction = -1) +
     ggplot2::scale_size_area(max_size = 6 / log10(1 + length(msigGsc_list))) +
-    current_theme()
+    bhuvad_theme()
 
   return(p1)
 }
@@ -250,7 +250,10 @@ plotMsigNetwork <-
 #'
 #' @examples
 #'
-current_theme = function (rl = 1.1) {
+#' p1 = ggplot2::ggplot()
+#' p1 + bhuvad_theme()
+#'
+bhuvad_theme = function (rl = 1.1) {
   stopifnot(rl > 0)
   ggplot2::theme_minimal() +
     ggplot2::theme(
