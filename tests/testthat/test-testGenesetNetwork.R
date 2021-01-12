@@ -41,7 +41,8 @@ test_that("geneset overlap computation works", {
   #hallmark geneset
   expect_equal(nrow(computeMsigOverlap(hgsc, nullgsc)), 0)
   expect_equal(ncol(computeMsigOverlap(hgsc, nullgsc)), 3)
-  expect_equal(nrow(computeMsigOverlap(hgsc, estgsc)), 1)
+  expect_equal(nrow(computeMsigOverlap(estgsc)), 1)
+  expect_equal(nrow(computeMsigOverlap(hgsc, estgsc)), 4)
   expect_equal(nrow(computeMsigOverlap(hgsc)), 14)
   expect_equal(nrow(computeMsigOverlap(hgsc, thresh = 0)), 1225)
   expect_equal(nrow(computeMsigOverlap(hgsc, thresh = 1)), 0)
