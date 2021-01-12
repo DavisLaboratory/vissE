@@ -1,6 +1,6 @@
 Package: enrichnets
 Title: Network Analysis and Text Mining of Gene Set Enrichment Analysis Results
-Version: 0.0.6
+Version: 0.0.7
 Authors@R: 
     person(given = "Dharmesh D.",
            family = "Bhuva",
