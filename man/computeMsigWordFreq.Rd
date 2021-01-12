@@ -23,7 +23,8 @@ frequency weights to term frequencies.}
 from the analysis.}
 }
 \value{
-
+a list, containing two data.frames summarising the results of the
+frequency analysis on gene set names and short descriptions.
 }
 \description{
 Compute word frequencies for a single MSigDB collection
