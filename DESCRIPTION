@@ -16,11 +16,7 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Imports: 
     igraph,
-    stringr,
     methods,
-    Matrix,
-    graphics,
-    stats,
     singscore,
     plyr,
     ggplot2,
@@ -30,13 +26,14 @@ Imports:
     tm,
     ggwordcloud,
     GSEABase,
-    ggpubr,
     reshape2,
     grDevices,
     ggforce
 URL: https://davislaboratory.github.io/enrichnets
 BugReports: https://github.com/DavisLaboratory/enrichnets/issues
 Suggests: 
-    testthat
+    testthat,
+    ggpubr,
+    singscore
 Depends: 
     R (>= 4.0)
