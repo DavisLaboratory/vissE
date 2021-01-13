@@ -14,7 +14,6 @@
 #' @export
 #'
 #' @examples
-#'
 #' data(hgsc)
 #' freq <- computeMsigWordFreq(hgsc, measure = 'tf')
 #'
@@ -91,7 +90,6 @@ computeMsigWordFreq <- function(msigGsc, measure = c('tf', 'tfidf'), rmwords = g
 #' @export
 #'
 #' @examples
-#'
 #' getMsigBlacklist('blacklist')
 #'
 getMsigBlacklist <- function(custom = c()) {

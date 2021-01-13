@@ -15,7 +15,6 @@
 #' @export
 #'
 #' @examples
-#'
 #' data(hgsc)
 #'
 #' #create a geneset using one of the Hallmark gene sets
