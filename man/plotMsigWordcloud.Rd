@@ -41,7 +41,6 @@ gene set names from the Molecular Signatures Database (MSigDB) collection
 attached with each gene set object.
 }
 \examples{
-
 data("hgsc")
 groups <- list('g1' = 1:10, 'g2' = 11:20)
 plotMsigWordcloud(hgsc, groups, rmwords = getMsigBlacklist())

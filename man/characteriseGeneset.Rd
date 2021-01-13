@@ -28,7 +28,6 @@ with gene sets from the MSigDB. A network of similar gene sets is retrieved
 using this function.
 }
 \examples{
-
 data(hgsc)
 
 #create a geneset using one of the Hallmark gene sets

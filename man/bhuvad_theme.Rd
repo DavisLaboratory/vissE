@@ -16,7 +16,6 @@ a ggplot2 theme
 Custom theme
 }
 \examples{
-
 p1 = ggplot2::ggplot()
 p1 + bhuvad_theme()
 

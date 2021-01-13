@@ -48,7 +48,6 @@ Plots a network of gene set overlap with overlap computed using the
 \code{\link[=computeMsigOverlap]{computeMsigOverlap()}} and a graph created using \code{\link[=computeMsigNetwork]{computeMsigNetwork()}}.
 }
 \examples{
-
 data(hgsc)
 ovlap <- computeMsigOverlap(hgsc)
 ig <- computeMsigNetwork(ovlap, hgsc)
