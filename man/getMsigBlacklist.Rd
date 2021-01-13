@@ -18,7 +18,6 @@ List of words to discard when performing text mining MSigDB gene set names
 and short descriptions.
 }
 \examples{
-
 getMsigBlacklist('blacklist')
 
 }

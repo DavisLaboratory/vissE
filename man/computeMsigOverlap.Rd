@@ -34,7 +34,6 @@ index or the overlap coefficient. These values can then be used to compute a
 network of gene set overlaps.
 }
 \examples{
-
 data(hgsc)
 ovlap <- computeMsigOverlap(hgsc)
 

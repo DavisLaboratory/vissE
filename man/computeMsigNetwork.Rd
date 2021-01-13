@@ -21,7 +21,6 @@ Computes an igraph object using information on gene sets and gene sets
 computed using the \code{\link[=computeMsigOverlap]{computeMsigOverlap()}} function.
 }
 \examples{
-
 data(hgsc)
 ovlap <- computeMsigOverlap(hgsc)
 ig <- computeMsigNetwork(ovlap, hgsc)
