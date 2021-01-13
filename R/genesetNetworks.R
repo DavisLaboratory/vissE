@@ -20,7 +20,6 @@ NULL
 #'   represented as a network in the simple interaction format (SIF).
 #' @export
 #' @examples
-#'
 #' data(hgsc)
 #' ovlap <- computeMsigOverlap(hgsc)
 #'
@@ -120,7 +119,6 @@ intersectSize <- function(x, y = NULL) {
 #' @export
 #'
 #' @examples
-#'
 #' data(hgsc)
 #' ovlap <- computeMsigOverlap(hgsc)
 #' ig <- computeMsigNetwork(ovlap, hgsc)

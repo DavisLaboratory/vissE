@@ -23,7 +23,6 @@ NULL
 #' @export
 #'
 #' @examples
-#'
 #' data("hgsc")
 #' groups <- list('g1' = 1:10, 'g2' = 11:20)
 #' plotMsigWordcloud(hgsc, groups, rmwords = getMsigBlacklist())
@@ -94,7 +93,6 @@ plotMsigWordcloud <-
 #' @export
 #'
 #' @examples
-#'
 #' data(hgsc)
 #' ovlap <- computeMsigOverlap(hgsc)
 #' ig <- computeMsigNetwork(ovlap, hgsc)
@@ -249,7 +247,6 @@ plotMsigNetwork <-
 #' @export
 #'
 #' @examples
-#'
 #' p1 = ggplot2::ggplot()
 #' p1 + bhuvad_theme()
 #'
