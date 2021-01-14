@@ -1,0 +1,51 @@
+---
+title: "enrichnets: Network-based gene set enrichment analysis and summarisation."
+author: "Dharmesh D. Bhuva"
+date: "`r BiocStyle::doc_date()`"
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+    toc: yes
+    toc_depth: 2
+    number_sections: yes
+    fig_caption: yes
+    df_print: paged
+vignette: >
+  %\VignetteIndexEntry{enrichnets}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# enrichnets
+
+This package implements the enrichnets algorithm to summarise results of gene-set analyses. Usually, the results of a gene-set enrichment analysis (e.g using limma::fry, singscore or GSEA) consist of a long list of gene-sets. Biologists then have to search through these lists to determines emerging themes to explain the altered biological processes. This task can be labour intensive therefore we need solutions to summarise large sets of results from such analyses.
+
+Enrichnets is an approach to provide summaries of results from gene-set enrichment analyses. It exploits the relatedness between gene-sets and the inherent hierarchical structure that may exist in pathway databases and gene ontologies to cluster results. For each cluster of gene-sets enrichnets identifies, it performs text-mining to automate characterisation of biological functions and processes represented by the cluster.
+
+An additional power of enrichnets is to perform a novel type of gene-set enrichment analysis based on the network of similarity between gene-sets. Given a list of genes (e.g. from a DE analysis), enrichnets can characterise said list by first identifying all other gene-sets that are similar to it, following up with clustering the resulting gene-sets and finally performing text-mining to reveal emerging themes.
+
+In addition to these analyses, it provides visualisations to assist the users in understanding the results of their experiment. This document will demonstrate these functions across the two use-cases. Enrichnets can be downloaded as follows:
+
+```{r}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("enrichnets")
+```
+
+# Summarising the results of a gene-set enrichment analysis
+
+# Characterise a gene list
+
+# Session information
+
+```{r}
+sessionInfo()
+```

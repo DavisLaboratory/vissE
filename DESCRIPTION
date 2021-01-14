@@ -1,6 +1,6 @@
 Package: enrichnets
 Title: Network Analysis and Text Mining of Gene Set Enrichment Analysis Results
-Version: 0.0.12
+Version: 0.0.13
 Authors@R: 
     person(given = "Dharmesh D.",
            family = "Bhuva",
@@ -14,6 +14,8 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
+Depends: 
+    R (>= 4.0)
 Imports: 
     igraph,
     methods,
@@ -28,11 +30,12 @@ Imports:
     reshape2,
     grDevices,
     ggforce
-URL: https://davislaboratory.github.io/enrichnets
-BugReports: https://github.com/DavisLaboratory/enrichnets/issues
 Suggests: 
     testthat,
     ggpubr,
-    singscore
-Depends: 
-    R (>= 4.0)
+    singscore,
+    knitr,
+    rmarkdown
+URL: https://davislaboratory.github.io/enrichnets
+BugReports: https://github.com/DavisLaboratory/enrichnets/issues
+VignetteBuilder: knitr
