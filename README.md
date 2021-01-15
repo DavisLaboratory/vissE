@@ -1,1 +1,1 @@
-# enrichnets
+# vissE - Visualising Set Enrichment Analysis Results

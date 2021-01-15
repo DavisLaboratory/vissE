@@ -1,5 +1,5 @@
-Package: enrichnets
-Title: Network Analysis and Text Mining of Gene Set Enrichment Analysis Results
+Package: vissE
+Title: Visualising Set Enrichment Analysis Results
 Version: 0.0.13
 Authors@R: 
     person(given = "Dharmesh D.",
@@ -36,6 +36,6 @@ Suggests:
     singscore,
     knitr,
     rmarkdown
-URL: https://davislaboratory.github.io/enrichnets
-BugReports: https://github.com/DavisLaboratory/enrichnets/issues
+URL: https://davislaboratory.github.io/vissE
+BugReports: https://github.com/DavisLaboratory/vissE/issues
 VignetteBuilder: knitr

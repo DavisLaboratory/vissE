@@ -1,4 +1,4 @@
 library(testthat)
-library(enrichnets)
+library(vissE)
 
-test_check("enrichnets")
+test_check("vissE")
