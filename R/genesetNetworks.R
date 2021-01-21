@@ -11,7 +11,7 @@ NULL
 #' @param msigGsc2 a GeneSetCollection object or NULL if pairwise overlaps are
 #'   to be computed.
 #' @param thresh a numeric, specifying the threshold to discard pairs of gene
-#'   sets (default 0.15).
+#'   sets.
 #' @param measure a character, specifying the similarity measure to use:
 #'   `jaccard` for the Jaccard Index and `ovlapcoef` for the Overlap
 #'   Coefficient.
@@ -45,8 +45,8 @@ computeMsigOverlap <- function(msigGsc1, msigGsc2 = NULL, thresh = 0.15, measure
   genes1 = lapply(msigGsc1, GSEABase::geneIds)
   names(genes1) = sapply(msigGsc1, GSEABase::setName)
   len1 = sapply(genes1, length)
-  genes1 = genes1[len1 > 10 & len1 < 500]
-  len1 = len1[len1 > 10 & len1 < 500]
+  # genes1 = genes1[len1 > 10 & len1 < 500]
+  # len1 = len1[len1 > 10 & len1 < 500]
 
   #compute overlap network
   if (!is.null(msigGsc2)) {
@@ -54,8 +54,8 @@ computeMsigOverlap <- function(msigGsc1, msigGsc2 = NULL, thresh = 0.15, measure
     genes2 = lapply(msigGsc2, GSEABase::geneIds)
     names(genes2) = sapply(msigGsc2, GSEABase::setName)
     len2 = sapply(genes2, length)
-    genes2 = genes2[len2 > 10 & len2 < 500]
-    len2 = len2[len2 > 10 & len2 < 500]
+    # genes2 = genes2[len2 > 10 & len2 < 500]
+    # len2 = len2[len2 > 10 & len2 < 500]
   } else {
     genes2 = NULL
     len2 = len1
