@@ -7,14 +7,14 @@ library(ExperimentHub)
 
 # msigdb = msigdb.hs.SYM()
 load('../msigdb/msigdb.hs.SYM.rda')
-msigdb = msigdb.hs.SYM
+gsc = msigdb.hs.SYM
 
 #add KEGG
-msigdb = appendKEGG(msigdb)
+gsc = appendKEGG(gsc)
 
 #msignetwork
-msigOverlap = computeMsigOverlap(msigdb, thresh = 0.15)
-msigOverlapNetwork = computeMsigNetwork(msigOverlap, msigdb)
+msigOverlap = computeMsigOverlap(gsc, thresh = 0.15)
+msigOverlapNetwork = computeMsigNetwork(msigOverlap, gsc)
 save(msigOverlapNetwork, file = 'msigOverlapNetwork.rda')
 
 #layout computation using cytoscape

@@ -10,12 +10,13 @@ test_that("hgsc data is in the correct format", {
 })
 
 test_that("msigOverlapNetwork data is in the correct format", {
-  # library(GSEABase)
-  # library(igraph)
-  # library(msigdb)
-  # 
-  # msigdb = msigdb.hs.SYM()
-  # data(msigOverlapNetwork)
-  # 
-  # expect_true(all(V(msigOverlapNetwork)$name %in% sapply(msigdb, setName)))
+  library(GSEABase)
+  library(igraph)
+  library(msigdb)
+
+  gsc = msigdb.hs.SYM()
+  gsc = appendKEGG(gsc)
+  data(msigOverlapNetwork)
+
+  expect_true(all(V(msigOverlapNetwork)$name %in% sapply(gsc, setName)))
 })
