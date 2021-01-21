@@ -38,18 +38,3 @@
 #' @docType data
 #'
 "msigOverlapNetwork"
-
-# library(RCy3)
-# library(igraph)
-# 
-# cytoscapePing()
-# createNetworkFromIgraph(msigOverlapNetwork)
-# RCy3::layoutNetwork(layout.name = 'force-directed-cl')
-# 
-# #get layout
-# lyt = as.matrix(RCy3::getNodePosition())
-# lyt = t(apply(lyt, 1, as.numeric))
-# lyt = apply(lyt, 2, function(x) (x - mean(x)) / sd(x))
-# 
-# V(msigOverlapNetwork)$x = lyt[V(msigOverlapNetwork)$name, 1]
-# V(msigOverlapNetwork)$y = -lyt[V(msigOverlapNetwork)$name, 2]
