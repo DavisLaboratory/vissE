@@ -35,7 +35,9 @@ Suggests:
     ggpubr,
     singscore,
     knitr,
-    rmarkdown
+    rmarkdown,
+    prettydoc,
+    BiocStyle
 URL: https://davislaboratory.github.io/vissE
 BugReports: https://github.com/DavisLaboratory/vissE/issues
 VignetteBuilder: knitr

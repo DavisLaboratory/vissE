@@ -7,7 +7,7 @@
 computeMsigOverlap(
   msigGsc1,
   msigGsc2 = NULL,
-  thresh = 0.1,
+  thresh = 0.15,
   measure = c("jaccard", "ovlapcoef")
 )
 }
@@ -18,7 +18,7 @@ computeMsigOverlap(
 to be computed.}
 
 \item{thresh}{a numeric, specifying the threshold to discard pairs of gene
-sets.}
+sets (default 0.15).}
 
 \item{measure}{a character, specifying the similarity measure to use:
 \code{jaccard} for the Jaccard Index and \code{ovlapcoef} for the Overlap

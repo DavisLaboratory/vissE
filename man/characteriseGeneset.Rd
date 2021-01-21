@@ -4,14 +4,14 @@
 \alias{characteriseGeneset}
 \title{Functionally characterise a list of genes}
 \usage{
-characteriseGeneset(gs, thresh = 0.1, measure = c("ovlapcoef", "jaccard"))
+characteriseGeneset(gs, thresh = 0.15, measure = c("ovlapcoef", "jaccard"))
 }
 \arguments{
 \item{gs}{a GeneSet object, representing the list of genes that need to be
 characterised.}
 
 \item{thresh}{a numeric, specifying the threshold to discard pairs of gene
-sets.}
+sets (default 0.15).}
 
 \item{measure}{a character, specifying the similarity measure to use:
 \code{jaccard} for the Jaccard Index and \code{ovlapcoef} for the Overlap
