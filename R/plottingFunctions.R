@@ -96,7 +96,7 @@ plotMsigWordcloud <-
 #' data(hgsc)
 #' ovlap <- computeMsigOverlap(hgsc)
 #' ig <- computeMsigNetwork(ovlap, hgsc)
-#' groups <- list('g1' = c(1, 10, 11, 14, 21), 'g2' = c(3, 5, 13))
+#' groups <- list('g1' = c(1, 9), 'g2' = c(5, 6))
 #'
 #' plotMsigNetwork(ig, markGroups = groups)
 #'

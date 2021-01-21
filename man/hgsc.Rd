@@ -13,7 +13,7 @@ hgsc
 }
 \description{
 The molecular signatures database (MSigDB) is a collection of over 25000 gene
-expression signatures. Signatures in v7.1 are divided into 8 categories. The
+expression signatures. Signatures in v7.2 are divided into 9 categories. The
 Hallmarks collection contains gene expression signatures representing
 molecular processes that are hallmarks in cancer development and progression.
 }

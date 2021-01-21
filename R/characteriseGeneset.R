@@ -28,10 +28,11 @@
 #'
 characteriseGeneset <- function(gs, thresh = 0.15, measure = c('ovlapcoef', 'jaccard')) {
   measure = match.arg(measure)
+  msigdb.hs.SYM = msigdb::msigdb.hs.SYM()
 
   #compute overlaps
-  ovmat = computeMsigOverlap(GSEABase::GeneSetCollection(gs), msigdb, thresh, measure)
-  gsc = GSEABase::GeneSetCollection(c(gs, msigdb))
+  ovmat = computeMsigOverlap(GSEABase::GeneSetCollection(gs), msigdb.hs.SYM, thresh, measure)
+  gsc = GSEABase::GeneSetCollection(c(gs, msigdb.hs.SYM))
 
   #combine new graph with precomputed graph
   nodedf = igraph::as_data_frame(msigOverlapNetwork, 'vertices')[, -(5:7)]
@@ -40,7 +41,7 @@ characteriseGeneset <- function(gs, thresh = 0.15, measure = c('ovlapcoef', 'jac
   edgedf = rbind(edgedf, ovmat)
 
   newnodes = setdiff(union(edgedf$from, edgedf$to), c(nodedf$name, GSEABase::setName(gs)))
-  newnodes = msigdb[newnodes]
+  newnodes = msigdb.hs.SYM[newnodes]
   newnodedf = data.frame(
     sapply(c(newnodes, gs), GSEABase::setName),
     sapply(lapply(c(newnodes, gs), GSEABase::geneIds), length),
