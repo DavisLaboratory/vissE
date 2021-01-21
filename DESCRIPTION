@@ -29,7 +29,8 @@ Imports:
     GSEABase,
     reshape2,
     grDevices,
-    ggforce
+    ggforce,
+    msigdb
 Suggests: 
     testthat,
     ggpubr,
