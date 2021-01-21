@@ -11,7 +11,7 @@ NULL
 #' @param msigGsc2 a GeneSetCollection object or NULL if pairwise overlaps are
 #'   to be computed.
 #' @param thresh a numeric, specifying the threshold to discard pairs of gene
-#'   sets.
+#'   sets (default 0.15).
 #' @param measure a character, specifying the similarity measure to use:
 #'   `jaccard` for the Jaccard Index and `ovlapcoef` for the Overlap
 #'   Coefficient.
@@ -23,7 +23,7 @@ NULL
 #' data(hgsc)
 #' ovlap <- computeMsigOverlap(hgsc)
 #'
-computeMsigOverlap <- function(msigGsc1, msigGsc2 = NULL, thresh = 0.1, measure = c('jaccard', 'ovlapcoef')) {
+computeMsigOverlap <- function(msigGsc1, msigGsc2 = NULL, thresh = 0.15, measure = c('jaccard', 'ovlapcoef')) {
   stopifnot(thresh >= 0 & thresh <= 1)
   measure = match.arg(measure)
 
@@ -155,7 +155,7 @@ computeMsigNetwork <- function(genesetOverlap, msigGsc) {
   return(msig_ig)
 }
 
-getMsigNeighbour <- function(srcsig, ig, thresh = 0.1) {
+getMsigNeighbour <- function(srcsig, ig, thresh = 0.15) {
   stopifnot(thresh >= 0 & thresh <= 1)
   stopifnot(srcsig %in% V(ig)$name)
 
