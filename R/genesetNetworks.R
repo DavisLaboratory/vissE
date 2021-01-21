@@ -39,7 +39,7 @@ computeMsigOverlap <- function(msigGsc1, msigGsc2 = NULL, thresh = 0.15, measure
 
   #return empty result if no gene sets are provided
   if (length(msigGsc1) == 0 | !is.null(msigGsc2) & length(msigGsc2) == 0)
-    return(data.frame('gs1' = character(), 'gs2' = character(), 'coef' = numeric()))
+    return(data.frame('gs1' = character(), 'gs2' = character(), 'weight' = numeric()))
 
   #filter out very small and very large genesets
   genes1 = lapply(msigGsc1, GSEABase::geneIds)
@@ -70,10 +70,10 @@ computeMsigOverlap <- function(msigGsc1, msigGsc2 = NULL, thresh = 0.15, measure
   }
 
   #convert to data.frame
-  mat = reshape2::melt(mat, varnames = c('gs1', 'gs2'), value.name = 'coef')
+  mat = reshape2::melt(mat, varnames = c('gs1', 'gs2'), value.name = 'weight')
   mat$gs1 = as.character(mat$gs1)
   mat$gs2 = as.character(mat$gs2)
-  mat = mat[mat$coef >= thresh, , drop = FALSE]
+  mat = mat[mat$weight >= thresh, , drop = FALSE]
 
   if (is.null(msigGsc2)) {
     #remove symmetric values
@@ -161,11 +161,11 @@ getMsigNeighbour <- function(srcsig, ig, thresh = 0.15) {
 
   #select surrounding network
   sub_ig = igraph::induced_subgraph(ig, vids = igraph::neighborhood(ig, nodes = srcsig)[[1]])
-  if (all(E(sub_ig)$coef <= thresh))
+  if (all(E(sub_ig)$weight <= thresh))
     return(c())
 
   #extract confident edges
-  sub_ig = igraph::subgraph.edges(sub_ig, E(sub_ig)[E(sub_ig)$coef > thresh])
+  sub_ig = igraph::subgraph.edges(sub_ig, E(sub_ig)[E(sub_ig)$weight > thresh])
   if (!srcsig %in% V(sub_ig)$name)
     return(c())
 
