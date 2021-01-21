@@ -26,7 +26,7 @@
 #' plotMsigNetwork(ig)
 #' }
 #'
-characteriseGeneset <- function(gs, thresh = 0.1, measure = c('ovlapcoef', 'jaccard')) {
+characteriseGeneset <- function(gs, thresh = 0.15, measure = c('ovlapcoef', 'jaccard')) {
   measure = match.arg(measure)
 
   #compute overlaps
