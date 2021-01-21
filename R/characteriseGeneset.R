@@ -1,3 +1,6 @@
+#' @importFrom igraph V
+NULL
+
 #' Functionally characterise a list of genes
 #'
 #' This function can be used to perform a network-based enrichment analysis of a
@@ -26,37 +29,29 @@
 #' plotMsigNetwork(ig)
 #' }
 #'
-characteriseGeneset <- function(gs, thresh = 0.15, measure = c('ovlapcoef', 'jaccard')) {
+characteriseGeneset <- function(gs, thresh = 0.3, measure = c('ovlapcoef', 'jaccard')) {
   measure = match.arg(measure)
   gsc = msigdb::msigdb.hs.SYM()
   gsc = msigdb::appendKEGG(gsc)
+  
+  #filter out large and small gene sets
+  len = sapply(lapply(gsc, GSEABase::geneIds), length)
+  gsc = GSEABase::GeneSetCollection(gsc[len > 10 & len < 500])
 
   #compute overlaps
   ovmat = computeMsigOverlap(GSEABase::GeneSetCollection(gs), gsc, thresh, measure)
   gsc = GSEABase::GeneSetCollection(c(gs, gsc))
-
-  #combine new graph with precomputed graph
-  nodedf = igraph::as_data_frame(msigOverlapNetwork, 'vertices')[, -(5:7)]
-  edgedf = igraph::as_data_frame(msigOverlapNetwork, 'edges')
-  colnames(ovmat) = colnames(edgedf)
-  edgedf = rbind(edgedf, ovmat)
-
-  newnodes = setdiff(union(edgedf$from, edgedf$to), c(nodedf$name, GSEABase::setName(gs)))
-  newnodes = gsc[newnodes]
-  newnodedf = data.frame(
-    sapply(c(newnodes, gs), GSEABase::setName),
-    sapply(lapply(c(newnodes, gs), GSEABase::geneIds), length),
-    c(sapply(lapply(newnodes, GSEABase::collectionType), GSEABase::bcCategory), 'custom'),
-    c(sapply(lapply(newnodes, GSEABase::collectionType), GSEABase::bcSubCategory), 'custom')
-  )
-  colnames(newnodedf) = colnames(nodedf)
-  nodedf = rbind(nodedf, newnodedf)
-
-  fullig = igraph::graph_from_data_frame(edgedf, FALSE, nodedf)
-
-  #define group by identifying communities
-  nb = getMsigNeighbour(GSEABase::setName(gs), fullig, thresh)
-  nbnet = igraph::induced_subgraph(fullig, vids = nb)
-
+  
+  #identify neighbours
+  ovmat = ovmat[ovmat$weight > thresh, ]
+  
+  #induce graph
+  nb = V(msigOverlapNetwork)$name[V(msigOverlapNetwork)$name %in% ovmat$gs2]
+  nbnet = igraph::induced_subgraph(msigOverlapNetwork, vids = nb)
+  
+  #remove layout
+  keepattr = !names(igraph::vertex.attributes(nbnet)) %in% c('x', 'y')
+  igraph::vertex.attributes(nbnet) = igraph::vertex.attributes(nbnet)[keepattr]
+  
   return(nbnet)
 }
