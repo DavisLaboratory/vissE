@@ -4,7 +4,7 @@
 #'   MSigDB. The [GSEABase::getBroadSets()] function can be used to parse XML
 #'   files downloaded from MSigDB.
 #' @param measure a character, specifying how frequencies should be computed.
-#'   "tf" (default) uses term frequencies and "tfidf" applies inverse document
+#'   "tf" uses term frequencies and "tfidf" (default) applies inverse document
 #'   frequency weights to term frequencies.
 #' @param rmwords a character vector, containing a blacklist of words to discard
 #'   from the analysis.
@@ -17,7 +17,7 @@
 #' data(hgsc)
 #' freq <- computeMsigWordFreq(hgsc, measure = 'tf')
 #'
-computeMsigWordFreq <- function(msigGsc, measure = c('tf', 'tfidf'), rmwords = getMsigBlacklist()) {
+computeMsigWordFreq <- function(msigGsc, measure = c('tfidf', 'tf'), rmwords = getMsigBlacklist()) {
   measure = match.arg(measure)
   stopifnot('GeneSetCollection' %in% class(msigGsc))
 
@@ -49,20 +49,16 @@ computeMsigWordFreq <- function(msigGsc, measure = c('tf', 'tfidf'), rmwords = g
   docs = lapply(docs, function(d) tm::tm_map(d, tm::removePunctuation))
   # Eliminate extra white spaces
   docs = lapply(docs, function(d) tm::tm_map(d, tm::stripWhitespace))
-  # # Text stemming
-  # docs = lapply(docs, function(d) tm::tm_map(d, tm::stemDocument, language = 'english'))
-  # docs = lapply(docs, function(d) tm::tm_map(d, tm::stemCompletion, dictionary = tm::inspect(d), type = 'shortest'))
   # Remove full numbers
   docs = lapply(docs, function(d) tm::tm_filter(d, function(x) !grepl('\\b[0-9]+\\b', x)))
+  # Text stemming
+  dicts = docs
+  docs = lapply(docs, function(d) tm::tm_map(d, tm::stemDocument, language = 'english'))
 
   #compute frequencies
   dtms = lapply(docs, tm::TermDocumentMatrix)
-  if (measure %in% 'tf') {
-    dtms = lapply(dtms, tm::weightTf)
-  } else{
-    dtms = lapply(dtms, tm::weightTfIdf)
-  }
-  v = lapply(dtms, function(x) sort(apply(x, 1, sum), decreasing = TRUE))
+  dtms = lapply(dtms, tm::weightTf)
+  v = lapply(dtms, function(x) apply(x, 1, sum))
   d = lapply(v, function(x) data.frame(word = names(x), freq = x))
 
   #remove GSE labels
@@ -74,6 +70,31 @@ computeMsigWordFreq <- function(msigGsc, measure = c('tf', 'tfidf'), rmwords = g
   if (is.null(nrow(d$Short))) {
     d$Short = data.frame('word' = character(), 'freq' = numeric())
   }
+  
+  #compute tfidfs
+  d = lapply(d, function(x) {
+    x = merge(x, df_idf, by.x = 'word', by.y = 'Stem')
+    x$freq = log(1 + x$freq)
+    x[, 4:5] = log(x[, 4:5]) * x$freq
+    return(x)
+  })
+  
+  if (measure %in% 'tfidf'){
+    #retrieve correct records
+    d$Name = d$Name[, -c(1, 2, 5)]
+    d$Short = d$Short[, -c(1, 2, 4)]
+  } else {
+    d = lapply(d, function(x) x[, 3:2])
+  }
+  
+  #rename columns and sort by TF-IDF
+  d = lapply(d, function(x) {
+    colnames(x) = c('word', 'freq')
+    x = x[order(x$freq, decreasing = TRUE), ]
+    x = x[!is.na(x$freq), ]
+    rownames(x) = NULL
+    return(x)
+  })
 
   return(d)
 }
