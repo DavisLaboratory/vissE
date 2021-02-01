@@ -1,6 +1,6 @@
 Package: vissE
 Title: Visualising Set Enrichment Analysis Results
-Version: 0.0.14
+Version: 0.0.15
 Authors@R: 
     person(given = "Dharmesh D.",
            family = "Bhuva",
@@ -30,7 +30,8 @@ Imports:
     reshape2,
     grDevices,
     ggforce,
-    msigdb
+    msigdb,
+    SnowballC
 Suggests: 
     testthat,
     ggpubr,
