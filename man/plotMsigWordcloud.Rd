@@ -22,7 +22,7 @@ specifying node groupings. Each element of the list represent a group and
 contains a character vector with node names.}
 
 \item{measure}{a character, specifying how frequencies should be computed.
-"tf" (default) uses term frequencies and "tfidf" applies inverse document
+"tf" uses term frequencies and "tfidf" (default) applies inverse document
 frequency weights to term frequencies.}
 
 \item{rmwords}{a character vector, containing a blacklist of words to discard
