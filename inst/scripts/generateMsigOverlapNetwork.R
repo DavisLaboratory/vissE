@@ -7,7 +7,8 @@ library(ExperimentHub)
 
 # msigdb = msigdb.hs.SYM()
 load('../msigdb/msigdb.hs.SYM.rda')
-gsc = msigdb.hs.SYM
+# load('../msigdb/msigdb.mm.SYM.rda')
+gsc = msigdb.mm.SYM
 
 #add KEGG
 gsc = appendKEGG(gsc)

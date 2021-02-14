@@ -6,7 +6,7 @@
 \usage{
 computeMsigWordFreq(
   msigGsc,
-  measure = c("tf", "tfidf"),
+  measure = c("tfidf", "tf"),
   rmwords = getMsigBlacklist()
 )
 }
@@ -16,7 +16,7 @@ MSigDB. The \code{\link[GSEABase:getObjects]{GSEABase::getBroadSets()}} function
 files downloaded from MSigDB.}
 
 \item{measure}{a character, specifying how frequencies should be computed.
-"tf" (default) uses term frequencies and "tfidf" applies inverse document
+"tf" uses term frequencies and "tfidf" (default) applies inverse document
 frequency weights to term frequencies.}
 
 \item{rmwords}{a character vector, containing a blacklist of words to discard
