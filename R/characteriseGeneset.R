@@ -29,7 +29,7 @@ NULL
 #' plotMsigNetwork(ig)
 #' }
 #'
-characteriseGeneset <- function(gs, thresh = 0.3, measure = c('ovlapcoef', 'jaccard')) {
+characteriseGeneset <- function(gs, thresh = 0.3, measure = c('jaccard', 'ovlapcoef')) {
   measure = match.arg(measure)
   gsc = msigdb::msigdb.hs.SYM()
   gsc = msigdb::appendKEGG(gsc)
@@ -39,19 +39,17 @@ characteriseGeneset <- function(gs, thresh = 0.3, measure = c('ovlapcoef', 'jacc
   gsc = GSEABase::GeneSetCollection(gsc[len > 10 & len < 500])
 
   #compute overlaps
-  ovmat = computeMsigOverlap(GSEABase::GeneSetCollection(gs), gsc, thresh, measure)
+  ovmat = computeMsigOverlap(GSEABase::GeneSetCollection(gs), gsc, thresh, 'ovlapcoef')
   gsc = GSEABase::GeneSetCollection(c(gs, gsc))
   
   #identify neighbours
   ovmat = ovmat[ovmat$weight > thresh, ]
   
   #induce graph
-  nb = V(msigOverlapNetwork)$name[V(msigOverlapNetwork)$name %in% ovmat$gs2]
-  nbnet = igraph::induced_subgraph(msigOverlapNetwork, vids = nb)
-  
-  #remove layout
-  keepattr = !names(igraph::vertex.attributes(nbnet)) %in% c('x', 'y')
-  igraph::vertex.attributes(nbnet) = igraph::vertex.attributes(nbnet)[keepattr]
+  nb = intersect(V(msigOverlapNetwork)$name, ovmat$gs2)
+  nb = GSEABase::GeneSetCollection(gsc[nb])
+  ovmat = computeMsigOverlap(nb, thresh, measure)
+  nbnet = computeMsigNetwork(ovmat, gsc)
   
   return(nbnet)
 }
