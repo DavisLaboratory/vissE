@@ -29,7 +29,7 @@ NULL
 #' plotMsigNetwork(ig)
 #' }
 #'
-characteriseGeneset <- function(gs, thresh = 0.3, measure = c('jaccard', 'ovlapcoef')) {
+characteriseGeneset <- function(gs, thresh = 0.15, measure = c('jaccard', 'ovlapcoef')) {
   measure = match.arg(measure)
   gsc = msigdb::msigdb.hs.SYM()
   gsc = msigdb::appendKEGG(gsc)
@@ -39,7 +39,7 @@ characteriseGeneset <- function(gs, thresh = 0.3, measure = c('jaccard', 'ovlapc
   gsc = GSEABase::GeneSetCollection(gsc[len > 10 & len < 500])
 
   #compute overlaps
-  ovmat = computeMsigOverlap(GSEABase::GeneSetCollection(gs), gsc, thresh, 'ovlapcoef')
+  ovmat = computeMsigOverlap(gsc, GSEABase::GeneSetCollection(gs), 0.3, 'ovlapcoef')
   gsc = GSEABase::GeneSetCollection(c(gs, gsc))
   
   #identify neighbours

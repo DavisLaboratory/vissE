@@ -61,6 +61,7 @@ computeMsigOverlap <- function(msigGsc1, msigGsc2 = NULL, thresh = 0.15, measure
     len2 = len1
   }
   ovlap = intersectSize(genes1, genes2)
+  ovlap = as.matrix(ovlap)
 
   #overlap coef
   if (measure %in% 'jaccard') {
@@ -88,18 +89,36 @@ computeMsigOverlap <- function(msigGsc1, msigGsc2 = NULL, thresh = 0.15, measure
 intersectSize <- function(x, y = NULL) {
   vals = unique(unlist(c(x, y)))
 
-  #compute overlap network
-  matx = plyr::laply(x, function(s) as.numeric(vals %in% s), .drop = FALSE)
-  rownames(matx) = names(x)
-  colnames(matx) = vals
+  #create membership matrix for x
+  matx = Matrix::Matrix(
+    0,
+    nrow = length(x),
+    ncol = length(vals),
+    dimnames = list(names(x), vals),
+    sparse = TRUE
+  )
+  for (i in 1:length(x)) {
+    matx[i, ] = as.numeric(vals %in% x[[i]])
+  }
 
   if (is.null(y)) {
-    ovlap = tcrossprod(matx)
+    #compute overlap
+    ovlap = Matrix::tcrossprod(matx)
   } else {
-    maty = plyr::laply(y, function(s) as.numeric(vals %in% s), .drop = FALSE)
-    rownames(maty) = names(y)
-    colnames(maty) = vals
-    ovlap = tcrossprod(matx, maty)
+    #create membership matrix for y
+    maty = Matrix::Matrix(
+      0,
+      nrow = length(y),
+      ncol = length(vals),
+      dimnames = list(names(y), vals),
+      sparse = TRUE
+    )
+    for (i in 1:length(y)) {
+      maty[i, ] = as.numeric(vals %in% y[[i]])
+    }
+    
+    #compute overlap
+    ovlap = Matrix::tcrossprod(matx, maty)
   }
 
   return(ovlap)

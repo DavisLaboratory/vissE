@@ -31,7 +31,8 @@ Imports:
     grDevices,
     ggforce,
     msigdb,
-    SnowballC
+    SnowballC,
+    Matrix
 Suggests: 
     testthat,
     ggpubr,
