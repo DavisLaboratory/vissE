@@ -23,18 +23,3 @@
 #'   collection. Cell systems, 1(6), 417-425.
 #'
 "hgsc"
-
-#' An overlap network of signatures in the MSigDB
-#'
-#' The molecular signatures database (MSigDB) is a collection of over 25000 gene
-#' expression signatures. Signatures in v7.2 are divided into 9 categories. This
-#' network represents the precomputed overlap between all non-empty signatures
-#' network represents the pre-computed overlap between all non-empty signatures
-#' in the `msigdb` data. The network was computed using [computeMsigOverlap()]
-#' and [computeMsigNetwork()] functions with default parameters.
-#'
-#' @format An igraph object, containing the overlap network computed using all
-#'   non-empty gene expression signatures in MSigDB.
-#' @docType data
-#'
-"msigOverlapNetwork"

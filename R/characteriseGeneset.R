@@ -46,7 +46,6 @@ characteriseGeneset <- function(gs, thresh = 0.15, measure = c('jaccard', 'ovlap
   ovmat = ovmat[ovmat$weight > thresh, ]
   
   #induce graph
-  nb = intersect(V(msigOverlapNetwork)$name, ovmat$gs2)
   nb = GSEABase::GeneSetCollection(gsc[nb])
   ovmat = computeMsigOverlap(nb, thresh, measure)
   nbnet = computeMsigNetwork(ovmat, gsc)
