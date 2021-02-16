@@ -1,6 +1,6 @@
 test_that("geneset intersection computation works", {
-  gs1 = list('a' = 1:5, 'b' = 4:8)
-  gs2 = list('c' = 6:9, 'd' = 9:12)
+  gs1 = list('a' = as.character(1:5), 'b' = as.character(4:8))
+  gs2 = list('c' = as.character(6:9), 'd' = as.character(9:12))
 
   expect_equal(intersectSize(gs1)['a', 'b'], 2)
   expect_equal(intersectSize(gs2)['c', 'd'], 1)
