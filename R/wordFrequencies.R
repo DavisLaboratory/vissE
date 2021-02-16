@@ -15,7 +15,7 @@
 #'
 #' @examples
 #' data(hgsc)
-#' freq <- computeMsigWordFreq(hgsc, measure = 'tf')
+#' freq <- computeMsigWordFreq(hgsc, measure = 'tfidf')
 #'
 computeMsigWordFreq <- function(msigGsc, measure = c('tfidf', 'tf'), rmwords = getMsigBlacklist()) {
   measure = match.arg(measure)
@@ -51,9 +51,8 @@ computeMsigWordFreq <- function(msigGsc, measure = c('tfidf', 'tf'), rmwords = g
   docs = lapply(docs, function(d) tm::tm_map(d, tm::stripWhitespace))
   # Remove full numbers
   docs = lapply(docs, function(d) tm::tm_filter(d, function(x) !grepl('\\b[0-9]+\\b', x)))
-  # Text stemming
-  dicts = docs
-  docs = lapply(docs, function(d) tm::tm_map(d, tm::stemDocument, language = 'english'))
+  # Text lemmatisation
+  docs = lapply(docs, function(d) tm::tm_map(d, textstem::lemmatize_strings))
 
   #compute frequencies
   dtms = lapply(docs, tm::TermDocumentMatrix)
@@ -70,26 +69,33 @@ computeMsigWordFreq <- function(msigGsc, measure = c('tfidf', 'tf'), rmwords = g
   if (is.null(nrow(d$Short))) {
     d$Short = data.frame('word' = character(), 'freq' = numeric())
   }
+  if (length(msigGsc) == 0)
+    return(d)
+  
+  #identify the organism and use the correct IDFs
+  idType = msigdb::getMsigIdType(msigGsc)
+  org = msigdb::getMsigOrganism(msigGsc, idType)
+  if (org %in% 'hs') {
+    idf = idf_hs
+  } else {
+    idf = idf_mm
+  }
   
   #compute tfidfs
   d = lapply(d, function(x) {
-    x = merge(x, df_idf, by.x = 'word', by.y = 'Stem')
     x$freq = log(1 + x$freq)
-    x[, 4:5] = log(x[, 4:5]) * x$freq
     return(x)
   })
   
   if (measure %in% 'tfidf'){
-    #retrieve correct records
-    d$Name = d$Name[, -c(1, 2, 5)]
-    d$Short = d$Short[, -c(1, 2, 4)]
-  } else {
-    d = lapply(d, function(x) x[, 3:2])
+    d = mapply(function(x, i) {
+      x$freq = log(i[x$word]) * x$freq
+      return(x)
+    }, d, idf, SIMPLIFY = FALSE)
   }
   
-  #rename columns and sort by TF-IDF
+  #sort by TF-IDF
   d = lapply(d, function(x) {
-    colnames(x) = c('word', 'freq')
     x = x[order(x$freq, decreasing = TRUE), ]
     x = x[!is.na(x$freq), ]
     rownames(x) = NULL
