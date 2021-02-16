@@ -2,8 +2,6 @@ library(org.Hs.eg.db)
 library(org.Mm.eg.db)
 
 computeIdf <- function(msigGsc) {
-  # msigGsc = msigdb::msigdb.hs.SYM()
-  msigGsc = msigdb::appendKEGG(msigGsc)
   rmwords = vissE:::getMsigBlacklist()
   
   signames = sapply(msigGsc, GSEABase::setName)
@@ -36,54 +34,39 @@ computeIdf <- function(msigGsc) {
   docs = lapply(docs, function(d) tm::tm_map(d, tm::stripWhitespace))
   # Remove full numbers
   docs = lapply(docs, function(d) tm::tm_filter(d, function(x) !grepl('\\b[0-9]+\\b', x)))
-  # Text stemming
-  dicts = docs
-  docs = lapply(docs, function(d) tm::tm_map(d, tm::stemDocument, language = 'english'))
+  # Text lemmatisation
+  docs = lapply(docs, function(d) tm::tm_map(d, textstem::lemmatize_strings))
   
   #compute idf
   dtms = lapply(docs, tm::TermDocumentMatrix)
   dtms = lapply(dtms, as.matrix)
-  stemmap = mapply(function(x, d) {
-    smap = tm::stemCompletion(rownames(x), d, type = 'prevalent')
-    names(smap) = rownames(x)
-    return(smap)
-  }, dtms, dicts, SIMPLIFY = FALSE)
   
-  #combine frequencies for completed-stemmed words
-  dtms = mapply(function(x, smap) {
-    rowsum(x, as.factor(smap[rownames(x)]))
-  }, dtms, stemmap)
-  
+  #compute IDF
   idfs = lapply(dtms, function(x) {
     idf = log(ncol(x) / rowSums(x != 0))
     return(idf)
   })
+  #sort names to quicken searches
+  idfs = lapply(idfs, function(x) {
+    x[sort(names(x))]
+  })
   
-  #create a df
-  df_name = merge(
-    data.frame('Stem' = names(stemmap$Name), 'Complete' = stemmap$Name),
-    data.frame('Complete' = names(idfs$Name), 'Name.IDF' = idfs$Name),
-    all = TRUE
-  )
-  df_short = merge(
-    data.frame('Stem' = names(stemmap$Short), 'Complete' = stemmap$Short),
-    data.frame('Complete' = names(idfs$Short), 'Short.IDF' = idfs$Short),
-    all = TRUE
-  )
-  df_idf = merge(df_name, df_short, all = TRUE)
-  df_idf = df_idf[df_idf$Complete != '', ]
-  rownames(df_idf) = NULL
-  
-  return(df_idf)
+  return(idfs)
 }
 
+# msigdb.hs.SYM = msigdb::msigdb.hs.SYM()
+# msigdb.mm.SYM = msigdb::msigdb.mm.SYM()
 e = new.env()
 load('../msigdb/msigdb.hs.SYM.rda', envir = e)
 load('../msigdb/msigdb.mm.SYM.rda', envir = e)
+msigdb.hs.SYM = e$msigdb.hs.SYM
+msigdb.mm.SYM = e$msigdb.mm.SYM
 
-df_idf_hs = computeIdf(e$msigdb.hs.SYM)
-df_idf_mm = computeIdf(e$msigdb.mm.SYM)
+msigdb.hs.SYM = msigdb::appendKEGG(msigdb.hs.SYM)
+msigdb.mm.SYM = msigdb::appendKEGG(msigdb.mm.SYM)
 
-usethis::use_data(df_idf_hs, internal = TRUE)
-usethis::use_data(df_idf_mm, internal = TRUE)
+idf_hs = computeIdf(msigdb.hs.SYM)
+idf_mm = computeIdf(msigdb.mm.SYM)
+
+# usethis::use_data(idf_hs, idf_mm, internal = TRUE)
 

@@ -1,6 +1,10 @@
 test_that("word frequencies are computed correctly for edge cases", {
+  #Null identifiers
+  nullgsc = emptygsc = GSEABase::GeneSetCollection(GSEABase::GeneSet(setName = 'A'))
+  expect_error(computeMsigWordFreq(nullgsc))
+  
   #empty collections
-  nullgsc = GSEABase::GeneSetCollection(list())
+  nullgsc = GSEABase::GeneSetCollection(list(), geneIdType = GSEABase::SymbolIdentifier())
   freq = computeMsigWordFreq(nullgsc)
 
   expect_length(freq, 2)
@@ -8,15 +12,15 @@ test_that("word frequencies are computed correctly for edge cases", {
   expect_equal(sapply(freq, nrow), c('Name' = 0, 'Short' = 0))
 
   #non-empty gscs but empty gene sets
-  emptygsc = GSEABase::GeneSetCollection(GSEABase::GeneSet())
+  emptygsc = GSEABase::GeneSetCollection(GSEABase::GeneSet(setName = 'A', geneIdType = GSEABase::SymbolIdentifier()))
   freq = computeMsigWordFreq(emptygsc)
 
   expect_length(freq, 2)
   expect_equal(sapply(freq, ncol), c('Name' = 2, 'Short' = 2))
   expect_equal(sapply(freq, nrow), c('Name' = 0, 'Short' = 0))
 
-  emptygsc = GSEABase::GeneSetCollection(GSEABase::GeneSet(setName = 'a'),
-                                         GSEABase::GeneSet(c('1', '2'), setName = 'b'))
+  emptygsc = GSEABase::GeneSetCollection(GSEABase::GeneSet(setName = 'a', geneIdType = GSEABase::SymbolIdentifier()),
+                                         GSEABase::GeneSet(c('ESR1', 'ESR2'), setName = 'b', geneIdType = GSEABase::SymbolIdentifier()))
   freq = computeMsigWordFreq(emptygsc)
 
   expect_length(freq, 2)
@@ -33,8 +37,8 @@ test_that("word frequencies (TF) are computed correctly", {
   expect_length(freq, 2)
   expect_equal(sapply(freq, nrow), c('Name' = 4, 'Short' = 5))
   expect_equal(sapply(freq, class), c('Name' = 'data.frame', 'Short' = 'data.frame'))
-  expect_equal(freq$Name[freq$Name$word %in% c('earliest', 'late'), 2], log(c(1, 1) + 1))
-  expect_equal(freq$Short[freq$Short$word %in% c('earliest', 'late'), 2], log(c(1, 1) + 1))
+  expect_equal(freq$Name[freq$Name$word %in% c('early', 'late'), 2], log(c(1, 1) + 1))
+  expect_equal(freq$Short[freq$Short$word %in% c('early', 'late'), 2], log(c(1, 1) + 1))
   expect_equal(freq$Name[freq$Name$word %in% c('estrogen'), 2], log(2 + 1))
   expect_equal(freq$Short[freq$Short$word %in% c('estrogen'), 2], log(2 + 1))
   expect_false('HALLMARK' %in% freq$Name$word)
@@ -48,10 +52,10 @@ test_that("word frequencies (TFIDF) are computed correctly", {
   freq = computeMsigWordFreq(estgsc, measure = 'tfidf')
 
   expect_length(freq, 2)
-  expect_equal(sapply(freq, nrow), c('Name' = 3, 'Short' = 5))
+  expect_equal(sapply(freq, nrow), c('Name' = 4, 'Short' = 5))
   expect_equal(sapply(freq, class), c('Name' = 'data.frame', 'Short' = 'data.frame'))
   expect_equal(freq$Name[freq$Name$word %in% c('late'), 2], 1.285637, tolerance = 1e-5)
-  expect_equal(freq$Short[freq$Short$word %in% c('earliest', 'late'), 2], c(1.253021, 1.190992), tolerance = 1e-5)
+  expect_equal(freq$Short[freq$Short$word %in% c('early', 'late'), 2], c(1.224576, 1.189632), tolerance = 1e-5)
   expect_equal(freq$Name[freq$Name$word %in% c('estrogen'), 2], 2.144721, tolerance = 1e-5)
   expect_equal(freq$Short[freq$Short$word %in% c('estrogen'), 2], 2.098393, tolerance = 1e-5)
   expect_false('HALLMARK' %in% freq$Name$word)
