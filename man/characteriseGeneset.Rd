@@ -28,10 +28,15 @@ with gene sets from the MSigDB. A network of similar gene sets is retrieved
 using this function.
 }
 \examples{
+library(GSEABase)
 data(hgsc)
 
 #create a geneset using one of the Hallmark gene sets
-mySet <- GSEABase::GeneSet(GSEABase::geneIds(hgsc[[2]]), setName = 'MySet')
+mySet <- GeneSet(
+  geneIds(hgsc[[2]]),
+  setName = 'MySet',
+  geneIdType = SymbolIdentifier()
+)
 
 \donttest{
 #characterise the custom gene set

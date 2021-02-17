@@ -36,7 +36,24 @@ NULL
 #'
 characteriseGeneset <- function(gs, thresh = 0.15, measure = c('jaccard', 'ovlapcoef')) {
   measure = match.arg(measure)
-  gsc = msigdb::msigdb.hs.SYM()
+  
+  #retrieve appropriate GeneSetCollection
+  gsc_gs = GSEABase::GeneSetCollection(gs)
+  id = msigdb::getMsigIdType(gsc_gs)
+  org = msigdb::getMsigOrganism(gsc_gs, id)
+  if (org %in% 'hs') {
+    if (is(id, 'SymbolIdentifier')) {
+      gsc = msigdb::msigdb.hs.SYM()
+    } else {
+      gsc = msigdb::msigdb.hs.EZID()
+    }
+  } else {
+    if (is(id, 'SymbolIdentifier')) {
+      gsc = msigdb::msigdb.mm.SYM()
+    } else {
+      gsc = msigdb::msigdb.mm.EZID()
+    }
+  }
   gsc = msigdb::appendKEGG(gsc)
   
   #filter out large and small gene sets
