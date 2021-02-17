@@ -68,5 +68,5 @@ msigdb.mm.SYM = msigdb::appendKEGG(msigdb.mm.SYM)
 idf_hs = computeIdf(msigdb.hs.SYM)
 idf_mm = computeIdf(msigdb.mm.SYM)
 
-# usethis::use_data(idf_hs, idf_mm, internal = TRUE)
+usethis::use_data(idf_hs, idf_mm, internal = TRUE)
 

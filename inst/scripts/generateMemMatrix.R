@@ -48,4 +48,5 @@ computeMemMatrix <- function(msigGsc) {
 mem_mat_hs = computeMemMatrix(msigdb.hs.EZID)
 mem_mat_mm = computeMemMatrix(msigdb.mm.EZID)
 
-usethis::use_data(mem_mat_hs, mem_mat_mm, internal = TRUE)
+usethis::use_data(mem_mat_hs)
+usethis::use_data(mem_mat_mm)
