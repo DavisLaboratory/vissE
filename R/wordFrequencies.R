@@ -19,7 +19,7 @@
 #'
 computeMsigWordFreq <- function(msigGsc, measure = c('tfidf', 'tf'), rmwords = getMsigBlacklist()) {
   measure = match.arg(measure)
-  stopifnot('GeneSetCollection' %in% class(msigGsc))
+  stopifnot(is(msigGsc, 'GeneSetCollection'))
 
   signames = sapply(msigGsc, GSEABase::setName)
   sigdesc_s = sapply(msigGsc, GSEABase::description)

@@ -129,7 +129,7 @@ retrieveMat <- function(gslist, allg, org, idType) {
     mem_mat = mem_mat_mm
   }
   
-  if (class(idType) %in% 'SymbolIdentifier') {
+  if (is(idType, 'SymbolIdentifier')) {
     if (org %in% 'hs') {
       colnames(mem_mat) = as.character(
         AnnotationDbi::mapIds(
