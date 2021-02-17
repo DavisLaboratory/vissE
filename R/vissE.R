@@ -24,17 +24,24 @@
 #'
 "hgsc"
 
-#' An overlap network of signatures in the MSigDB
+#' Binary membership matrix for the Human MSigDB
 #'
-#' The molecular signatures database (MSigDB) is a collection of over 25000 gene
-#' expression signatures. Signatures in v7.2 are divided into 9 categories. This
-#' network represents the precomputed overlap between all non-empty signatures
-#' network represents the pre-computed overlap between all non-empty signatures
-#' in the `msigdb` data. The network was computed using [computeMsigOverlap()]
-#' and [computeMsigNetwork()] functions with default parameters.
-#'
-#' @format An igraph object, containing the overlap network computed using all
-#'   non-empty gene expression signatures in MSigDB.
+#' This object stores the Human molecular signatures database (MSigDB) in binary
+#' format as a membership matrix. Gene signatures are along the rows and Entrez
+#' IDs are along the columns.
+#' @format A dgCMatrix (sparse) object, with gene sets along the rows and Entrez
+#'   IDs along the columns.
 #' @docType data
+#'   
+"mem_mat_hs"
+
+#' Binary membership matrix for the Mouse MSigDB
 #'
-"msigOverlapNetwork"
+#' This object stores the Mouse molecular signatures database (MSigDB) in binary
+#' format as a membership matrix. Gene signatures are along the rows and Entrez
+#' IDs are along the columns.
+#' @format A dgCMatrix (sparse) object, with gene sets along the rows and Entrez
+#'   IDs along the columns.
+#' @docType data
+#'   
+"mem_mat_mm"
