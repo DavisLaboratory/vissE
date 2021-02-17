@@ -1,13 +1,24 @@
-test_that("geneset intersection computation works", {
-  gs1 = list('a' = 1:5, 'b' = 4:8)
-  gs2 = list('c' = 6:9, 'd' = 9:12)
+library(GSEABase)
+library(msigdb)
 
-  expect_equal(intersectSize(gs1)['a', 'b'], 2)
-  expect_equal(intersectSize(gs2)['c', 'd'], 1)
-  expect_equal(intersectSize(gs1, gs2)['b', 'c'], 3)
+test_that("geneset intersection computation works", {
+  g = paste0('ABCB', 1:12)
+  gs1 = GeneSetCollection(
+    GeneSet(g[1:5], setName = 'a', geneIdType = SymbolIdentifier()),
+    GeneSet(g[4:8], setName = 'b', geneIdType = SymbolIdentifier())
+  )
+  gs2 = GeneSetCollection(
+    GeneSet(g[6:9], setName = 'c', geneIdType = SymbolIdentifier()),
+    GeneSet(g[9:12], setName = 'd', geneIdType = SymbolIdentifier())
+  )
+  id = msigdb::getMsigIdType(GeneSetCollection(gs1))
+
+  expect_equal(intersectSize(geneIds(gs1), org = 'hs', idType = id)['a', 'b'], 2)
+  expect_equal(intersectSize(geneIds(gs2), org = 'hs', idType = id)['c', 'd'], 1)
+  expect_equal(intersectSize(geneIds(gs1), geneIds(gs2), org = 'hs', idType = id)['b', 'c'], 3)
 
   #works for single gene sets
-  expect_equal(intersectSize(gs1[2], gs2)['b', 'c'], 3)
+  expect_equal(intersectSize(geneIds(gs1[2]), geneIds(gs2), org = 'hs', idType = id)['b', 'c'], 3)
 })
 
 test_that("geneset overlap computation works", {
