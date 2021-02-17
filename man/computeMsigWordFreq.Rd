@@ -31,6 +31,6 @@ Compute word frequencies for a single MSigDB collection
 }
 \examples{
 data(hgsc)
-freq <- computeMsigWordFreq(hgsc, measure = 'tf')
+freq <- computeMsigWordFreq(hgsc, measure = 'tfidf')
 
 }
