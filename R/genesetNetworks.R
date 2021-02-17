@@ -49,7 +49,7 @@ computeMsigOverlap <- function(msigGsc1, msigGsc2 = NULL, thresh = 0.15, measure
     organism2 = msigdb::getMsigOrganism(msigGsc1, idType2)
     
     #check for concordance
-    stopifnot(class(idType1) == class(idType2))
+    stopifnot(identical(idType1, idType2))
     stopifnot(organism1 == organism2)
   }
 
