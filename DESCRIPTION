@@ -1,6 +1,6 @@
 Package: vissE
 Title: Visualising Set Enrichment Analysis Results
-Version: 0.0.15
+Version: 0.0.16
 Authors@R: 
     person(given = "Dharmesh D.",
            family = "Bhuva",
@@ -32,7 +32,10 @@ Imports:
     ggforce,
     msigdb,
     SnowballC,
-    Matrix
+    Matrix,
+    org.Hs.eg.db,
+    org.Mm.eg.db,
+    AnnotationDbi
 Suggests: 
     testthat,
     ggpubr,
