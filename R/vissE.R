@@ -23,3 +23,25 @@
 #'   collection. Cell systems, 1(6), 417-425.
 #'
 "hgsc"
+
+#' Binary membership matrix for the Human MSigDB
+#'
+#' This object stores the Human molecular signatures database (MSigDB) in binary
+#' format as a membership matrix. Gene signatures are along the rows and Entrez
+#' IDs are along the columns.
+#' @format A dgCMatrix (sparse) object, with gene sets along the rows and Entrez
+#'   IDs along the columns.
+#' @docType data
+#'   
+"mem_mat_hs"
+
+#' Binary membership matrix for the Mouse MSigDB
+#'
+#' This object stores the Mouse molecular signatures database (MSigDB) in binary
+#' format as a membership matrix. Gene signatures are along the rows and Entrez
+#' IDs are along the columns.
+#' @format A dgCMatrix (sparse) object, with gene sets along the rows and Entrez
+#'   IDs along the columns.
+#' @docType data
+#'   
+"mem_mat_mm"
