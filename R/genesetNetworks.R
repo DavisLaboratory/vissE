@@ -26,15 +26,27 @@ NULL
 computeMsigOverlap <- function(msigGsc1, msigGsc2 = NULL, thresh = 0.15, measure = c('jaccard', 'ovlapcoef')) {
   stopifnot(thresh >= 0 & thresh <= 1)
   measure = match.arg(measure)
-
+  
   #empty genesets
   gsc1_lengths = sapply(lapply(msigGsc1, GSEABase::geneIds), length)
   stopifnot(all(gsc1_lengths > 0))
+  
+  #get organism
+  idType1 = msigdb::getMsigIdType(msigGsc1)
+  organism1 = msigdb::getMsigOrganism(msigGsc1, idType1)
 
   if (!is.null(msigGsc2)) {
     #empty genesets
     gsc2_lengths = sapply(lapply(msigGsc2, GSEABase::geneIds), length)
     stopifnot(all(gsc2_lengths > 0))
+    
+    #get organism
+    idType2 = msigdb::getMsigIdType(msigGsc2)
+    organism2 = msigdb::getMsigOrganism(msigGsc1, idType2)
+    
+    #check for concordance
+    stopifnot(idType1 == idType2)
+    stopifnot(organism1 == organism2)
   }
 
   #return empty result if no gene sets are provided
@@ -60,7 +72,7 @@ computeMsigOverlap <- function(msigGsc1, msigGsc2 = NULL, thresh = 0.15, measure
     genes2 = NULL
     len2 = len1
   }
-  ovlap = intersectSize(genes1, genes2)
+  ovlap = intersectSize(genes1, genes2, organism1, idType1)
   ovlap = as.matrix(ovlap)
 
   #overlap coef
@@ -86,42 +98,101 @@ computeMsigOverlap <- function(msigGsc1, msigGsc2 = NULL, thresh = 0.15, measure
   return(mat)
 }
 
-intersectSize <- function(x, y = NULL) {
-  vals = unique(unlist(c(x, y)))
+intersectSize <- function(x, y = NULL, org, idType) {
+  allg = unique(unlist(c(x, y)))
 
-  #create membership matrix for x
-  matx = Matrix::Matrix(
-    0,
-    nrow = length(x),
-    ncol = length(vals),
-    dimnames = list(names(x), vals),
-    sparse = TRUE
-  )
-  for (i in 1:length(x)) {
-    matx[i, ] = as.numeric(vals %in% x[[i]])
-  }
+  #retrieve/create membership matrix for x
+  matx = retrieveMat(x, allg, org, idType)
 
   if (is.null(y)) {
     #compute overlap
     ovlap = Matrix::tcrossprod(matx)
   } else {
-    #create membership matrix for y
-    maty = Matrix::Matrix(
-      0,
-      nrow = length(y),
-      ncol = length(vals),
-      dimnames = list(names(y), vals),
-      sparse = TRUE
-    )
-    for (i in 1:length(y)) {
-      maty[i, ] = as.numeric(vals %in% y[[i]])
-    }
+    #retreive/create membership matrix for x
+    maty = retrieveMat(y, allg, org, idType)
     
     #compute overlap
     ovlap = Matrix::tcrossprod(matx, maty)
   }
 
   return(ovlap)
+}
+
+retrieveMat <- function(gslist, allg, org, idType) {
+  if (org %in% 'hs') {
+    mem_mat = mem_mat_hs
+  } else {
+    mem_mat = mem_mat_mm
+  }
+  
+  if (class(idType) %in% 'SymbolIdentifier') {
+    if (org %in% 'hs') {
+      colnames(mem_mat) = as.character(
+        AnnotationDbi::mapIds(
+          org.Hs.eg.db::org.Hs.eg.db,
+          colnames(mem_mat),
+          'SYMBOL',
+          'ENTREZID'
+        )
+      )
+    } else {
+      colnames(mem_mat) = as.character(
+        AnnotationDbi::mapIds(
+          org.Mm.eg.db::org.Mm.eg.db,
+          colnames(mem_mat),
+          'SYMBOL',
+          'ENTREZID'
+        )
+      )
+    }
+  }
+  
+  #retrieve precomputed results
+  mem_mat = mem_mat[intersect(names(gslist), rownames(mem_mat)), intersect(allg, colnames(mem_mat))]
+  
+  #determine new genes and gene sets
+  newgs = setdiff(names(gslist), rownames(mem_mat))
+  allg = setdiff(allg, colnames(mem_mat))
+  
+  #compute overlap for new gene sets
+  if (length(newgs) > 0) {
+    #initialise
+    gids = colnames(mem_mat)
+    mat = Matrix::Matrix(
+      0,
+      nrow = length(newgs),
+      ncol = ncol(mem_mat),
+      dimnames = list(newgs, gids),
+      sparse = TRUE
+    )
+    #compute membership
+    for (i in 1:length(newgs)) {
+      mat[i, ] = as.numeric(gids %in% gslist[[i]])
+    }
+    #merge
+    mem_mat = rbind(mem_mat, mat)
+  }
+  
+  #compute overlap for new genes
+  if (length(allg) > 0) {
+    #initialise
+    gsnames = rownames(mem_mat)
+    mat = Matrix::Matrix(
+      0,
+      nrow = length(gsnames),
+      ncol = length(allg),
+      dimnames = list(gsnames, allg),
+      sparse = TRUE
+    )
+    #compute membership
+    for (i in 1:length(gsnames)) {
+      mat[i, ] = as.numeric(allg %in% gslist[[i]])
+    }
+    #merge
+    mem_mat = cbind(mem_mat, mat)
+  }
+  
+  return(mem_mat)
 }
 
 #' Compute a network using computed gene set overlap
