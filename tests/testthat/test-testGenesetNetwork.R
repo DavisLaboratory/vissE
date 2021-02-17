@@ -23,16 +23,11 @@ test_that("geneset intersection computation works", {
 
 test_that("geneset overlap computation works", {
   #empty collections
-  nullgsc = GSEABase::GeneSetCollection(list())
-  ov = computeMsigOverlap(nullgsc)
-  expect_equal(nrow(ov), 0)
-  expect_equal(ncol(ov), 3)
-  expect_error(computeMsigOverlap(nullgsc, thresh = 2))
-  expect_error(computeMsigOverlap(nullgsc, thresh = -2))
-  expect_error(computeMsigOverlap(nullgsc, measure = 'euclidean'))
+  nullgsc = GeneSetCollection(list())
+  expect_error(computeMsigOverlap(nullgsc))
 
   #non-empty gscs but empty gene sets
-  emptygsc = GSEABase::GeneSetCollection(GSEABase::GeneSet())
+  emptygsc = GeneSetCollection(GeneSet(setName = 'A', geneIdType = SymbolIdentifier()))
   expect_error(computeMsigOverlap(emptygsc, thresh = 1))
 
   emptygsc = GSEABase::GeneSetCollection(GSEABase::GeneSet(setName = 'a'),
@@ -50,8 +45,8 @@ test_that("geneset overlap computation works", {
   expect_equal(round(ov_oc[, 3], 3), 0.505)
 
   #hallmark geneset
-  expect_equal(nrow(computeMsigOverlap(hgsc, nullgsc)), 0)
-  expect_equal(ncol(computeMsigOverlap(hgsc, nullgsc)), 3)
+  expect_error(nrow(computeMsigOverlap(hgsc, nullgsc)))
+  expect_error(ncol(computeMsigOverlap(hgsc, nullgsc)))
   expect_equal(nrow(computeMsigOverlap(estgsc)), 1)
   expect_equal(nrow(computeMsigOverlap(hgsc, estgsc)), 4)
   expect_equal(nrow(computeMsigOverlap(hgsc)), 6)
@@ -60,12 +55,6 @@ test_that("geneset overlap computation works", {
 })
 
 test_that("overlap network computation works", {
-  #empty collections
-  nullgsc = GSEABase::GeneSetCollection(list())
-  ov = computeMsigOverlap(nullgsc)
-
-  expect_error(computeMsigNetwork(ov, hgsc))
-
   #hallmark geneset
   data("hgsc")
   ov = computeMsigOverlap(hgsc)

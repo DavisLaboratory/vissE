@@ -24,6 +24,10 @@ NULL
 #' ovlap <- computeMsigOverlap(hgsc)
 #'
 computeMsigOverlap <- function(msigGsc1, msigGsc2 = NULL, thresh = 0.15, measure = c('jaccard', 'ovlapcoef')) {
+  stopifnot(length(msigGsc1) > 0)
+  if (!is.null(msigGsc2))
+    stopifnot(length(msigGsc2) > 0)
+    
   stopifnot(thresh >= 0 & thresh <= 1)
   measure = match.arg(measure)
   
@@ -45,7 +49,7 @@ computeMsigOverlap <- function(msigGsc1, msigGsc2 = NULL, thresh = 0.15, measure
     organism2 = msigdb::getMsigOrganism(msigGsc1, idType2)
     
     #check for concordance
-    stopifnot(idType1 == idType2)
+    stopifnot(class(idType1) == class(idType2))
     stopifnot(organism1 == organism2)
   }
 
