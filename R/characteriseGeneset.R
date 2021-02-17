@@ -18,12 +18,17 @@ NULL
 #' @export
 #'
 #' @examples
+#' library(GSEABase)
 #' data(hgsc)
 #'
 #' #create a geneset using one of the Hallmark gene sets
-#' mySet <- GSEABase::GeneSet(GSEABase::geneIds(hgsc[[2]]), setName = 'MySet')
+#' mySet <- GeneSet(
+#'   geneIds(hgsc[[2]]),
+#'   setName = 'MySet',
+#'   geneIdType = SymbolIdentifier()
+#' )
 #'
-#' \dontrun{
+#' \donttest{
 #' #characterise the custom gene set
 #' ig <- characteriseGeneset(mySet)
 #' plotMsigNetwork(ig)
@@ -46,8 +51,8 @@ characteriseGeneset <- function(gs, thresh = 0.15, measure = c('jaccard', 'ovlap
   ovmat = ovmat[ovmat$weight > thresh, ]
   
   #induce graph
-  nb = GSEABase::GeneSetCollection(gsc[nb])
-  ovmat = computeMsigOverlap(nb, thresh, measure)
+  nb = GSEABase::GeneSetCollection(gsc[ovmat[, 1]])
+  ovmat = computeMsigOverlap(nb, thresh = thresh, measure = measure)
   nbnet = computeMsigNetwork(ovmat, gsc)
   
   return(nbnet)

@@ -33,7 +33,7 @@ data(hgsc)
 #create a geneset using one of the Hallmark gene sets
 mySet <- GSEABase::GeneSet(GSEABase::geneIds(hgsc[[2]]), setName = 'MySet')
 
-\dontrun{
+\donttest{
 #characterise the custom gene set
 ig <- characteriseGeneset(mySet)
 plotMsigNetwork(ig)
