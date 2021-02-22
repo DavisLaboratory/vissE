@@ -76,9 +76,9 @@ plotMsigWordcloud <-
 #'   specifying node groupings. Each element of the list represent a group and
 #'   contains a character vector with node names. Up to 12 groups can be
 #'   visualised in the plot.
-#' @param enrichStat a numeric, statistic to project onto the nodes. These could
-#'   be p-values, log fold-changes or gene set score from a singscore-based
-#'   analysis.
+#' @param genesetStat a numeric, statistic to project onto the nodes. These
+#'   could be p-values, log fold-changes or gene set score from a
+#'   singscore-based analysis.
 #' @param nodeSF a numeric, indicating the scaling factor to apply to node
 #'   sizes.
 #' @param edgeSF a numeric, indicating the scaling factor to apply to edge
@@ -99,11 +99,11 @@ plotMsigWordcloud <-
 #' groups <- list('g1' = c(1, 9), 'g2' = c(5, 6))
 #'
 #' plotMsigNetwork(ig, markGroups = groups)
-#'
+#' 
 plotMsigNetwork <-
   function(ig,
            markGroups = NULL,
-           enrichStat = NULL,
+           genesetStat = NULL,
            nodeSF = 1,
            edgeSF = 1,
            lytFunc = igraph::layout_with_graphopt,
@@ -112,7 +112,7 @@ plotMsigNetwork <-
   stopifnot(edgeSF > 0)
   stopifnot(is.function(lytFunc))
   stopifnot(is.null(markGroups) | is.list(markGroups))
-  stopifnot(is.null(enrichStat) | !is.null(names(enrichStat)))
+  stopifnot(is.null(genesetStat) | !is.null(names(genesetStat)))
 
   if (length(markGroups) > 12) {
     warning("Only the first 12 components will be plot")
@@ -180,7 +180,7 @@ plotMsigNetwork <-
       plot.title = element_text(hjust = 0.5, size = rel(1.5))
     )
 
-  if (is.null(enrichStat)) {
+  if (is.null(genesetStat)) {
     p1 = p1 +
       #plot nodes
       ggplot2::geom_point(
@@ -194,14 +194,14 @@ plotMsigNetwork <-
       guides(fill = guide_legend(ncol = 4, override.aes = list(size = 5)))
   } else {
     #add stats
-    commongs = intersect(nodedf$name, names(enrichStat))
-    nodedf$EnrichStat = NA
-    nodedf[commongs, 'EnrichStat'] = enrichStat[commongs]
+    commongs = intersect(nodedf$name, names(genesetStat))
+    nodedf$genesetStat = NA
+    nodedf[commongs, 'genesetStat'] = genesetStat[commongs]
 
     p1 = p1 +
       #plot nodes
       ggplot2::geom_point(
-        aes(x, y, fill = EnrichStat, size = Size),
+        aes(x, y, fill = genesetStat, size = Size),
         alpha = 0.75,
         shape = 21,
         stroke = 0.2 * nodeSF,

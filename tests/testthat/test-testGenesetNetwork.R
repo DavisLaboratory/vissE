@@ -84,7 +84,7 @@ test_that("plot functions work", {
   expect_error(plotMsigNetwork(ig, edgeSF = -1))
   expect_error(plotMsigNetwork(ig, lytFunc = data.frame()))
   expect_error(plotMsigNetwork(ig, markGroups = character()))
-  expect_error(plotMsigNetwork(ig, enrichStat = c(1)))
+  expect_error(plotMsigNetwork(ig, genesetStat = c(1)))
 })
 
 test_that("geneset neighbourhood works", {
