@@ -4,7 +4,7 @@
 \alias{characteriseGeneset}
 \title{Functionally characterise a list of genes}
 \usage{
-characteriseGeneset(gs, thresh = 0.15, measure = c("jaccard", "ovlapcoef"))
+characteriseGeneset(gs, thresh = 0.2, measure = c("ovlapcoef", "jaccard"))
 }
 \arguments{
 \item{gs}{a GeneSet object, representing the list of genes that need to be

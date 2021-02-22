@@ -58,15 +58,32 @@ computeIdf <- function(msigGsc) {
 # msigdb.mm.SYM = msigdb::msigdb.mm.SYM()
 e = new.env()
 load('../msigdb/msigdb.hs.SYM.rda', envir = e)
+load('../msigdb/msigdb.hs.EZID.rda', envir = e)
 load('../msigdb/msigdb.mm.SYM.rda', envir = e)
+load('../msigdb/msigdb.mm.EZID.rda', envir = e)
 msigdb.hs.SYM = e$msigdb.hs.SYM
+msigdb.hs.EZID = e$msigdb.hs.EZID
 msigdb.mm.SYM = e$msigdb.mm.SYM
+msigdb.mm.EZID = e$msigdb.mm.EZID
 
 msigdb.hs.SYM = msigdb::appendKEGG(msigdb.hs.SYM)
+msigdb.hs.EZID = msigdb::appendKEGG(msigdb.hs.EZID)
 msigdb.mm.SYM = msigdb::appendKEGG(msigdb.mm.SYM)
+msigdb.mm.EZID = msigdb::appendKEGG(msigdb.mm.EZID)
 
 idf_hs = computeIdf(msigdb.hs.SYM)
 idf_mm = computeIdf(msigdb.mm.SYM)
 
-usethis::use_data(idf_hs, idf_mm, internal = TRUE)
+#----namemap for membership matrix----
+mem_mat_hs_map = unique(unlist(geneIds(msigdb.hs.SYM)))
+mem_mat_mm_map = unique(unlist(geneIds(msigdb.mm.SYM)))
+
+usethis::use_data(
+  idf_hs,
+  idf_mm,
+  mem_mat_hs_map,
+  mem_mat_mm_map,
+  internal = TRUE,
+  overwrite = TRUE
+)
 

@@ -131,23 +131,9 @@ retrieveMat <- function(gslist, allg, org, idType) {
   
   if (is(idType, 'SymbolIdentifier')) {
     if (org %in% 'hs') {
-      colnames(mem_mat) = as.character(
-        AnnotationDbi::mapIds(
-          org.Hs.eg.db::org.Hs.eg.db,
-          colnames(mem_mat),
-          'SYMBOL',
-          'ENTREZID'
-        )
-      )
+      colnames(mem_mat) = mem_mat_hs_map
     } else {
-      colnames(mem_mat) = as.character(
-        AnnotationDbi::mapIds(
-          org.Mm.eg.db::org.Mm.eg.db,
-          colnames(mem_mat),
-          'SYMBOL',
-          'ENTREZID'
-        )
-      )
+      colnames(mem_mat) = mem_mat_mm_map
     }
   }
   
