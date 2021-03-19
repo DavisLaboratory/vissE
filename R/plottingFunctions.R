@@ -249,6 +249,7 @@ plotMsigNetwork <-
 #' @param geneStat a named numeric, containing the statistic to be displayed.
 #'   The vector must be named with either gene Symbols or Entrez IDs depending
 #'   on annotations in msigGsc.
+#' @param statName a character, specifying the name of the statistic.
 #' @param topN a numeric, specifying the number of genes to label. The top genes
 #'   are those with the largest count and statistic.
 #'
@@ -272,7 +273,7 @@ plotMsigNetwork <-
 #' #plot
 #' plotGeneStats(gstats, hgsc, groups)
 #' 
-plotGeneStats <- function(geneStat, msigGsc, groups, topN = 10) {
+plotGeneStats <- function(geneStat, msigGsc, groups, statName = 'Gene-level statistic', topN = 10) {
   #compute frequencies
   genefreq = plyr::ldply(groups, function (x) {
     gc = table(unlist(lapply(msigGsc[x], GSEABase::geneIds)))
@@ -297,6 +298,8 @@ plotGeneStats <- function(geneStat, msigGsc, groups, topN = 10) {
     ggplot2::geom_jitter(data = genefreq[!genefreq$isLab, ], shape = '.', colour = 'gray80') +
     ggplot2::geom_jitter(data = genefreq[genefreq$isLab, ]) +
     ggrepel::geom_text_repel(aes(label = Gene), data = genefreq[genefreq$isLab, ]) +
+    ggplot2::xlab('Gene-set count') +
+    ggplot2::ylab(statName) +
     ggplot2::facet_wrap(~ Group, scales = 'free_x') +
     bhuvad_theme()
   
