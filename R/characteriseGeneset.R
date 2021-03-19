@@ -43,15 +43,15 @@ characteriseGeneset <- function(gs, thresh = 0.2, measure = c('ovlapcoef', 'jacc
   org = msigdb::getMsigOrganism(gsc_gs, id)
   if (org %in% 'hs') {
     if (is(id, 'SymbolIdentifier')) {
-      gsc = msigdb::msigdb.hs.SYM()
+      gsc = msigdb::msigdb.v7.2.hs.SYM()
     } else {
-      gsc = msigdb::msigdb.hs.EZID()
+      gsc = msigdb::msigdb.v7.2.hs.EZID()
     }
   } else {
     if (is(id, 'SymbolIdentifier')) {
-      gsc = msigdb::msigdb.mm.SYM()
+      gsc = msigdb::msigdb.v7.2.mm.SYM()
     } else {
-      gsc = msigdb::msigdb.mm.EZID()
+      gsc = msigdb::msigdb.v7.2.mm.EZID()
     }
   }
   gsc = msigdb::appendKEGG(gsc)

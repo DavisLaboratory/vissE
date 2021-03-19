@@ -54,29 +54,22 @@ computeIdf <- function(msigGsc) {
   return(idfs)
 }
 
-# msigdb.hs.SYM = msigdb::msigdb.hs.SYM()
-# msigdb.mm.SYM = msigdb::msigdb.mm.SYM()
-e = new.env()
-load('../msigdb/msigdb.hs.SYM.rda', envir = e)
-load('../msigdb/msigdb.hs.EZID.rda', envir = e)
-load('../msigdb/msigdb.mm.SYM.rda', envir = e)
-load('../msigdb/msigdb.mm.EZID.rda', envir = e)
-msigdb.hs.SYM = e$msigdb.hs.SYM
-msigdb.hs.EZID = e$msigdb.hs.EZID
-msigdb.mm.SYM = e$msigdb.mm.SYM
-msigdb.mm.EZID = e$msigdb.mm.EZID
+msigdb.v7.2.hs.SYM = msigdb::msigdb.v7.2.hs.SYM()
+msigdb.v7.2.mm.SYM = msigdb::msigdb.v7.2.mm.SYM()
+msigdb.v7.2.hs.EZID = msigdb::msigdb.v7.2.hs.EZID()
+msigdb.v7.2.mm.EZID = msigdb::msigdb.v7.2.mm.EZID()
 
-msigdb.hs.SYM = msigdb::appendKEGG(msigdb.hs.SYM)
-msigdb.hs.EZID = msigdb::appendKEGG(msigdb.hs.EZID)
-msigdb.mm.SYM = msigdb::appendKEGG(msigdb.mm.SYM)
-msigdb.mm.EZID = msigdb::appendKEGG(msigdb.mm.EZID)
+msigdb.v7.2.hs.SYM = msigdb::appendKEGG(msigdb.v7.2.hs.SYM)
+msigdb.v7.2.hs.EZID = msigdb::appendKEGG(msigdb.v7.2.hs.EZID)
+msigdb.v7.2.mm.SYM = msigdb::appendKEGG(msigdb.v7.2.mm.SYM)
+msigdb.v7.2.mm.EZID = msigdb::appendKEGG(msigdb.v7.2.mm.EZID)
 
-idf_hs = computeIdf(msigdb.hs.SYM)
-idf_mm = computeIdf(msigdb.mm.SYM)
+idf_hs = computeIdf(msigdb.v7.2.hs.SYM)
+idf_mm = computeIdf(msigdb.v7.2.mm.SYM)
 
 #----namemap for membership matrix----
-mem_mat_hs_map = unique(unlist(geneIds(msigdb.hs.SYM)))
-mem_mat_mm_map = unique(unlist(geneIds(msigdb.mm.SYM)))
+mem_mat_hs_map = unique(unlist(geneIds(msigdb.v7.2.hs.SYM)))
+mem_mat_mm_map = unique(unlist(geneIds(msigdb.v7.2.mm.SYM)))
 
 usethis::use_data(
   idf_hs,

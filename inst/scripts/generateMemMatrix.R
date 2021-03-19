@@ -2,18 +2,12 @@ library(msigdb)
 library(GSEABase)
 
 #----load collections----
-# msigdb.hs.SYM = msigdb.hs.SYM()
-# msigdb.mm.SYM = msigdb.mm.SYM()
-
-e = new.env()
-load('../msigdb/msigdb.hs.EZID.rda', envir = e)
-load('../msigdb/msigdb.mm.EZID.rda', envir = e)
-msigdb.hs.EZID = e$msigdb.hs.EZID
-msigdb.mm.EZID = e$msigdb.mm.EZID
+msigdb.v7.2.hs.SYM = msigdb.v7.2.hs.SYM()
+msigdb.v7.2.mm.SYM = msigdb.v7.2.mm.SYM()
 
 #----append KEGG----
-msigdb.hs.EZID = appendKEGG(msigdb.hs.EZID)
-msigdb.mm.EZID = appendKEGG(msigdb.mm.EZID)
+msigdb.v7.2.hs.EZID = appendKEGG(msigdb.v7.2.hs.EZID)
+msigdb.v7.2.mm.EZID = appendKEGG(msigdb.v7.2.mm.EZID)
 
 computeMemMatrix <- function(msigGsc) {
   msigGsc = GeneSetCollection(msigGsc)
@@ -45,8 +39,8 @@ computeMemMatrix <- function(msigGsc) {
   return(matx)
 }
 
-mem_mat_hs = computeMemMatrix(msigdb.hs.EZID)
-mem_mat_mm = computeMemMatrix(msigdb.mm.EZID)
+mem_mat_hs = computeMemMatrix(msigdb.v7.2.hs.EZID)
+mem_mat_mm = computeMemMatrix(msigdb.v7.2.mm.EZID)
 
 usethis::use_data(mem_mat_hs)
 usethis::use_data(mem_mat_mm)
