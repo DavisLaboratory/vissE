@@ -4,7 +4,13 @@
 \alias{plotGeneStats}
 \title{Plot gene statistics for clusters of gene sets}
 \usage{
-plotGeneStats(geneStat, msigGsc, groups, topN = 10)
+plotGeneStats(
+  geneStat,
+  msigGsc,
+  groups,
+  statName = "Gene-level statistic",
+  topN = 10
+)
 }
 \arguments{
 \item{geneStat}{a named numeric, containing the statistic to be displayed.
@@ -18,6 +24,8 @@ files downloaded from MSigDB.}
 \item{groups}{a named list, of character vectors or numeric indices
 specifying node groupings. Each element of the list represent a group and
 contains a character vector with node names.}
+
+\item{statName}{a character, specifying the name of the statistic.}
 
 \item{topN}{a numeric, specifying the number of genes to label. The top genes
 are those with the largest count and statistic.}

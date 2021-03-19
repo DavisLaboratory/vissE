@@ -282,19 +282,19 @@ plotGeneStats <- function(geneStat, msigGsc, groups, statName = 'Gene-level stat
   }, .id = 'Group')
   
   #add stats
-  genefreq$Stat = geneStat[genefreq$Gene]
-  stopifnot(any(!is.na(genefreq$Stat)))
+  genefreq$GeneStat = geneStat[genefreq$Gene]
+  stopifnot(any(!is.na(genefreq$GeneStat)))
   
   #identify outliers
   genefreq = plyr::ddply(genefreq, 'Group', function(x) {
-    x = x[!is.na(x$Stat) & !is.infinite(x$Stat), ]
-    st = rank(abs(x$Stat)) * rank(x$Count)
+    x = x[!is.na(x$GeneStat) & !is.infinite(x$GeneStat), ]
+    st = rank(abs(x$GeneStat)) * rank(x$Count)
     x$isLab = rank(-st) <= topN
     return(x)
   })
   
   #plot
-  p1 = ggplot(genefreq, aes(Count, Stat)) +
+  p1 = ggplot(genefreq, aes(Count, GeneStat)) +
     ggplot2::geom_jitter(data = genefreq[!genefreq$isLab, ], shape = '.', colour = 'gray80') +
     ggplot2::geom_jitter(data = genefreq[genefreq$isLab, ]) +
     ggrepel::geom_text_repel(aes(label = Gene), data = genefreq[genefreq$isLab, ]) +
