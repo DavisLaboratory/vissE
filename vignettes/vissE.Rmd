@@ -10,6 +10,8 @@ output:
     number_sections: yes
     fig_caption: yes
     df_print: paged
+abstract: > 
+  This package enables the interpretation and analysis of results from a gene set enrichment analysis using network-based and text-mining approaches. Most enrichment analyses result in large lists of significant gene sets that are difficult to interpret. Tools in this package help build a similarity-based network of significant gene sets from a gene set enrichment analysis that can then be investigated for their biological function using text-mining approaches.
 vignette: >
   %\VignetteIndexEntry{vissE}
   %\VignetteEngine{knitr::rmarkdown}
@@ -19,6 +21,8 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
   comment = "#>"
 )
 ```
@@ -37,12 +41,174 @@ In addition to these analyses, it provides visualisations to assist the users in
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
-BiocManager::install("vissE")
+# BiocManager::install("vissE")
 ```
 
 # Summarising the results of a gene-set enrichment analysis
 
+Often, the results of a gene-set enrichment analysis (be it an over representation analysis of a functional class scoring approach) is a list of gene-sets that are accompanied by their statistics and p-values or false discovery rates (FDR). These results are mostly scanned through by biologists who then extract relevant themes pertaining to the experiment of interest. The approach here, vissE, will allow automated extraction of themes.
+
+The example below can be used with the results of any enrichment analysis. The data below is simulated to demonstrate the workflow.
+
+```{r}
+library(msigdb)
+library(GSEABase)
+
+#load the MSigDB from the msigdb package
+msigdb_hs = msigdb.v7.2.hs.SYM()
+#append KEGG gene-sets
+msigdb_hs = appendKEGG(msigdb_hs)
+
+#randomly sample gene-sets to simulate the results of an enrichment analysis
+set.seed(360)
+geneset_res = sample(sapply(msigdb_hs, setName), 2500)
+
+#create a GeneSetCollection using the gene-set analysis results
+geneset_gsc = msigdb_hs[geneset_res]
+geneset_gsc
+```
+
+A vissE analysis involves 3 steps:
+
+1.  Compute gene-set overlaps and the gene-set overlap network
+2.  Identify clusters of gene-sets based on their overlap
+3.  Characterise clusters using text mining
+4.  (Optional) Visualise gene-level statistics
+
+## Compute gene-set overlap
+
+The default approach to computing overlaps is using the Jaccard index. Overlap is computed based on the gene overlap between gene-sets. Alternatively, the overlap coefficient can be used. The latter can be used to highlight hierarchical overlaps (such as those present in the gene ontology).
+
+```{r}
+library(vissE)
+
+#compute gene-set overlap
+gs_ovlap = computeMsigOverlap(geneset_gsc, thresh = 0.25)
+#create an overlap network
+gs_ovnet = computeMsigNetwork(gs_ovlap, msigdb_hs)
+#plot the network
+set.seed(36) #set seed for reproducible layout
+plotMsigNetwork(gs_ovnet)
+```
+
+The overlap network plot above is annotated using the MSigDB category. If gene-set statistics are available, they can be projected onto the network too. Gene-set statistics can be passed onto the plotting function as a named vector.
+
+```{r}
+#simulate gene-set statistics
+geneset_stats = rnorm(2500)
+names(geneset_stats) = geneset_res
+head(geneset_stats)
+
+#plot the network and overlay gene-set statistics
+set.seed(36) #set seed for reproducible layout
+plotMsigNetwork(gs_ovnet, genesetStat = geneset_stats)
+```
+
+## Identify clusters of gene-sets
+
+Related gene-sets likely represent related processes. The next step is to identify clusters of gene-sets so that they can be assessed for biological themes. The specific clustering approach can be selected by the user though we recommend graph clustering approaches to use the information provided in the overlap graph. We recommend using the `igraph::cluster_walktrap()` algorithm as it works well with dense graphs. Many other algorithms are implemented in the igraph package and these can be used instead of the walktrap algorithm.
+
+```{r}
+library(igraph)
+
+#identify clusters
+grps = cluster_walktrap(gs_ovnet)
+#extract clustering results
+grps = groups(grps)
+#sort by cluster size
+grps = grps[order(sapply(grps, length), decreasing = TRUE)]
+#plot the top 12 clusters
+set.seed(36) #set seed for reproducible layout
+plotMsigNetwork(gs_ovnet, markGroups = grps[1:6], genesetStat = geneset_stats)
+```
+
+## Characterise gene-set clusters
+
+Gene-set clusters identified can be assessed for their biological similarities using text-mining approaches. Here, we perform a frequency analysis (adjusted for using the inverse document frequency) on the gene-set names or their short descriptions to assess recurring biological themes in clusters. These results are then presented as word clouds.
+
+```{r}
+#compute and plot the results of text-mining
+#using gene-set Names
+plotMsigWordcloud(msigdb_hs, grps[1:6], type = 'Name')
+#using gene-set Short descriptions
+plotMsigWordcloud(msigdb_hs, grps[1:6], type = 'Short')
+```
+
+## Visualise gene-level statistics for gene-set clusters
+
+Gene-level statistics for each gene-set cluster can be visualised to better understand the genes contributing to significance of gene-sets. Gene-level statistics can be passed onto the plotting function as a named vector. A jitter is applied on the x-axis (due to its discrete nature).
+
+```{r}
+library(ggplot2)
+
+#simulate gene-set statistics
+set.seed(36)
+genes = unique(unlist(geneIds(geneset_gsc)))
+gene_stats = rnorm(length(genes))
+names(gene_stats) = genes
+head(gene_stats)
+
+#plot the gene-level statistics
+plotGeneStats(gene_stats, msigdb_hs, grps[1:6]) +
+  geom_hline(yintercept = 0, colour = 2, lty = 2)
+```
+
+## Combine results to interpret results
+
+Results of a vissE analysis are best presented and interpreted as paneled plots that combine all of the above plots. This allows for collective interpretation of the gene-set clusters.
+
+```{r fig.width=12, fig.height=5}
+library(ggpubr)
+
+#create independent plots
+set.seed(36) #set seed for reproducible layout
+p1 = plotMsigWordcloud(msigdb_hs, grps[1:6], type = 'Name')
+p2 = plotMsigNetwork(gs_ovnet, markGroups = grps[1:6], genesetStat = geneset_stats)
+p3 = plotGeneStats(gene_stats, msigdb_hs, grps[1:6]) +
+  geom_hline(yintercept = 0, colour = 2, lty = 2)
+
+#combine using functions from ggpubr
+ggarrange(p1, p2, p3, ncol = 3, common.legend = TRUE, legend = 'bottom')
+```
+
 # Characterise a gene list
+
+An alternative application of this package is to characterise a gene list based on similarity with all other gene-sets in the MSigDB. Below, we demonstrate how a list of estrogen response genes can be characterised using this approach.
+
+```{r}
+#retrieve hallmarks gene-sets from this package
+data(hgsc)
+#create a query using Estrogen response genes
+dnarep_genes = geneIds(hgsc[['HALLMARK_DNA_REPAIR']])
+#create a GeneSet object using the query
+dnarep_gs = GeneSet(dnarep_genes, setName = 'DNA_REPAIR_GENES', geneIdType = SymbolIdentifier())
+```
+
+First we generate a similarity network using the gene list as a query.
+
+```{r}
+sim_ovnet = characteriseGeneset(dnarep_gs)
+#plot the network
+set.seed(36) #set seed for reproducible layout
+plotMsigNetwork(sim_ovnet)
+```
+
+Next, we follow a similar workflow to the previous section whereby gene-set clusters are first, identified, then characterised.
+
+```{r fig.width=8, fig.height=5}
+#identify clusters
+grps = cluster_walktrap(sim_ovnet)
+#extract clustering results
+grps = groups(grps)
+#sort by cluster size
+grps = grps[order(sapply(grps, length), decreasing = TRUE)]
+
+#compute and plot the results of text-mining
+p1 = plotMsigWordcloud(msigdb_hs, grps, type = 'Name')
+set.seed(36) #set seed for reproducible layout
+p2 = plotMsigNetwork(sim_ovnet, markGroups = grps)
+ggarrange(p1, p2, ncol = 2, common.legend = TRUE, legend = 'bottom')
+```
 
 # Session information
 
