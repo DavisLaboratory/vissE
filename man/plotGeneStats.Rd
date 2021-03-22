@@ -9,7 +9,7 @@ plotGeneStats(
   msigGsc,
   groups,
   statName = "Gene-level statistic",
-  topN = 10
+  topN = 5
 )
 }
 \arguments{

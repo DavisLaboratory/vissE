@@ -273,7 +273,7 @@ plotMsigNetwork <-
 #' #plot
 #' plotGeneStats(gstats, hgsc, groups)
 #' 
-plotGeneStats <- function(geneStat, msigGsc, groups, statName = 'Gene-level statistic', topN = 10) {
+plotGeneStats <- function(geneStat, msigGsc, groups, statName = 'Gene-level statistic', topN = 5) {
   #compute frequencies
   genefreq = plyr::ldply(groups, function (x) {
     gc = table(unlist(lapply(msigGsc[x], GSEABase::geneIds)))
