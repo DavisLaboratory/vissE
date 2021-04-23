@@ -10,6 +10,9 @@ NULL
 #'
 #' @param gs a GeneSet object, representing the list of genes that need to be
 #'   characterised.
+#' @param gscolcs a character, listing the MSigDB collections to use as a
+#'   background (defaults to h, c2, and c5). Collection types can be retrieved
+#'   using [msigdb::listCollections()].
 #'
 #' @inheritParams computeMsigOverlap
 #'
@@ -33,8 +36,8 @@ NULL
 #' ig <- characteriseGeneset(mySet)
 #' plotMsigNetwork(ig)
 #' }
-#'
-characteriseGeneset <- function(gs, thresh = 0.2, measure = c('ovlapcoef', 'jaccard')) {
+#' 
+characteriseGeneset <- function(gs, thresh = 0.2, measure = c('ovlapcoef', 'jaccard'), gscolcs = c('h', 'c2', 'c5')) {
   measure = match.arg(measure)
   
   #retrieve appropriate GeneSetCollection
@@ -55,6 +58,10 @@ characteriseGeneset <- function(gs, thresh = 0.2, measure = c('ovlapcoef', 'jacc
     }
   }
   gsc = msigdb::appendKEGG(gsc)
+  
+  #subset collections to use
+  stopifnot(all(gscolcs %in% msigdb::listCollections(gsc)))
+  gsc = msigdb::subsetCollection(gsc, gscolcs)
   
   #filter out large and small gene sets
   len = sapply(lapply(gsc, GSEABase::geneIds), length)

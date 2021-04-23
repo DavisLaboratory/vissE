@@ -4,7 +4,12 @@
 \alias{characteriseGeneset}
 \title{Functionally characterise a list of genes}
 \usage{
-characteriseGeneset(gs, thresh = 0.2, measure = c("ovlapcoef", "jaccard"))
+characteriseGeneset(
+  gs,
+  thresh = 0.2,
+  measure = c("ovlapcoef", "jaccard"),
+  gscolcs = c("h", "c2", "c5")
+)
 }
 \arguments{
 \item{gs}{a GeneSet object, representing the list of genes that need to be
@@ -16,6 +21,10 @@ sets.}
 \item{measure}{a character, specifying the similarity measure to use:
 \code{jaccard} for the Jaccard Index and \code{ovlapcoef} for the Overlap
 Coefficient.}
+
+\item{gscolcs}{a character, listing the MSigDB collections to use as a
+background (defaults to h, c2, and c5). Collection types can be retrieved
+using \code{\link[msigdb:listCollections]{msigdb::listCollections()}}.}
 }
 \value{
 an igraph object, containing gene sets that are similar to the query
