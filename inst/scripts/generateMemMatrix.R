@@ -2,15 +2,14 @@ library(msigdb)
 library(GSEABase)
 
 #----load collections----
-msigdb.v7.2.hs.SYM = msigdb.v7.2.hs.SYM()
-msigdb.v7.2.mm.SYM = msigdb.v7.2.mm.SYM()
+msigdb.hs = msigdb.v7.2.hs.EZID()
+msigdb.mm = msigdb.v7.2.mm.EZID()
 
 #----append KEGG----
-msigdb.v7.2.hs.EZID = appendKEGG(msigdb.v7.2.hs.EZID)
-msigdb.v7.2.mm.EZID = appendKEGG(msigdb.v7.2.mm.EZID)
+msigdb.hs = appendKEGG(msigdb.hs)
+msigdb.mm = appendKEGG(msigdb.mm)
 
 computeMemMatrix <- function(msigGsc) {
-  msigGsc = GeneSetCollection(msigGsc)
   x = geneIds(msigGsc)
   vals = unique(unlist(x))
   
@@ -39,8 +38,9 @@ computeMemMatrix <- function(msigGsc) {
   return(matx)
 }
 
-mem_mat_hs = computeMemMatrix(msigdb.v7.2.hs.EZID)
-mem_mat_mm = computeMemMatrix(msigdb.v7.2.mm.EZID)
+selcolc = c('h', 'c2', 'c5')
+mem_mat_hs = computeMemMatrix(subsetCollection(msigdb.hs, selcolc))
+mem_mat_mm = computeMemMatrix(subsetCollection(msigdb.mm, selcolc))
 
 usethis::use_data(mem_mat_hs)
 usethis::use_data(mem_mat_mm)

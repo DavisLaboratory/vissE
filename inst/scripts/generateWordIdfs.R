@@ -54,22 +54,19 @@ computeIdf <- function(msigGsc) {
   return(idfs)
 }
 
-msigdb.v7.2.hs.SYM = msigdb::msigdb.v7.2.hs.SYM()
-msigdb.v7.2.mm.SYM = msigdb::msigdb.v7.2.mm.SYM()
-msigdb.v7.2.hs.EZID = msigdb::msigdb.v7.2.hs.EZID()
-msigdb.v7.2.mm.EZID = msigdb::msigdb.v7.2.mm.EZID()
+msigdb.hs = msigdb::msigdb.v7.2.hs.SYM()
+msigdb.mm = msigdb::msigdb.v7.2.mm.SYM()
 
-msigdb.v7.2.hs.SYM = msigdb::appendKEGG(msigdb.v7.2.hs.SYM)
-msigdb.v7.2.hs.EZID = msigdb::appendKEGG(msigdb.v7.2.hs.EZID)
-msigdb.v7.2.mm.SYM = msigdb::appendKEGG(msigdb.v7.2.mm.SYM)
-msigdb.v7.2.mm.EZID = msigdb::appendKEGG(msigdb.v7.2.mm.EZID)
+msigdb.hs = msigdb::appendKEGG(msigdb.hs)
+msigdb.mm = msigdb::appendKEGG(msigdb.mm)
 
-idf_hs = computeIdf(msigdb.v7.2.hs.SYM)
-idf_mm = computeIdf(msigdb.v7.2.mm.SYM)
+selcolc = c('h', 'c2', 'c5')
+idf_hs = computeIdf(subsetCollection(msigdb.hs, selcolc))
+idf_mm = computeIdf(subsetCollection(msigdb.mm, selcolc))
 
 #----namemap for membership matrix----
-mem_mat_hs_map = unique(unlist(geneIds(msigdb.v7.2.hs.SYM)))
-mem_mat_mm_map = unique(unlist(geneIds(msigdb.v7.2.mm.SYM)))
+mem_mat_hs_map = unique(unlist(geneIds(subsetCollection(msigdb.hs, selcolc))))
+mem_mat_mm_map = unique(unlist(geneIds(subsetCollection(msigdb.mm, selcolc))))
 
 usethis::use_data(
   idf_hs,
