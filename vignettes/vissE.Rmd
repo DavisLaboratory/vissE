@@ -41,7 +41,7 @@ In addition to these analyses, it provides visualisations to assist the users in
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
-# BiocManager::install("vissE")
+BiocManager::install("vissE")
 ```
 
 # Summarising the results of a gene-set enrichment analysis
@@ -58,6 +58,8 @@ library(GSEABase)
 msigdb_hs = msigdb.v7.2.hs.SYM()
 #append KEGG gene-sets
 msigdb_hs = appendKEGG(msigdb_hs)
+#select h, c2, and c5 collections (recommended)
+msigdb_hs = subsetCollection(msigdb_hs, c('h', 'c2', 'c5'))
 
 #randomly sample gene-sets to simulate the results of an enrichment analysis
 set.seed(360)
@@ -173,12 +175,12 @@ ggarrange(p1, p2, p3, ncol = 3, common.legend = TRUE, legend = 'bottom')
 
 # Characterise a gene list
 
-An alternative application of this package is to characterise a gene list based on similarity with all other gene-sets in the MSigDB. Below, we demonstrate how a list of estrogen response genes can be characterised using this approach.
+An alternative application of this package is to characterise a gene list based on similarity with all other gene-sets in the MSigDB. Below, we demonstrate how a list of DNA repair genes can be characterised using this approach.
 
 ```{r}
 #retrieve hallmarks gene-sets from this package
 data(hgsc)
-#create a query using Estrogen response genes
+#create a query using DNA repair genes
 dnarep_genes = geneIds(hgsc[['HALLMARK_DNA_REPAIR']])
 #create a GeneSet object using the query
 dnarep_gs = GeneSet(dnarep_genes, setName = 'DNA_REPAIR_GENES', geneIdType = SymbolIdentifier())
@@ -193,20 +195,20 @@ set.seed(36) #set seed for reproducible layout
 plotMsigNetwork(sim_ovnet)
 ```
 
-Next, we follow a similar workflow to the previous section whereby gene-set clusters are first, identified, then characterised.
+Next, we follow a similar workflow to the previous section whereby gene-set clusters are first, identified, then characterised. Instead of the walktrap clustering algorithm, we can use the Louvain algorithm.
 
 ```{r fig.width=8, fig.height=5}
 #identify clusters
-grps = cluster_walktrap(sim_ovnet)
+grps = cluster_louvain(sim_ovnet)
 #extract clustering results
 grps = groups(grps)
 #sort by cluster size
 grps = grps[order(sapply(grps, length), decreasing = TRUE)]
 
 #compute and plot the results of text-mining
-p1 = plotMsigWordcloud(msigdb_hs, grps, type = 'Name')
+p1 = plotMsigWordcloud(msigdb_hs, grps[1:4], type = 'Name')
 set.seed(36) #set seed for reproducible layout
-p2 = plotMsigNetwork(sim_ovnet, markGroups = grps)
+p2 = plotMsigNetwork(sim_ovnet, markGroups = grps[1:4])
 ggarrange(p1, p2, ncol = 2, common.legend = TRUE, legend = 'bottom')
 ```
 
