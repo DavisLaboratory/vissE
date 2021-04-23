@@ -142,7 +142,7 @@ retrieveMat <- function(gslist, allg, org, idType) {
   
   #determine new genes and gene sets
   newgs = setdiff(names(gslist), rownames(mem_mat))
-  allg = setdiff(allg, colnames(mem_mat))
+  newg = setdiff(allg, colnames(mem_mat))
   
   #compute overlap for new gene sets
   if (length(newgs) > 0) {
@@ -156,7 +156,7 @@ retrieveMat <- function(gslist, allg, org, idType) {
       sparse = TRUE
     )
     #compute membership
-    for (i in 1:length(newgs)) {
+    for (i in newgs) {
       mat[i, ] = as.numeric(gids %in% gslist[[i]])
     }
     #merge
@@ -164,23 +164,26 @@ retrieveMat <- function(gslist, allg, org, idType) {
   }
   
   #compute overlap for new genes
-  if (length(allg) > 0) {
+  if (length(newg) > 0) {
     #initialise
     gsnames = rownames(mem_mat)
     mat = Matrix::Matrix(
       0,
       nrow = length(gsnames),
-      ncol = length(allg),
-      dimnames = list(gsnames, allg),
+      ncol = length(newg),
+      dimnames = list(gsnames, newg),
       sparse = TRUE
     )
     #compute membership
-    for (i in 1:length(gsnames)) {
-      mat[i, ] = as.numeric(allg %in% gslist[[i]])
+    for (i in gsnames) {
+      mat[i, ] = as.numeric(newg %in% gslist[[i]])
     }
     #merge
     mem_mat = cbind(mem_mat, mat)
   }
+  
+  #reorder genesets to original order
+  mem_mat = mem_mat[names(gslist), allg]
   
   return(mem_mat)
 }
