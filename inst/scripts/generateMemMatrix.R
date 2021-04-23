@@ -38,7 +38,7 @@ computeMemMatrix <- function(msigGsc) {
   return(matx)
 }
 
-selcolc = c('h', 'c2', 'c5')
+selcolc = c('h', 'c5')
 mem_mat_hs = computeMemMatrix(subsetCollection(msigdb.hs, selcolc))
 mem_mat_mm = computeMemMatrix(subsetCollection(msigdb.mm, selcolc))
 

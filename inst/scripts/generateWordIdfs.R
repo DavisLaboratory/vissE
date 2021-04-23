@@ -60,11 +60,11 @@ msigdb.mm = msigdb::msigdb.v7.2.mm.SYM()
 msigdb.hs = msigdb::appendKEGG(msigdb.hs)
 msigdb.mm = msigdb::appendKEGG(msigdb.mm)
 
-selcolc = c('h', 'c2', 'c5')
-idf_hs = computeIdf(subsetCollection(msigdb.hs, selcolc))
-idf_mm = computeIdf(subsetCollection(msigdb.mm, selcolc))
+idf_hs = computeIdf(msigdb.hs)
+idf_mm = computeIdf(msigdb.mm)
 
 #----namemap for membership matrix----
+selcolc = c('h', 'c5')
 mem_mat_hs_map = unique(unlist(geneIds(subsetCollection(msigdb.hs, selcolc))))
 mem_mat_mm_map = unique(unlist(geneIds(subsetCollection(msigdb.mm, selcolc))))
 
