@@ -183,7 +183,7 @@ retrieveMat <- function(gslist, allg, org, idType) {
   }
   
   #reorder genesets to original order
-  mem_mat = mem_mat[names(gslist), allg]
+  mem_mat = mem_mat[names(gslist), allg, drop = FALSE]
   
   return(mem_mat)
 }
