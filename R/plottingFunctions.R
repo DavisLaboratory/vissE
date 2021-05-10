@@ -49,7 +49,7 @@ plotMsigWordcloud <-
     worddf = plyr::ldply(msigGsc_list, function(x) {
       df = computeMsigWordFreq(x, measure, rmwords)[[type]]
       df$freq = df$freq / max(df$freq)
-      df = df[1:min(30, nrow(df)), ]
+      df = df[seq_len(min(30, nrow(df))), ]
       df$angle = sample(c(0, 90), nrow(df), replace = TRUE, prob = c(0.65, 0.35))
       return(df)
     }, .id = 'NodeGroup')
@@ -116,7 +116,7 @@ plotMsigNetwork <-
     
     if (length(markGroups) > 12) {
       warning("Only the first 12 components will be plot")
-      markGroups = markGroups[1:12]
+      markGroups = markGroups[seq_len(12)]
     }
     
     #remove unconnected nodes
