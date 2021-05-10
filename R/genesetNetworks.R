@@ -124,9 +124,11 @@ intersectSize <- function(x, y = NULL, org, idType) {
 
 retrieveMat <- function(gslist, allg, org, idType) {
   if (org %in% 'hs') {
-    mem_mat = vissE::mem_mat_hs
+    .data_internal('mem_mat_hs')
+    mem_mat = .myDataEnv$mem_mat_hs
   } else {
-    mem_mat = vissE::mem_mat_mm
+    .data_internal('mem_mat_mm')
+    mem_mat = .myDataEnv$mem_mat_mm
   }
   
   if (is(idType, 'SymbolIdentifier')) {
