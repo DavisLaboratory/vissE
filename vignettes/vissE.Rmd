@@ -37,7 +37,7 @@ An additional power of vissE is to perform a novel type of gene-set enrichment a
 
 In addition to these analyses, it provides visualisations to assist the users in understanding the results of their experiment. This document will demonstrate these functions across the two use-cases. The vissE package can be downloaded as follows:
 
-```{r}
+```{r eval=FALSE}
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
