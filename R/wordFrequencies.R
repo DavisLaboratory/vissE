@@ -73,7 +73,7 @@ computeMsigWordFreq <- function(msigGsc, weight = NULL, measure = c('tfidf', 'tf
   #apply weights
   dtms = lapply(dtms, function(x) {
     #log for TF-IDF computation
-    x$v = log(1 + x$v) * weight[x$j]
+    x$v = x$v * weight[x$j]
     return(x)
   })
   v = lapply(dtms, function(x) apply(x, 1, sum))
@@ -99,6 +99,12 @@ computeMsigWordFreq <- function(msigGsc, weight = NULL, measure = c('tfidf', 'tf
   } else {
     idf = idf_mm
   }
+  
+  #compute log TF
+  d = lapply(d, function(x) {
+    x$freq = log(1 + x$freq)
+    return(x)
+  })
   
   #compute tfidfs
   if (measure %in% 'tfidf'){

@@ -76,6 +76,6 @@ test_that("weights work", {
   
   names(w) = names(estgsc)
   freq = computeMsigWordFreq(estgsc, w, measure = 'tf')
-  expect_equal(freq$Name[freq$Name$word %in% c('early', 'late'), 2], as.numeric(log(c(1, 1) + 1) * w/2))
-  expect_equal(freq$Short[freq$Short$word %in% c('early', 'late'), 2], as.numeric(log(c(1, 1) + 1) * w/2))
+  expect_equal(freq$Name[freq$Name$word %in% c('early', 'late'), 2], as.numeric(log(c(1, 1) * w + 1)))
+  expect_equal(freq$Short[freq$Short$word %in% c('early', 'late'), 2], as.numeric(log(c(1, 1) * w + 1)))
 })
