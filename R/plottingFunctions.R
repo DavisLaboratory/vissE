@@ -30,6 +30,7 @@ NULL
 plotMsigWordcloud <-
   function(msigGsc,
            groups,
+           weight = NULL,
            measure = c('tf', 'tfidf'),
            rmwords = getMsigBlacklist(),
            type = c('Name', 'Short')) {
@@ -47,7 +48,7 @@ plotMsigWordcloud <-
     
     #compute word frequencies
     worddf = plyr::ldply(msigGsc_list, function(x) {
-      df = computeMsigWordFreq(x, measure, rmwords)[[type]]
+      df = computeMsigWordFreq(x, weight, measure, rmwords)[[type]]
       df$freq = df$freq / max(df$freq)
       df = df[seq_len(min(30, nrow(df))), ]
       df$angle = sample(c(0, 90), nrow(df), replace = TRUE, prob = c(0.65, 0.35))

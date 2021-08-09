@@ -7,6 +7,7 @@
 plotMsigWordcloud(
   msigGsc,
   groups,
+  weight = NULL,
   measure = c("tf", "tfidf"),
   rmwords = getMsigBlacklist(),
   type = c("Name", "Short")
@@ -20,6 +21,10 @@ files downloaded from MSigDB.}
 \item{groups}{a named list, of character vectors or numeric indices
 specifying node groupings. Each element of the list represent a group and
 contains a character vector with node names.}
+
+\item{weight}{a named numeric vector, containing weights to apply to each
+gene-set. This can be -log10(FDR), -log10(p-value) or an enrichment score
+(ideally unsigned).}
 
 \item{measure}{a character, specifying how frequencies should be computed.
 "tf" uses term frequencies and "tfidf" (default) applies inverse document

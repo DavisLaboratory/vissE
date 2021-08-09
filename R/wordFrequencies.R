@@ -8,6 +8,9 @@
 #'   frequency weights to term frequencies.
 #' @param rmwords a character vector, containing a blacklist of words to discard
 #'   from the analysis.
+#' @param weight a named numeric vector, containing weights to apply to each
+#'   gene-set. This can be -log10(FDR), -log10(p-value) or an enrichment score
+#'   (ideally unsigned).
 #'
 #' @return a list, containing two data.frames summarising the results of the
 #'   frequency analysis on gene set names and short descriptions.
@@ -16,11 +19,22 @@
 #' @examples
 #' data(hgsc)
 #' freq <- computeMsigWordFreq(hgsc, measure = 'tfidf')
-#'
-computeMsigWordFreq <- function(msigGsc, measure = c('tfidf', 'tf'), rmwords = getMsigBlacklist()) {
+#' 
+computeMsigWordFreq <- function(msigGsc, weight = NULL, measure = c('tfidf', 'tf'), rmwords = getMsigBlacklist()) {
   measure = match.arg(measure)
   stopifnot(is(msigGsc, 'GeneSetCollection'))
 
+  #check weights
+  if (is.null(weight)) {
+    weight = rep(1, length(msigGsc))
+    names(weight) = sapply(msigGsc, GSEABase::setName)
+  } else{
+    stopifnot(all(names(msigGsc) %in% names(weight)))
+    weight = weight[names(msigGsc)]
+  }
+  weight = weight / max(weight)
+  
+  #extract text data from signatures
   signames = sapply(msigGsc, GSEABase::setName)
   sigdesc_s = sapply(msigGsc, GSEABase::description)
   docs = list('Name' = signames, 'Short' = sigdesc_s)
@@ -57,6 +71,11 @@ computeMsigWordFreq <- function(msigGsc, measure = c('tfidf', 'tf'), rmwords = g
   #compute frequencies
   dtms = lapply(docs, tm::TermDocumentMatrix)
   dtms = lapply(dtms, tm::weightTf)
+  #apply weights
+  dtms = lapply(dtms, function(x) {
+    x$v = x$v * weight[x$j]
+    return(x)
+  })
   v = lapply(dtms, function(x) apply(x, 1, sum))
   d = lapply(v, function(x) data.frame(word = names(x), freq = x))
 

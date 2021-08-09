@@ -6,6 +6,7 @@
 \usage{
 computeMsigWordFreq(
   msigGsc,
+  weight = NULL,
   measure = c("tfidf", "tf"),
   rmwords = getMsigBlacklist()
 )
@@ -14,6 +15,10 @@ computeMsigWordFreq(
 \item{msigGsc}{a GeneSetCollection object, containing gene sets from the
 MSigDB. The \code{\link[GSEABase:getObjects]{GSEABase::getBroadSets()}} function can be used to parse XML
 files downloaded from MSigDB.}
+
+\item{weight}{a named numeric vector, containing weights to apply to each
+gene-set. This can be -log10(FDR), -log10(p-value) or an enrichment score
+(ideally unsigned).}
 
 \item{measure}{a character, specifying how frequencies should be computed.
 "tf" uses term frequencies and "tfidf" (default) applies inverse document
