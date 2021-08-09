@@ -32,7 +32,6 @@ computeMsigWordFreq <- function(msigGsc, weight = NULL, measure = c('tfidf', 'tf
     stopifnot(all(names(msigGsc) %in% names(weight)))
     weight = weight[names(msigGsc)]
   }
-  weight = weight / max(weight)
   
   #extract text data from signatures
   signames = sapply(msigGsc, GSEABase::setName)
