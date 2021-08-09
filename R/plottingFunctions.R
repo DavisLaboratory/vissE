@@ -76,8 +76,8 @@ plotMsigWordcloud <-
 #'   specifying node groupings. Each element of the list represent a group and
 #'   contains a character vector with node names. Up to 12 groups can be
 #'   visualised in the plot.
-#' @param genesetStat a numeric, statistic to project onto the nodes. These
-#'   could be p-values, log fold-changes or gene set score from a
+#' @param genesetStat a named numeric, statistic to project onto the nodes.
+#'   These could be p-values, log fold-changes or gene set score from a
 #'   singscore-based analysis.
 #' @param nodeSF a numeric, indicating the scaling factor to apply to node
 #'   sizes.
