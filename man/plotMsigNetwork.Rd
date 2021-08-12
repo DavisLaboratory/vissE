@@ -18,10 +18,9 @@ plotMsigNetwork(
 \item{ig}{an igraph object, containing a network of gene set overlaps
 computed using \code{\link[=computeMsigNetwork]{computeMsigNetwork()}}.}
 
-\item{markGroups}{a named list, of character vectors or numeric indices
-specifying node groupings. Each element of the list represent a group and
-contains a character vector with node names. Up to 12 groups can be
-visualised in the plot.}
+\item{markGroups}{a named list, of character vectors. Each element of the
+list represent a group and contains a character vector with node names. Up
+to 12 groups can be visualised in the plot.}
 
 \item{genesetStat}{a named numeric, statistic to project onto the nodes.
 These could be p-values, log fold-changes or gene set score from a
@@ -50,7 +49,10 @@ Plots a network of gene set overlap with overlap computed using the
 data(hgsc)
 ovlap <- computeMsigOverlap(hgsc)
 ig <- computeMsigNetwork(ovlap, hgsc)
-groups <- list('g1' = c(1, 9), 'g2' = c(5, 6))
+groups <- list(
+  'g1' = c("HALLMARK_HYPOXIA", "HALLMARK_GLYCOLYSIS"),
+  'g2' = c("HALLMARK_INTERFERON_GAMMA_RESPONSE")
+)
 
 plotMsigNetwork(ig, markGroups = groups)
 
