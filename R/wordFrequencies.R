@@ -11,6 +11,8 @@
 #' @param weight a named numeric vector, containing weights to apply to each
 #'   gene-set. This can be -log10(FDR), -log10(p-value) or an enrichment score
 #'   (ideally unsigned).
+#' @param version a character, specifying the version of msigdb to use (see
+#'   `msigdb::getMsigdbVersions()`).
 #'
 #' @return a list, containing two data.frames summarising the results of the
 #'   frequency analysis on gene set names and short descriptions.
@@ -20,7 +22,13 @@
 #' data(hgsc)
 #' freq <- computeMsigWordFreq(hgsc, measure = 'tfidf')
 #' 
-computeMsigWordFreq <- function(msigGsc, weight = NULL, measure = c('tfidf', 'tf'), rmwords = getMsigBlacklist()) {
+computeMsigWordFreq <-
+  function(msigGsc,
+           weight = NULL,
+           measure = c('tfidf', 'tf'),
+           version = msigdb::getMsigdbVersions(),
+           rmwords = getMsigBlacklist()) {
+    
   measure = match.arg(measure)
   stopifnot(is(msigGsc, 'GeneSetCollection'))
 
@@ -42,30 +50,32 @@ computeMsigWordFreq <- function(msigGsc, weight = NULL, measure = c('tfidf', 'tf
   #text-mining
   docs = lapply(docs, function(d) tm::Corpus(tm::VectorSource(d)))
   toSpace <- tm::content_transformer(function (x, pattern) gsub(pattern, " ", x))
-  docs = lapply(docs, function(d) tm::tm_map(d, toSpace, "_"))
-  docs = lapply(docs, function(d) tm::tm_map(d, toSpace, "/"))
-  docs = lapply(docs, function(d) tm::tm_map(d, toSpace, "@"))
-  docs = lapply(docs, function(d) tm::tm_map(d, toSpace, "\\|"))
-  docs = lapply(docs, function(d) tm::tm_map(d, toSpace, "\\("))
-  docs = lapply(docs, function(d) tm::tm_map(d, toSpace, "\\)"))
-
-  # Convert the text to lower case
-  docs = lapply(docs, function(d) tm::tm_map(d, tm::content_transformer(tolower)))
-  # Remove numbers
-  # docs = lapply(docs, function(d) tm_map(d, removeNumbers))
-  # Remove english common stopwords
-  docs = lapply(docs, function(d) tm::tm_map(d, tm::removeWords, tm::stopwords('english')))
-  # Remove your own stop word
-  # specify your stopwords as a character vector
-  docs = lapply(docs, function(d) tm::tm_map(d, tm::removeWords, rmwords))
-  # Remove punctuations
-  docs = lapply(docs, function(d) tm::tm_map(d, tm::removePunctuation))
-  # Eliminate extra white spaces
-  docs = lapply(docs, function(d) tm::tm_map(d, tm::stripWhitespace))
-  # Remove full numbers
-  docs = lapply(docs, function(d) tm::tm_filter(d, function(x) !grepl('\\b[0-9]+\\b', x)))
-  # Text lemmatisation
-  docs = lapply(docs, function(d) tm::tm_map(d, textstem::lemmatize_strings))
+  suppressWarnings({
+    docs = lapply(docs, function(d) tm::tm_map(d, toSpace, "_"))
+    docs = lapply(docs, function(d) tm::tm_map(d, toSpace, "/"))
+    docs = lapply(docs, function(d) tm::tm_map(d, toSpace, "@"))
+    docs = lapply(docs, function(d) tm::tm_map(d, toSpace, "\\|"))
+    docs = lapply(docs, function(d) tm::tm_map(d, toSpace, "\\("))
+    docs = lapply(docs, function(d) tm::tm_map(d, toSpace, "\\)"))
+    
+    # Convert the text to lower case
+    docs = lapply(docs, function(d) tm::tm_map(d, tm::content_transformer(tolower)))
+    # Remove numbers
+    # docs = lapply(docs, function(d) tm_map(d, removeNumbers))
+    # Remove english common stopwords
+    docs = lapply(docs, function(d) tm::tm_map(d, tm::removeWords, tm::stopwords('english')))
+    # Remove your own stop word
+    # specify your stopwords as a character vector
+    docs = lapply(docs, function(d) tm::tm_map(d, tm::removeWords, rmwords))
+    # Remove punctuations
+    docs = lapply(docs, function(d) tm::tm_map(d, tm::removePunctuation))
+    # Eliminate extra white spaces
+    docs = lapply(docs, function(d) tm::tm_map(d, tm::stripWhitespace))
+    # Remove full numbers
+    docs = lapply(docs, function(d) tm::tm_filter(d, function(x) !grepl('\\b[0-9]+\\b', x)))
+    # Text lemmatisation
+    docs = lapply(docs, function(d) tm::tm_map(d, textstem::lemmatize_strings))
+  })
 
   #compute frequencies
   dtms = lapply(docs, tm::TermDocumentMatrix)
@@ -99,6 +109,7 @@ computeMsigWordFreq <- function(msigGsc, weight = NULL, measure = c('tfidf', 'tf
   } else {
     idf = idf_mm
   }
+  # idf = msigdb:::getMsigdbIDF(org, version)
   
   #compute log TF
   d = lapply(d, function(x) {
