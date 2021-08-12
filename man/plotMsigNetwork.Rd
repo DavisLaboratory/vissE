@@ -10,7 +10,7 @@ plotMsigNetwork(
   genesetStat = NULL,
   nodeSF = 1,
   edgeSF = 1,
-  lytFunc = igraph::layout_with_graphopt,
+  lytFunc = "graphopt",
   lytParams = list()
 )
 }
@@ -33,12 +33,11 @@ sizes.}
 \item{edgeSF}{a numeric, indicating the scaling factor to apply to edge
 widths.}
 
-\item{lytFunc}{a function, that computes layouts and returns a matrix with 2
-columns specifying the x and y coordinates of nodes. Layout functions in
-the igraph package can be used here.}
+\item{lytFunc}{a character, specifying the layout to use (see
+\code{ggraph::create_layout()}).}
 
-\item{lytParams}{a named list, containing additional parameters to be passed
-on to the layout function.}
+\item{lytParams}{a named list, containing additional parameters needed for
+the layout (see \code{ggraph::create_layout()}).}
 }
 \value{
 a ggplot2 object

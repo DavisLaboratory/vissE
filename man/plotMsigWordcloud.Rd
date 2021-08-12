@@ -9,6 +9,7 @@ plotMsigWordcloud(
   groups,
   weight = NULL,
   measure = c("tf", "tfidf"),
+  version = msigdb::getMsigdbVersions(),
   rmwords = getMsigBlacklist(),
   type = c("Name", "Short")
 )
@@ -29,6 +30,9 @@ gene-set. This can be -log10(FDR), -log10(p-value) or an enrichment score
 \item{measure}{a character, specifying how frequencies should be computed.
 "tf" uses term frequencies and "tfidf" (default) applies inverse document
 frequency weights to term frequencies.}
+
+\item{version}{a character, specifying the version of msigdb to use (see
+\code{msigdb::getMsigdbVersions()}).}
 
 \item{rmwords}{a character vector, containing a blacklist of words to discard
 from the analysis.}

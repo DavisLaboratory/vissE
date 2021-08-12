@@ -85,11 +85,10 @@ plotMsigWordcloud <-
 #'   sizes.
 #' @param edgeSF a numeric, indicating the scaling factor to apply to edge
 #'   widths.
-#' @param lytFunc a function, that computes layouts and returns a matrix with 2
-#'   columns specifying the x and y coordinates of nodes. Layout functions in
-#'   the igraph package can be used here.
-#' @param lytParams a named list, containing additional parameters to be passed
-#'   on to the layout function.
+#' @param lytFunc a character, specifying the layout to use (see
+#'   `ggraph::create_layout()`).
+#' @param lytParams a named list, containing additional parameters needed for
+#'   the layout (see `ggraph::create_layout()`).
 #'
 #' @return a ggplot2 object
 #' @export
@@ -108,11 +107,10 @@ plotMsigNetwork <-
            genesetStat = NULL,
            nodeSF = 1,
            edgeSF = 1,
-           lytFunc = igraph::layout_with_graphopt,
+           lytFunc = 'graphopt',
            lytParams = list()) {
     stopifnot(nodeSF > 0)
     stopifnot(edgeSF > 0)
-    stopifnot(is.function(lytFunc))
     stopifnot(is.null(markGroups) | is.list(markGroups))
     stopifnot(is.null(genesetStat) | !is.null(names(genesetStat)))
     
@@ -124,93 +122,58 @@ plotMsigNetwork <-
     #remove unconnected nodes
     ig = igraph::induced_subgraph(ig, V(ig)[igraph::degree(ig) > 0])
     
-    #compute layout if none present
-    if (!all(c('x', 'y') %in% igraph::list.vertex.attributes(ig))) {
-      lytParams = c(list('graph' = ig), lytParams)
-      lyt = do.call(lytFunc, lytParams)
-      V(ig)$x = lyt[, 1]
-      V(ig)$y = lyt[, 2]
-    }
+    #add custom annotation is no category annotated
     if (!all(c('Category') %in% igraph::list.vertex.attributes(ig))) {
       V(ig)$Category = rep('custom', length(V(ig)))
     }
-    
-    #convert to dataframe
-    nodedf = igraph::as_data_frame(ig, what = 'vertices')
-    edgedf = igraph::as_data_frame(ig, what = 'edges')
     
     #node colour map
     colmap_nodes = RColorBrewer::brewer.pal(10, 'Set3')
     names(colmap_nodes) = c('archived', 'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'h', 'custom')
     
-    #order nodes
-    nodedf = nodedf[order(nodedf$Category), ]
-    
-    #add edge coordinates
-    edgedf$x_begin = nodedf[edgedf$from, 'x']
-    edgedf$x_end = nodedf[edgedf$to, 'x']
-    edgedf$y_begin = nodedf[edgedf$from, 'y']
-    edgedf$y_end = nodedf[edgedf$to, 'y']
-    
-    p1 = ggplot() +
-      ggplot2::geom_segment(
-        aes(
-          x = x_begin,
-          y = y_begin,
-          xend = x_end,
-          yend = y_end
-        ),
+    #plot base graph
+    lytParams = c(list(graph = igraph::as.directed(ig), layout = lytFunc), lytParams)
+    p1 = do.call(ggraph::ggraph, lytParams) +
+      ggraph::geom_edge_link(
         lwd = 0.2 * edgeSF,
-        alpha = 1 / log10(nrow(edgedf)),
-        colour = '#66666666',
-        data = edgedf
+        alpha = 1 / log10(length(igraph::E(ig))),
+        colour = '#66666666'
       ) +
-      #to cover up edges
-      ggplot2::geom_point(
-        aes(x, y, size = Size),
-        fill = 'white',
-        colour = 'white',
-        shape = 21,
-        stroke = 0.2 * nodeSF,
-        data = nodedf
-      ) +
-      ggplot2::scale_size_continuous(range = c(0.1, 6) * nodeSF) +
-      guides(size = guide_legend(ncol = 2)) +
-      ggplot2::theme_void() +
-      ggplot2::theme(
-        legend.position = 'bottom',
-        plot.title = element_text(hjust = 0.5, size = rel(1.5))
-      )
+      ggraph::geom_node_point(aes(size = Size), colour = '#FFFFFF')
     
     if (is.null(genesetStat)) {
       p1 = p1 +
-        #plot nodes
-        ggplot2::geom_point(
-          aes(x, y, fill = Category, size = Size),
+        ggraph::geom_node_point(
+          aes(fill = Category, size = Size),
           alpha = 0.75,
           shape = 21,
-          stroke = 0.2 * nodeSF,
-          data = nodedf
+          stroke = 0.2 * nodeSF
         ) +
         ggplot2::scale_fill_manual(values = colmap_nodes) +
         guides(fill = guide_legend(ncol = 4, override.aes = list(size = 5)))
     } else {
       #add stats
-      commongs = intersect(nodedf$name, names(genesetStat))
-      nodedf$genesetStat = NA
-      nodedf[commongs, 'genesetStat'] = genesetStat[commongs]
+      p1$data$genesetStat = genesetStat[p1$data$name]
       
       p1 = p1 +
-        #plot nodes
-        ggplot2::geom_point(
-          aes(x, y, fill = genesetStat, size = Size),
+        ggraph::geom_node_point(
+          aes(fill = genesetStat, size = Size),
           alpha = 0.75,
           shape = 21,
-          stroke = 0.2 * nodeSF,
-          data = nodedf
+          stroke = 0.2 * nodeSF
         ) +
         scico::scale_fill_scico(palette = 'cork', na.value = '#AAAAAA')
     }
+    
+    #general theme settings
+    p1 = p1 +
+      guides(size = guide_legend(ncol = 2)) +
+      ggplot2::scale_size_continuous(range = c(0.1, 6) * nodeSF) +
+      ggplot2::theme_void() +
+      ggplot2::theme(
+        legend.position = 'bottom',
+        plot.title = element_text(hjust = 0.5, size = rel(1.5))
+      )
     
     #mark groups
     if (!is.null(markGroups)) {
@@ -221,12 +184,11 @@ plotMsigNetwork <-
       
       #complex hull for groups
       hulldf = plyr::ldply(markGroups, function(x) {
-        df = nodedf[x, ]
+        df = p1$data[x, ]
         df = df[grDevices::chull(df$x, df$y), ]
       }, .id = 'NodeGroup')
       
       p1 = p1 +
-        ggnewscale::new_scale_colour() +
         ggforce::geom_shape(
           aes(x, y, colour = NodeGroup),
           fill = NA,
