@@ -135,7 +135,7 @@ plotMsigNetwork <-
     lytParams = c(list(graph = igraph::as.directed(ig), layout = lytFunc), lytParams)
     p1 = do.call(ggraph::ggraph, lytParams) +
       ggraph::geom_edge_link(
-        lwd = 0.2 * edgeSF,
+        edge_width = 0.2 * edgeSF,
         alpha = 1 / log10(length(igraph::E(ig))),
         colour = '#66666666'
       ) +
