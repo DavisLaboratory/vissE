@@ -55,7 +55,7 @@ library(msigdb)
 library(GSEABase)
 
 #load the MSigDB from the msigdb package
-msigdb_hs = msigdb.v7.2.hs.SYM()
+msigdb_hs = getMsigdb()
 #append KEGG gene-sets
 msigdb_hs = appendKEGG(msigdb_hs)
 #select h, c2, and c5 collections (recommended)
@@ -206,7 +206,8 @@ grps = groups(grps)
 grps = grps[order(sapply(grps, length), decreasing = TRUE)]
 
 #compute and plot the results of text-mining
-p1 = plotMsigWordcloud(msigdb_hs, grps[1:4], type = 'Name')
+allgs = GeneSetCollection(c(msigdb_hs, dnarep_gs))
+p1 = plotMsigWordcloud(allgs, grps[1:4], type = 'Name')
 set.seed(36) #set seed for reproducible layout
 p2 = plotMsigNetwork(sim_ovnet, markGroups = grps[1:4])
 ggarrange(p1, p2, ncol = 2, common.legend = TRUE, legend = 'bottom')

@@ -33,7 +33,8 @@ Imports:
     msigdb,
     Matrix,
     ggrepel,
-    textstem
+    textstem,
+    ggraph
 Suggests: 
     testthat,
     org.Hs.eg.db,

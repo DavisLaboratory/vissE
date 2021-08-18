@@ -51,7 +51,7 @@ computeMsigOverlap <- function(msigGsc1, msigGsc2 = NULL, thresh = 0.15, measure
     ovlap = tcrossprod(imat)
     len1 = len2 = rowSums(imat)
   } else {
-    ovlap = tcrossprod(imat[is1, ], imat[is2, ])
+    ovlap = tcrossprod(imat[is1, , drop = FALSE], imat[is2, , drop = FALSE])
     len = rowSums(imat)
     len1 = len[is1]
     len2 = len[is2]

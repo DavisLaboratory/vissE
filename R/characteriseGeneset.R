@@ -44,19 +44,8 @@ characteriseGeneset <- function(gs, thresh = 0.2, measure = c('ovlapcoef', 'jacc
   gsc_gs = GSEABase::GeneSetCollection(gs)
   id = msigdb::getMsigIdType(gsc_gs)
   org = msigdb::getMsigOrganism(gsc_gs, id)
-  if (org %in% 'hs') {
-    if (is(id, 'SymbolIdentifier')) {
-      gsc = msigdb::msigdb.v7.2.hs.SYM()
-    } else {
-      gsc = msigdb::msigdb.v7.2.hs.EZID()
-    }
-  } else {
-    if (is(id, 'SymbolIdentifier')) {
-      gsc = msigdb::msigdb.v7.2.mm.SYM()
-    } else {
-      gsc = msigdb::msigdb.v7.2.mm.EZID()
-    }
-  }
+  id = ifelse(is(id, 'SymbolIdentifier'), 'SYM', 'EZID')
+  gsc = msigdb::getMsigdb(org, id)
   gsc = msigdb::appendKEGG(gsc)
   
   #subset collections to use
