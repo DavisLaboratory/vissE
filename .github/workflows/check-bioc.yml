@@ -147,7 +147,7 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           ## Edit below if you have any Windows system dependencies
-          PATH="${RTOOLS40_HOME}\usr\bin;${PATH}"
+          C:\ProgramData\Chocolatey\bin\choco.exe install curl --no-progress
         shell: Rscript {0}
 
       - name: Install BiocManager
