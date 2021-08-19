@@ -39,12 +39,14 @@ Suggests:
     testthat,
     org.Hs.eg.db,
     org.Mm.eg.db,
-    ggpubr,
+    patchwork,
     singscore,
     knitr,
     rmarkdown,
     prettydoc,
-    BiocStyle
+    BiocStyle,
+    pkgdown,
+    covr
 URL: https://davislaboratory.github.io/vissE
 BugReports: https://github.com/DavisLaboratory/vissE/issues
 VignetteBuilder: knitr

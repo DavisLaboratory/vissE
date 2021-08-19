@@ -160,7 +160,7 @@ plotGeneStats(gene_stats, msigdb_hs, grps[1:6]) +
 Results of a vissE analysis are best presented and interpreted as paneled plots that combine all of the above plots. This allows for collective interpretation of the gene-set clusters.
 
 ```{r fig.width=12, fig.height=5}
-library(ggpubr)
+library(patchwork)
 
 #create independent plots
 set.seed(36) #set seed for reproducible layout
@@ -170,7 +170,7 @@ p3 = plotGeneStats(gene_stats, msigdb_hs, grps[1:6]) +
   geom_hline(yintercept = 0, colour = 2, lty = 2)
 
 #combine using functions from ggpubr
-ggarrange(p1, p2, p3, ncol = 3, common.legend = TRUE, legend = 'bottom')
+p1 + p2 + p3
 ```
 
 # Characterise a gene list
@@ -210,7 +210,7 @@ allgs = GeneSetCollection(c(msigdb_hs, dnarep_gs))
 p1 = plotMsigWordcloud(allgs, grps[1:4], type = 'Name')
 set.seed(36) #set seed for reproducible layout
 p2 = plotMsigNetwork(sim_ovnet, markGroups = grps[1:4])
-ggarrange(p1, p2, ncol = 2, common.legend = TRUE, legend = 'bottom')
+p1 + p2
 ```
 
 # Session information
