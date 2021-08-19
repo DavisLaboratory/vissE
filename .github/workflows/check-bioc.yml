@@ -46,6 +46,7 @@ jobs:
     runs-on: ${{ matrix.config.os }}
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
     container: ${{ matrix.config.cont }}
+    continue-on-error: ${{ matrix.config.allow_failure }}
     ## Environment variables unique to this job.
 
     strategy:
@@ -54,7 +55,7 @@ jobs:
         config:
           - { os: ubuntu-latest, r: '4.1', bioc: '3.14', cont: "bioconductor/bioconductor_docker:devel", rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest" }
           - { os: macOS-latest, r: '4.1', bioc: '3.14'}
-          ## - { os: windows-latest, r: '4.1', bioc: '3.14'}
+          - { os: windows-latest, r: '4.1', bioc: '3.14', allow_failure: true}
           ## Check https://github.com/r-lib/actions/tree/master/examples
           ## for examples using the http-user-agent
     env:
