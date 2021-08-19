@@ -173,46 +173,6 @@ p3 = plotGeneStats(gene_stats, msigdb_hs, grps[1:6]) +
 p1 + p2 + p3
 ```
 
-# Characterise a gene list
-
-An alternative application of this package is to characterise a gene list based on similarity with all other gene-sets in the MSigDB. Below, we demonstrate how a list of DNA repair genes can be characterised using this approach.
-
-```{r}
-#retrieve hallmarks gene-sets from this package
-data(hgsc)
-#create a query using DNA repair genes
-dnarep_genes = geneIds(hgsc[['HALLMARK_DNA_REPAIR']])
-#create a GeneSet object using the query
-dnarep_gs = GeneSet(dnarep_genes, setName = 'DNA_REPAIR_GENES', geneIdType = SymbolIdentifier())
-```
-
-First we generate a similarity network using the gene list as a query.
-
-```{r}
-sim_ovnet = characteriseGeneset(dnarep_gs)
-#plot the network
-set.seed(36) #set seed for reproducible layout
-plotMsigNetwork(sim_ovnet)
-```
-
-Next, we follow a similar workflow to the previous section whereby gene-set clusters are first, identified, then characterised. Instead of the walktrap clustering algorithm, we can use the Louvain algorithm.
-
-```{r fig.width=8, fig.height=5}
-#identify clusters
-grps = cluster_louvain(sim_ovnet)
-#extract clustering results
-grps = groups(grps)
-#sort by cluster size
-grps = grps[order(sapply(grps, length), decreasing = TRUE)]
-
-#compute and plot the results of text-mining
-allgs = GeneSetCollection(c(msigdb_hs, dnarep_gs))
-p1 = plotMsigWordcloud(allgs, grps[1:4], type = 'Name')
-set.seed(36) #set seed for reproducible layout
-p2 = plotMsigNetwork(sim_ovnet, markGroups = grps[1:4])
-p1 + p2
-```
-
 # Session information
 
 ```{r}
