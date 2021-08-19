@@ -54,7 +54,7 @@ jobs:
         config:
           - { os: ubuntu-latest, r: '4.1', bioc: '3.14', cont: "bioconductor/bioconductor_docker:devel", rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest" }
           - { os: macOS-latest, r: '4.1', bioc: '3.14'}
-          - { os: windows-latest, r: '4.1', bioc: '3.14'}
+          ## - { os: windows-latest, r: '4.1', bioc: '3.14'}
           ## Check https://github.com/r-lib/actions/tree/master/examples
           ## for examples using the http-user-agent
     env:
@@ -147,7 +147,6 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           ## Edit below if you have any Windows system dependencies
-          C:\ProgramData\Chocolatey\bin\choco.exe install curl --no-progress
         shell: Rscript {0}
 
       - name: Install BiocManager
