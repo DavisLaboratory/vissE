@@ -1,0 +1,16 @@
+url: https://DavisLaboratory.github.io/vissE
+
+template:
+  params:
+    bootswatch: flatly
+    #ganalytics: UA-99999999-9
+
+home:
+  title: "vissE"
+  type: inverse
+
+
+navbar:
+  right:
+   - icon: fa-github
+     href: https://github.com/DavisLaboratory/vissE
