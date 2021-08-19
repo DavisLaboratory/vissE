@@ -147,6 +147,7 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           ## Edit below if you have any Windows system dependencies
+          PATH="${RTOOLS40_HOME}\usr\bin;${PATH}"
         shell: Rscript {0}
 
       - name: Install BiocManager
