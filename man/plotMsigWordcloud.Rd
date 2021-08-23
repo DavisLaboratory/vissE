@@ -51,7 +51,7 @@ attached with each gene set object.
 }
 \examples{
 data("hgsc")
-groups <- list('g1' = 1:10, 'g2' = 11:20)
+groups <- list('g1' = names(hgsc)[1:25], 'g2' = names(hgsc)[26:50])
 plotMsigWordcloud(hgsc, groups, rmwords = getMsigBlacklist())
 
 }
