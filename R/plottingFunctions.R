@@ -36,6 +36,7 @@ plotMsigWordcloud <-
            rmwords = getMsigBlacklist(),
            type = c('Name', 'Short')) {
     stopifnot(is.list(groups))
+    checkGroups(groups, names(msigGsc))
     measure = match.arg(measure)
     type = match.arg(type)
     
@@ -179,9 +180,7 @@ plotMsigNetwork <-
     
     #mark groups
     if (!is.null(markGroups)) {
-      if (!all(unlist(markGroups) %in% p1$data$name)) {
-        stop('Invalid node names found in markGroups.')
-      }
+      checkGroups(markGroups, p1$data$name)
       
       #add gene set counts for each group
       names(markGroups) = sapply(names(markGroups), function(x) {
@@ -233,7 +232,7 @@ plotMsigNetwork <-
 #' library(GSEABase)
 #'
 #' data(hgsc)
-#' groups <- list('g1' = 1:25, 'g2' = 26:50)
+#' groups <- list('g1' = names(hgsc)[1:25], 'g2' = names(hgsc)[26:50])
 #'
 #' #create statistics
 #' allgenes = unique(unlist(geneIds(hgsc)))
@@ -244,6 +243,8 @@ plotMsigNetwork <-
 #' plotGeneStats(gstats, hgsc, groups)
 #' 
 plotGeneStats <- function(geneStat, msigGsc, groups, statName = 'Gene-level statistic', topN = 5) {
+  checkGroups(groups, names(msigGsc))
+  
   #compute frequencies
   genefreq = plyr::ldply(groups, function (x) {
     gc = table(unlist(lapply(msigGsc[x], GSEABase::geneIds)))
@@ -301,4 +302,11 @@ bhuvad_theme = function (rl = 1.1) {
       legend.text = element_text(size = rel(rl)),
       legend.title = element_text(size = rel(rl), face = 'italic')
     )
+}
+
+checkGroups <- function(grps, gscnames) {
+  lapply(names(grps), function(grpname) {
+    if (!all(grps[[grpname]] %in% gscnames))
+      stop(sprintf('group "%s" contains unknown members', grpname))
+  })
 }

@@ -44,7 +44,7 @@ overlaps) and have a strong statistic (e.g. log fold-chage or p-value).
 library(GSEABase)
 
 data(hgsc)
-groups <- list('g1' = 1:25, 'g2' = 26:50)
+groups <- list('g1' = names(hgsc)[1:25], 'g2' = names(hgsc)[26:50])
 
 #create statistics
 allgenes = unique(unlist(geneIds(hgsc)))

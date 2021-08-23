@@ -34,6 +34,9 @@ Imports:
     Matrix,
     ggrepel,
     textstem,
+    tidygraph,
+    stats,
+    scales,
     ggraph
 Suggests: 
     testthat,
