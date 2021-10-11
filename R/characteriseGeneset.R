@@ -15,6 +15,7 @@ NULL
 #'   using [msigdb::listCollections()].
 #'
 #' @inheritParams computeMsigOverlap
+#' @inheritParams computeMsigWordFreq
 #'
 #' @return an igraph object, containing gene sets that are similar to the query
 #'   set. The network contains relationships between results of the query too.
@@ -37,13 +38,16 @@ NULL
 #' plotMsigNetwork(ig)
 #' }
 #' 
-characteriseGeneset <- function(gs, thresh = 0.2, measure = c('ovlapcoef', 'jaccard'), gscolcs = c('h', 'c2', 'c5')) {
+characteriseGeneset <- function(gs, thresh = 0.2, measure = c('ovlapcoef', 'jaccard'), gscolcs = c('h', 'c2', 'c5'), org = c('auto', 'hs', 'mm')) {
   measure = match.arg(measure)
+  org = match.arg(org)
   
   #retrieve appropriate GeneSetCollection
   gsc_gs = GSEABase::GeneSetCollection(gs)
   id = msigdb::getMsigIdType(gsc_gs)
-  org = msigdb::getMsigOrganism(gsc_gs, id)
+  if (org %in% 'auto') {
+    org = msigdb::getMsigOrganism(gsc_gs, id)
+  }
   id = ifelse(is(id, 'SymbolIdentifier'), 'SYM', 'EZID')
   gsc = msigdb::getMsigdb(org, id)
   gsc = msigdb::appendKEGG(gsc)

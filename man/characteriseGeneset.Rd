@@ -8,7 +8,8 @@ characteriseGeneset(
   gs,
   thresh = 0.2,
   measure = c("ovlapcoef", "jaccard"),
-  gscolcs = c("h", "c2", "c5")
+  gscolcs = c("h", "c2", "c5"),
+  org = c("auto", "hs", "mm")
 )
 }
 \arguments{
@@ -25,6 +26,9 @@ Coefficient.}
 \item{gscolcs}{a character, listing the MSigDB collections to use as a
 background (defaults to h, c2, and c5). Collection types can be retrieved
 using \code{\link[msigdb:listCollections]{msigdb::listCollections()}}.}
+
+\item{org}{a character, specifying the organism to use. This can either be
+"auto" (default), "hs" or "mm".}
 }
 \value{
 an igraph object, containing gene sets that are similar to the query
