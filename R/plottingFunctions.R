@@ -167,12 +167,12 @@ plotMsigNetwork <-
           shape = 21,
           stroke = 0.2 * nodeSF
         )
-      if (!all(geneStat >= 0)) {
-        lims = c(-1, 1) * stats::quantile(abs(geneStat), 0.99)
+      if (!all(genesetStat >= 0)) {
+        lims = c(-1, 1) * stats::quantile(abs(genesetStat), 0.99)
         palname = 'cork'
         dir = 1
       } else {
-        lims = stats::quantile(abs(geneStat), c(0.01, 0.99))
+        lims = stats::quantile(abs(genesetStat), c(0.01, 0.99))
         palname = 'tokyo'
         dir = -1
       }
