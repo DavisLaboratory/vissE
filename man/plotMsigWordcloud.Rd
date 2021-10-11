@@ -10,6 +10,7 @@ plotMsigWordcloud(
   weight = NULL,
   measure = c("tf", "tfidf"),
   version = msigdb::getMsigdbVersions(),
+  org = c("auto", "hs", "mm"),
   rmwords = getMsigBlacklist(),
   type = c("Name", "Short")
 )
@@ -33,6 +34,9 @@ frequency weights to term frequencies.}
 
 \item{version}{a character, specifying the version of msigdb to use (see
 \code{msigdb::getMsigdbVersions()}).}
+
+\item{org}{a character, specifying the organism to use. This can either be
+"auto" (default), "hs" or "mm".}
 
 \item{rmwords}{a character vector, containing a blacklist of words to discard
 from the analysis.}

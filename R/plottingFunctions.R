@@ -33,11 +33,13 @@ plotMsigWordcloud <-
            weight = NULL,
            measure = c('tf', 'tfidf'),
            version = msigdb::getMsigdbVersions(),
+           org = c('auto', 'hs', 'mm'),
            rmwords = getMsigBlacklist(),
            type = c('Name', 'Short')) {
     stopifnot(is.list(groups))
     checkGroups(groups, names(msigGsc))
     measure = match.arg(measure)
+    org = match.arg(org)
     type = match.arg(type)
     
     #add gene set counts for each group
@@ -50,7 +52,7 @@ plotMsigWordcloud <-
     
     #compute word frequencies
     worddf = plyr::ldply(msigGsc_list, function(x) {
-      df = computeMsigWordFreq(x, weight, measure, version, rmwords)[[type]]
+      df = computeMsigWordFreq(x, weight, measure, version, org, rmwords)[[type]]
       df$freq = df$freq / max(df$freq)
       df = df[seq_len(min(30, nrow(df))), ]
       df$angle = sample(c(0, 90), nrow(df), replace = TRUE, prob = c(0.65, 0.35))
