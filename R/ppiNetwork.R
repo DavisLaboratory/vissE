@@ -148,7 +148,7 @@ computeMsigGroupPPI <- function(msigGsc,
   }
   
   #retrieve PPI
-  ppi = msigdb::getIMEX(org)
+  ppi = msigdb::getIMEX(org, inferred)
   if (is(idType, 'SymbolIdentifier')) {
     colnames(ppi)[colnames(ppi) %in% c('SymbolA', 'SymbolB')] = c('from', 'to')
   } else {
@@ -159,7 +159,7 @@ computeMsigGroupPPI <- function(msigGsc,
   ppi_list = lapply(names(groups), function(grpname) {
     gs = groups[[grpname]]
     genes = table(unlist(lapply(msigGsc[gs], GSEABase::geneIds)))
-    ig = computeMsigPPI(names(genes), ppi, threshConfidence, inferred)
+    ig = computeMsigPPI(names(genes), ppi, threshConfidence)
     
     #remove unconnected nodes
     ig = igraph::induced_subgraph(ig, V(ig)$name[igraph::degree(ig) > 0])
@@ -246,8 +246,7 @@ computeMsigPPI <- function(genes, ppi, threshConfidence = 0, inferred = TRUE) {
   colnames(ppi)[colnames(ppi) %in% c('Confidence')] = c('weight')
   
   #identify the organism and use the subset PPI
-  ppi = ppi[(ppi$Inferred | inferred) &
-              ppi$from %in% genes &
+  ppi = ppi[ppi$from %in% genes &
               ppi$to %in% genes &
               ppi$weight >= threshConfidence, , drop = FALSE]
   ppi = ppi[ppi$from != ppi$to ,]
