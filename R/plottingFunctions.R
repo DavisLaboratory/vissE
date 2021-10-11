@@ -166,8 +166,24 @@ plotMsigNetwork <-
           alpha = 0.75,
           shape = 21,
           stroke = 0.2 * nodeSF
-        ) +
-        scico::scale_fill_scico(palette = 'cork', na.value = '#AAAAAA')
+        )
+      if (!all(geneStat >= 0)) {
+        lims = c(-1, 1) * stats::quantile(abs(geneStat), 0.99)
+        palname = 'cork'
+        dir = 1
+      } else {
+        lims = stats::quantile(abs(geneStat), c(0.01, 0.99))
+        palname = 'tokyo'
+        dir = -1
+      }
+      p1 = p1 +
+        scico::scale_fill_scico(
+          palette = palname,
+          na.value = '#AAAAAA',
+          limits = lims,
+          oob = scales::squish,
+          direction = dir
+        )
     }
     
     #general theme settings
