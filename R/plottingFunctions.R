@@ -260,15 +260,15 @@ plotGeneStats <- function(geneStat, msigGsc, groups, statName = 'Gene-level stat
   genefreq = plyr::ddply(genefreq, 'Group', function(x) {
     x = x[!is.na(x$GeneStat) & !is.infinite(x$GeneStat), ]
     st = rank(abs(x$GeneStat)) * rank(x$Count)
-    x$isLab = rank(-st) <= topN
+    x$rank = rank(-st)
     return(x)
   })
   
   #plot
   p1 = ggplot(genefreq, aes(Count, GeneStat)) +
-    ggplot2::geom_jitter(data = genefreq[!genefreq$isLab, ], shape = '.', colour = 'gray80') +
-    ggplot2::geom_jitter(data = genefreq[genefreq$isLab, ]) +
-    ggrepel::geom_text_repel(aes(label = Gene), data = genefreq[genefreq$isLab, ]) +
+    ggplot2::geom_jitter(data = genefreq[genefreq$rank > topN, ], shape = '.', colour = 'gray80') +
+    ggplot2::geom_jitter(data = genefreq[genefreq$rank <= topN, ]) +
+    ggrepel::geom_text_repel(aes(label = Gene), data = genefreq[genefreq$rank <= topN, ]) +
     ggplot2::xlab('Gene-set count') +
     ggplot2::ylab(statName) +
     ggplot2::facet_wrap(~ Group, scales = 'free_x') +
