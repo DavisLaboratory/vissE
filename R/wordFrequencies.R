@@ -13,6 +13,8 @@
 #'   (ideally unsigned).
 #' @param version a character, specifying the version of msigdb to use (see
 #'   `msigdb::getMsigdbVersions()`).
+#' @param org a character, specifying the organism to use. This can either be
+#'   "auto" (default), "hs" or "mm".
 #'
 #' @return a list, containing two data.frames summarising the results of the
 #'   frequency analysis on gene set names and short descriptions.
@@ -27,9 +29,11 @@ computeMsigWordFreq <-
            weight = NULL,
            measure = c('tfidf', 'tf'),
            version = msigdb::getMsigdbVersions(),
+           org = c('auto', 'hs', 'mm'),
            rmwords = getMsigBlacklist()) {
     
   measure = match.arg(measure)
+  org = match.arg(org)
   stopifnot(is(msigGsc, 'GeneSetCollection'))
   stopifnot(is.null(weight) | all(weight > 0))
   stopifnot(is.null(weight) | all(names(msigGsc) %in% names(weight)))
@@ -105,7 +109,10 @@ computeMsigWordFreq <-
   
   #identify the organism and use the correct IDFs
   idType = msigdb::getMsigIdType(msigGsc)
-  org = msigdb::getMsigOrganism(msigGsc, idType)
+  if (org %in% 'auto') {
+    org = msigdb::getMsigOrganism(msigGsc, idType)
+  }
+  #select pre-processed data for organism
   if (org %in% 'hs') {
     idf = idf_hs
   } else {
