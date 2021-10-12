@@ -6,10 +6,10 @@
 \usage{
 plotMsigPPI(
   msigGsc,
+  ppidf,
   groups,
   geneStat = NULL,
   statName = "Gene-level statistic",
-  inferred = TRUE,
   threshConfidence = 0,
   threshFrequency = 0.25,
   threshStatistic = 0,
@@ -18,8 +18,7 @@ plotMsigPPI(
   nodeSF = 1,
   edgeSF = 1,
   lytFunc = "graphopt",
-  lytParams = list(),
-  org = c("auto", "hs", "mm")
+  lytParams = list()
 )
 }
 \arguments{
@@ -36,9 +35,6 @@ The vector must be named with either gene Symbols or Entrez IDs depending
 on annotations in msigGsc.}
 
 \item{statName}{a character, specifying the name of the statistic.}
-
-\item{inferred}{a logical, use PPIs inferred from another organism (human or
-mouse).}
 
 \item{threshConfidence}{a numeric, specifying the confidence threshold to
 apply to determine high confidence interactions. This should be a value
@@ -72,9 +68,6 @@ widths.}
 
 \item{lytParams}{a named list, containing additional parameters needed for
 the layout (see \code{ggraph::create_layout()}).}
-
-\item{org}{a character, specifying the organism to use. This can either be
-"auto" (default), "hs" or "mm".}
 }
 \value{
 
@@ -87,6 +80,7 @@ gene-set cluster identified using vissE. The international molecular exchange
 \examples{
 data(hgsc)
 grps = list('early' = 'HALLMARK_ESTROGEN_RESPONSE_EARLY', 'late' = 'HALLMARK_ESTROGEN_RESPONSE_LATE')
-plotMsigPPI(hgsc, grps)
+ppi = msigdb::getIMEX(org = 'hs', inferred = TRUE)
+plotMsigPPI(hgsc, ppi, grps)
 
 }

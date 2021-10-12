@@ -10,8 +10,6 @@ NULL
 #' gene-set cluster identified using vissE. The international molecular exchange
 #' (IMEx) PPI is used to obtain PPIs for genes present in a gene-set cluster.
 #'
-#' @param inferred a logical, use PPIs inferred from another organism (human or
-#'   mouse).
 #' @param threshConfidence a numeric, specifying the confidence threshold to
 #'   apply to determine high confidence interactions. This should be a value
 #'   between 0 and 1 (default is 0).
@@ -26,8 +24,6 @@ NULL
 #'   threshold should be applied to absolute values (default TRUE). This can be
 #'   used to threshold on statistics such as the log fold-chage from a
 #'   differential expression analysis.
-#' @param org a character, specifying the organism to use. This can either be
-#'   "auto" (default), "hs" or "mm".
 #'
 #' @inheritParams plotMsigNetwork
 #' @inheritParams plotGeneStats
@@ -38,14 +34,15 @@ NULL
 #' @examples
 #' data(hgsc)
 #' grps = list('early' = 'HALLMARK_ESTROGEN_RESPONSE_EARLY', 'late' = 'HALLMARK_ESTROGEN_RESPONSE_LATE')
-#' plotMsigPPI(hgsc, grps)
+#' ppi = msigdb::getIMEX(org = 'hs', inferred = TRUE)
+#' plotMsigPPI(hgsc, ppi, grps)
 #' 
 plotMsigPPI <-
   function(msigGsc,
+           ppidf,
            groups,
            geneStat = NULL,
            statName = 'Gene-level statistic',
-           inferred = TRUE,
            threshConfidence = 0,
            threshFrequency = 0.25,
            threshStatistic = 0,
@@ -54,29 +51,25 @@ plotMsigPPI <-
            nodeSF = 1,
            edgeSF = 1,
            lytFunc = 'graphopt',
-           lytParams = list(),
-           org = c('auto', 'hs', 'mm')) {
+           lytParams = list()) {
+    checkGroups(groups, names(msigGsc))
     stopifnot(threshConfidence >= 0)
     stopifnot(threshFrequency >= 0)
     stopifnot(nodeSF > 0)
     stopifnot(edgeSF > 0)
     stopifnot(is.null(geneStat) | !is.null(names(geneStat)))
-    stopifnot(is.list(groups))
-    checkGroups(groups, names(msigGsc))
-    org = match.arg(org)
     
     #compute combined graph
     gr = computeMsigGroupPPI(
       msigGsc,
+      ppidf,
       groups,
       geneStat,
-      inferred,
       threshConfidence,
       threshFrequency,
       threshStatistic,
       threshUseAbsolute,
-      topN,
-      org
+      topN
     )
     
     #plot base graph
@@ -132,34 +125,38 @@ plotMsigPPI <-
   }
 
 computeMsigGroupPPI <- function(msigGsc,
+                                ppidf,
                                 groups,
                                 geneStat = NULL,
-                                inferred = TRUE,
                                 threshConfidence = 0,
                                 threshFrequency = 0.25,
                                 threshStatistic = 0,
                                 threshUseAbsolute = TRUE,
-                                topN = 5,
-                                org) {
+                                topN = 5) {
   #identify the organism
   idType = msigdb::getMsigIdType(msigGsc)
-  if (org %in% 'auto') {
-    org = msigdb::getMsigOrganism(msigGsc, idType)
-  }
+  org = msigdb::getMsigOrganism(msigGsc, idType)
+  
+  #check PPI has records for organism of interest
+  taxid = c('hs' = '9606', 'mm' = 10090)[org]
+  isorg = ppidf$Taxid %in% taxid
+  if (any(isorg))
+    ppidf = ppidf[isorg, , drop = FALSE]
+  else
+    stop('No PPIs found for organism, please ensure that the correct PPI database has been loaded.')
   
   #retrieve PPI
-  ppi = msigdb::getIMEX(org, inferred)
   if (is(idType, 'SymbolIdentifier')) {
-    colnames(ppi)[colnames(ppi) %in% c('SymbolA', 'SymbolB')] = c('from', 'to')
+    colnames(ppidf)[colnames(ppidf) %in% c('SymbolA', 'SymbolB')] = c('from', 'to')
   } else {
-    colnames(ppi)[colnames(ppi) %in% c('EntrezA', 'EntrezB')] = c('from', 'to')
+    colnames(ppidf)[colnames(ppidf) %in% c('EntrezA', 'EntrezB')] = c('from', 'to')
   }
   
   #compute group-specific PPIs
   ppi_list = lapply(names(groups), function(grpname) {
     gs = groups[[grpname]]
     genes = table(unlist(lapply(msigGsc[gs], GSEABase::geneIds)))
-    ig = computeMsigPPI(names(genes), ppi, threshConfidence)
+    ig = computeMsigPPI(names(genes), ppidf, threshConfidence)
     
     #remove unconnected nodes
     ig = igraph::induced_subgraph(ig, V(ig)$name[igraph::degree(ig) > 0])
@@ -242,19 +239,19 @@ computeMsigGroupPPI <- function(msigGsc,
   return(gr)
 }
 
-computeMsigPPI <- function(genes, ppi, threshConfidence = 0, inferred = TRUE) {
-  colnames(ppi)[colnames(ppi) %in% c('Confidence')] = c('weight')
+computeMsigPPI <- function(genes, ppidf, threshConfidence = 0) {
+  colnames(ppidf)[colnames(ppidf) %in% c('Confidence')] = c('weight')
   
   #identify the organism and use the subset PPI
-  ppi = ppi[ppi$from %in% genes &
-              ppi$to %in% genes &
-              ppi$weight >= threshConfidence, , drop = FALSE]
-  ppi = ppi[ppi$from != ppi$to ,]
+  ppidf = ppidf[ppidf$from %in% genes &
+                  ppidf$to %in% genes &
+                  ppidf$weight >= threshConfidence, , drop = FALSE]
+  ppidf = ppidf[ppidf$from != ppidf$to ,]
   
   #create igraph
   edgecols = c('from', 'to', 'weight')
-  ppi = ppi[, union(edgecols, colnames(ppi)), drop = FALSE]
-  ppi_ig = igraph::graph_from_data_frame(ppi)
+  ppidf = ppidf[, union(edgecols, colnames(ppidf)), drop = FALSE]
+  ppi_ig = igraph::graph_from_data_frame(ppidf)
   igraph::V(ppi_ig)$Degree = igraph::degree(ppi_ig)
   
   return(ppi_ig)
