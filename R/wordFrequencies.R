@@ -178,7 +178,10 @@ getMsigBlacklist <- function(custom = c()) {
     'neighborhood',
     'pathway',
     'reactome',
-    'up'
+    'up',
+    'gobp',
+    'gomf',
+    'gocc'
   )
 
   #add custom words
