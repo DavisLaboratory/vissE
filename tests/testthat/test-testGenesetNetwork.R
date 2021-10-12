@@ -57,7 +57,7 @@ test_that("plot functions work", {
 
   # expect_warning(plotMsigNetwork(ig, grps))
   expect_s3_class(plotMsigNetwork(ig, grps[1:3]), 'ggplot')
-  expect_s3_class(plotMsigNetwork(ig, markGroups = list('a' = character())), 'ggplot')
+  expect_error(plotMsigNetwork(ig, markGroups = list('a' = character())), 'groups')
   expect_error(plotMsigNetwork(ig, nodeSF = 0))
   expect_error(plotMsigNetwork(ig, nodeSF = -1))
   expect_error(plotMsigNetwork(ig, edgeSF = 0))

@@ -116,6 +116,7 @@ plotMsigNetwork <-
            lytParams = list()) {
     stopifnot(nodeSF > 0)
     stopifnot(edgeSF > 0)
+    stopifnot(is.null(genesetStat) | !is.null(names(genesetStat)))
     stopifnot(is.null(markGroups) | checkGroups(markGroups, V(ig)$name))
     
     if (length(markGroups) > 12) {
@@ -321,13 +322,15 @@ bhuvad_theme = function (rl = 1.1) {
     )
 }
 
-checkGroups <- function(grps, gscnames) {
+checkGroups <- function(groups, gscnames) {
   stopifnot(length(groups) > 0)
   stopifnot(all(sapply(groups, length) > 0))
   stopifnot(is.list(groups))
-  stopifnot(!is.null(names(genesetStat)))
-  lapply(names(grps), function(grpname) {
-    if (!all(grps[[grpname]] %in% gscnames))
+  stopifnot(!is.null(names(groups)))
+  lapply(names(groups), function(grpname) {
+    if (!all(groups[[grpname]] %in% gscnames))
       stop(sprintf('group "%s" contains unknown members', grpname))
   })
+  
+  return(TRUE)
 }
