@@ -30,7 +30,8 @@ NULL
 #' @inheritParams plotMsigNetwork
 #' @inheritParams plotGeneStats
 #'
-#' @return
+#' @return a ggplot object with the protein-protein interaction networks plot
+#'   for each gene-set cluster.
 #' @export
 #'
 #' @examples

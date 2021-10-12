@@ -73,7 +73,8 @@ widths.}
 the layout (see \code{ggraph::create_layout()}).}
 }
 \value{
-
+a ggplot object with the protein-protein interaction networks plot
+for each gene-set cluster.
 }
 \description{
 This function plots the protein-protein interaction (PPI) network for a

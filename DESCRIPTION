@@ -1,6 +1,6 @@
 Package: vissE
 Title: Visualising Set Enrichment Analysis Results
-Version: 1.1.5
+Version: 1.1.6
 Authors@R: 
     person(given = "Dharmesh D.",
            family = "Bhuva",
@@ -21,7 +21,6 @@ Imports:
     methods,
     plyr,
     ggplot2,
-    ggnewscale,
     scico,
     RColorBrewer,
     tm,
@@ -31,7 +30,6 @@ Imports:
     grDevices,
     ggforce,
     msigdb,
-    Matrix,
     ggrepel,
     textstem,
     tidygraph,
