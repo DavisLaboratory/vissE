@@ -155,11 +155,32 @@ plotGeneStats(gene_stats, msigdb_hs, grps[1:6]) +
   geom_hline(yintercept = 0, colour = 2, lty = 2)
 ```
 
+## Visualise protein-protein interactions (PPI) in each cluster
+
+An alternative line of evidence for a common functional role of genes are the protein-protein interactions between them. Genes involved in a biological process are likely to interact with each other to achieve the desired function. We can therefore investigate protein-protein interactions within each cluster and thus assess evidence of a common process. In vissE, this can be done by inducing the protein-protein interaction of all genes in a gene-set cluster. Furthermore, the individual nodes in the network can be mapped onto properties such as the gene-level statistic. Networks can then be filtered based on the gene-level statistic, the confidence value of each interaction and the frequency of each gene in the cluster (i.e., how many gene-sets it belongs to).
+
+We will retrieve the PPI from the `msigdb` R/Bioconductor package. Setting inferred to TRUE will allow PPIs inferred from across organisms to be used in the analysis.
+
+```{r}
+#load PPI from the msigdb package
+ppi = getIMEX('hs', inferred = TRUE)
+#create the PPI plot
+set.seed(36)
+plotMsigPPI(
+  ppi,
+  msigdb_hs,
+  grps[1:6],
+  geneStat = gene_stats,
+  threshStatistic = 1.5,
+  threshConfidence = 0.5
+)
+```
+
 ## Combine results to interpret results
 
 Results of a vissE analysis are best presented and interpreted as paneled plots that combine all of the above plots. This allows for collective interpretation of the gene-set clusters.
 
-```{r fig.width=12, fig.height=5}
+```{r fig.width=12, fig.height=10}
 library(patchwork)
 
 #create independent plots
@@ -168,9 +189,17 @@ p1 = plotMsigWordcloud(msigdb_hs, grps[1:6], type = 'Name')
 p2 = plotMsigNetwork(gs_ovnet, markGroups = grps[1:6], genesetStat = geneset_stats)
 p3 = plotGeneStats(gene_stats, msigdb_hs, grps[1:6]) +
   geom_hline(yintercept = 0, colour = 2, lty = 2)
+p4 = plotMsigPPI(
+  ppi,
+  msigdb_hs,
+  grps[1:6],
+  geneStat = gene_stats,
+  threshStatistic = 1.5,
+  threshConfidence = 0.5
+)
 
 #combine using functions from ggpubr
-p1 + p2 + p3
+p1 + p2 + p3 + p4 + plot_layout(2, 2)
 ```
 
 # Session information
