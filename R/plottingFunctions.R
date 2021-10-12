@@ -116,8 +116,8 @@ plotMsigNetwork <-
            lytParams = list()) {
     stopifnot(nodeSF > 0)
     stopifnot(edgeSF > 0)
-    stopifnot(is.null(genesetStat) | !is.null(names(genesetStat)))
-    stopifnot(is.null(markGroups) | checkGroups(markGroups, V(ig)$name))
+    stopifnot(is.null(genesetStat) || !is.null(names(genesetStat)))
+    stopifnot(is.null(markGroups) || checkGroups(markGroups, V(ig)$name))
     
     if (length(markGroups) > 12) {
       warning("Only the first 12 components will be plot")

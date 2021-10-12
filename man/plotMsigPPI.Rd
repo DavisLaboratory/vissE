@@ -5,8 +5,8 @@
 \title{Plot PPI network for gene-set clusters identified using vissE}
 \usage{
 plotMsigPPI(
-  msigGsc,
   ppidf,
+  msigGsc,
   groups,
   geneStat = NULL,
   statName = "Gene-level statistic",
@@ -22,6 +22,9 @@ plotMsigPPI(
 )
 }
 \arguments{
+\item{ppidf}{a data.frame, containing a protein-protein interaction from the
+IMEx database. This can be retrieved from the \code{\link[msigdb:getIMEX]{msigdb::getIMEX()}} function.}
+
 \item{msigGsc}{a GeneSetCollection object, containing gene sets from the
 MSigDB. The \code{\link[GSEABase:getObjects]{GSEABase::getBroadSets()}} function can be used to parse XML
 files downloaded from MSigDB.}
@@ -81,6 +84,6 @@ gene-set cluster identified using vissE. The international molecular exchange
 data(hgsc)
 grps = list('early' = 'HALLMARK_ESTROGEN_RESPONSE_EARLY', 'late' = 'HALLMARK_ESTROGEN_RESPONSE_LATE')
 ppi = msigdb::getIMEX(org = 'hs', inferred = TRUE)
-plotMsigPPI(hgsc, ppi, grps)
+plotMsigPPI(ppi, hgsc, grps)
 
 }

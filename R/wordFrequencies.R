@@ -35,8 +35,8 @@ computeMsigWordFreq <-
   measure = match.arg(measure)
   org = match.arg(org)
   stopifnot(is(msigGsc, 'GeneSetCollection'))
-  stopifnot(is.null(weight) | all(weight > 0))
-  stopifnot(is.null(weight) | all(names(msigGsc) %in% names(weight)))
+  stopifnot(is.null(weight) || all(weight > 0))
+  stopifnot(is.null(weight) || all(names(msigGsc) %in% names(weight)))
 
   #check weights
   if (is.null(weight)) {

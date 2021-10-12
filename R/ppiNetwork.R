@@ -10,6 +10,8 @@ NULL
 #' gene-set cluster identified using vissE. The international molecular exchange
 #' (IMEx) PPI is used to obtain PPIs for genes present in a gene-set cluster.
 #'
+#' @param ppidf a data.frame, containing a protein-protein interaction from the
+#'   IMEx database. This can be retrieved from the [msigdb::getIMEX()] function.
 #' @param threshConfidence a numeric, specifying the confidence threshold to
 #'   apply to determine high confidence interactions. This should be a value
 #'   between 0 and 1 (default is 0).
@@ -35,11 +37,11 @@ NULL
 #' data(hgsc)
 #' grps = list('early' = 'HALLMARK_ESTROGEN_RESPONSE_EARLY', 'late' = 'HALLMARK_ESTROGEN_RESPONSE_LATE')
 #' ppi = msigdb::getIMEX(org = 'hs', inferred = TRUE)
-#' plotMsigPPI(hgsc, ppi, grps)
+#' plotMsigPPI(ppi, hgsc, grps)
 #' 
 plotMsigPPI <-
-  function(msigGsc,
-           ppidf,
+  function(ppidf,
+           msigGsc,
            groups,
            geneStat = NULL,
            statName = 'Gene-level statistic',
@@ -57,12 +59,12 @@ plotMsigPPI <-
     stopifnot(threshFrequency >= 0)
     stopifnot(nodeSF > 0)
     stopifnot(edgeSF > 0)
-    stopifnot(is.null(geneStat) | !is.null(names(geneStat)))
+    stopifnot(is.null(geneStat) || !is.null(names(geneStat)))
     
     #compute combined graph
     gr = computeMsigGroupPPI(
-      msigGsc,
       ppidf,
+      msigGsc,
       groups,
       geneStat,
       threshConfidence,
@@ -124,8 +126,8 @@ plotMsigPPI <-
     return(p1)
   }
 
-computeMsigGroupPPI <- function(msigGsc,
-                                ppidf,
+computeMsigGroupPPI <- function(ppidf,
+                                msigGsc,
                                 groups,
                                 geneStat = NULL,
                                 threshConfidence = 0,
