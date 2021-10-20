@@ -31,7 +31,7 @@ plotMsigWordcloud <-
   function(msigGsc,
            groups,
            weight = NULL,
-           measure = c('tf', 'tfidf'),
+           measure = c('tfidf', 'tf'),
            version = msigdb::getMsigdbVersions(),
            org = c('auto', 'hs', 'mm'),
            rmwords = getMsigBlacklist(),
