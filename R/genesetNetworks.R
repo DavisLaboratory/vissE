@@ -23,7 +23,7 @@ NULL
 #' data(hgsc)
 #' ovlap <- computeMsigOverlap(hgsc)
 #'
-computeMsigOverlap <- function(msigGsc1, msigGsc2 = NULL, thresh = 0.15, measure = c('jaccard', 'ovlapcoef')) {
+computeMsigOverlap <- function(msigGsc1, msigGsc2 = NULL, thresh = 0.25, measure = c('jaccard', 'ovlapcoef')) {
   #check collection size
   stopifnot(length(msigGsc1) > 0)
   stopifnot(all(sapply(lapply(msigGsc1, GSEABase::geneIds), length) > 0))

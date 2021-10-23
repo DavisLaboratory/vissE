@@ -7,7 +7,7 @@
 computeMsigOverlap(
   msigGsc1,
   msigGsc2 = NULL,
-  thresh = 0.15,
+  thresh = 0.25,
   measure = c("jaccard", "ovlapcoef")
 )
 }
