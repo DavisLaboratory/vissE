@@ -97,7 +97,7 @@ plotMsigWordcloud <-
 #'
 #' @examples
 #' data(hgsc)
-#' ovlap <- computeMsigOverlap(hgsc)
+#' ovlap <- computeMsigOverlap(hgsc, thresh = 0.15)
 #' ig <- computeMsigNetwork(ovlap, hgsc)
 #' groups <- list(
 #'   'g1' = c("HALLMARK_HYPOXIA", "HALLMARK_GLYCOLYSIS"),

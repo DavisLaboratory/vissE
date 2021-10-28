@@ -47,7 +47,7 @@ Plots a network of gene set overlap with overlap computed using the
 }
 \examples{
 data(hgsc)
-ovlap <- computeMsigOverlap(hgsc)
+ovlap <- computeMsigOverlap(hgsc, thresh = 0.15)
 ig <- computeMsigNetwork(ovlap, hgsc)
 groups <- list(
   'g1' = c("HALLMARK_HYPOXIA", "HALLMARK_GLYCOLYSIS"),
