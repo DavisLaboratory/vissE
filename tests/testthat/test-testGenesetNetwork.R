@@ -4,32 +4,32 @@ library(msigdb)
 test_that("geneset overlap computation works", {
   #empty collections
   nullgsc = GeneSetCollection(list())
-  expect_error(computeMsigOverlap(nullgsc))
-
+  expect_error(computeMsigOverlap(nullgsc, thresh = 0.15))
+  
   #non-empty gscs but empty gene sets
   emptygsc = GeneSetCollection(GeneSet(setName = 'A', geneIdType = SymbolIdentifier()))
   expect_error(computeMsigOverlap(emptygsc, thresh = 1))
-
+  
   emptygsc = GSEABase::GeneSetCollection(GSEABase::GeneSet(setName = 'a'),
                                          GSEABase::GeneSet(c('1', '2'), setName = 'b'))
   expect_error(computeMsigOverlap(emptygsc, thresh = 1))
   expect_error(computeMsigOverlap(emptygsc[2], emptygsc[1], thresh = 1))
-
+  
   #2 geneset
   data("hgsc")
   estgsc = hgsc[grep('ESTROGEN', hgsc)]
-  ov_jc = computeMsigOverlap(estgsc)
-  ov_oc = computeMsigOverlap(estgsc, measure = 'ovlap')
-
+  ov_jc = computeMsigOverlap(estgsc, thresh = 0.15)
+  ov_oc = computeMsigOverlap(estgsc, thresh = 0.15, measure = 'ovlap')
+  
   expect_equal(round(ov_jc[, 3], 3), 0.338)
   expect_equal(round(ov_oc[, 3], 3), 0.505)
-
+  
   #hallmark geneset
-  expect_error(nrow(computeMsigOverlap(hgsc, nullgsc)))
-  expect_error(ncol(computeMsigOverlap(hgsc, nullgsc)))
-  expect_equal(nrow(computeMsigOverlap(estgsc)), 1)
-  expect_equal(nrow(computeMsigOverlap(hgsc, estgsc)), 4)
-  expect_equal(nrow(computeMsigOverlap(hgsc)), 6)
+  expect_error(nrow(computeMsigOverlap(hgsc, nullgsc, thresh = 0.15)))
+  expect_error(ncol(computeMsigOverlap(hgsc, nullgsc, thresh = 0.15)))
+  expect_equal(nrow(computeMsigOverlap(estgsc, thresh = 0.15)), 1)
+  expect_equal(nrow(computeMsigOverlap(hgsc, estgsc, thresh = 0.15)), 4)
+  expect_equal(nrow(computeMsigOverlap(hgsc, thresh = 0.15)), 6)
   expect_equal(nrow(computeMsigOverlap(hgsc, thresh = 0)), 1225)
   expect_equal(nrow(computeMsigOverlap(hgsc, thresh = 1)), 0)
 })
@@ -37,9 +37,9 @@ test_that("geneset overlap computation works", {
 test_that("overlap network computation works", {
   #hallmark geneset
   data("hgsc")
-  ov = computeMsigOverlap(hgsc)
+  ov = computeMsigOverlap(hgsc, thresh = 0.15)
   ig = computeMsigNetwork(ov, hgsc)
-
+  
   expect_s3_class(ig, 'igraph')
   expect_length(igraph::V(ig), 12)
   expect_length(igraph::E(ig), 6)
@@ -50,11 +50,11 @@ test_that("overlap network computation works", {
 test_that("plot functions work", {
   #hallmark geneset
   data("hgsc")
-  ov = computeMsigOverlap(hgsc)
+  ov = computeMsigOverlap(hgsc, thresh = 0.15)
   ig = computeMsigNetwork(ov, hgsc)
   grps = as.list(igraph::V(ig)$name)
   names(grps) = 1:length(grps)
-
+  
   # expect_warning(plotMsigNetwork(ig, grps))
   expect_s3_class(plotMsigNetwork(ig, grps[1:3]), 'ggplot')
   expect_error(plotMsigNetwork(ig, markGroups = list('a' = character())), 'groups')
@@ -70,9 +70,9 @@ test_that("plot functions work", {
 test_that("geneset neighbourhood works", {
   #hallmark geneset
   data("hgsc")
-  ov = computeMsigOverlap(hgsc)
+  ov = computeMsigOverlap(hgsc, thresh = 0.15)
   ig = computeMsigNetwork(ov, hgsc)
-
+  
   expect_equal(getMsigNeighbour('HALLMARK_ESTROGEN_RESPONSE_LATE', ig), 'HALLMARK_ESTROGEN_RESPONSE_EARLY')
   expect_length(getMsigNeighbour('HALLMARK_ESTROGEN_RESPONSE_LATE', ig, 0.5), 0)
   expect_error(getMsigNeighbour('FAKE_SIG', ig))
