@@ -224,11 +224,20 @@ computeMsigGroupPPI <- function(ppidf,
   #add labels
   #identify outliers
   nodedf = plyr::ddply(nodedf, 'Group', function(x) {
+    if (is.na(x$name)) {
+      x$Rank = Inf
+      x$Label = ''
+      return(x)
+    }
+    
+    #rank genes for labelling
     st = rank(x$Degree) * rank(x$Freq)
     if (!is.null(geneStat)) {
       gst = geneStat[x$label]
       st = st * rank(abs(gst))
     }
+    #add rank for webserver
+    x$Rank = rank(-st)
     islab = !is.na(st) & rank(-st) <= topN
     
     x$Label = ''

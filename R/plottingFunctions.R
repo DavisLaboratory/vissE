@@ -262,6 +262,7 @@ plotMsigNetwork <-
 #' 
 plotGeneStats <- function(geneStat, msigGsc, groups, statName = 'Gene-level statistic', topN = 5) {
   checkGroups(groups, names(msigGsc))
+  stopifnot(!is.null(names(geneStat)))
   
   #compute frequencies
   genefreq = plyr::ldply(groups, function (x) {
