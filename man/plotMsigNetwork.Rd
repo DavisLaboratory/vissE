@@ -11,7 +11,8 @@ plotMsigNetwork(
   nodeSF = 1,
   edgeSF = 1,
   lytFunc = "graphopt",
-  lytParams = list()
+  lytParams = list(),
+  rmUnmarkedGroups = FALSE
 )
 }
 \arguments{
@@ -37,6 +38,9 @@ widths.}
 
 \item{lytParams}{a named list, containing additional parameters needed for
 the layout (see \code{ggraph::create_layout()}).}
+
+\item{rmUnmarkedGroups}{a logical, indicating whether unmarked groups should
+be removed from the network (TRUE) or retained (FALSE - default).}
 }
 \value{
 a ggplot2 object

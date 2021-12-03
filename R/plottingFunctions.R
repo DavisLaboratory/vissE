@@ -91,6 +91,8 @@ plotMsigWordcloud <-
 #'   `ggraph::create_layout()`).
 #' @param lytParams a named list, containing additional parameters needed for
 #'   the layout (see `ggraph::create_layout()`).
+#' @param rmUnmarkedGroups a logical, indicating whether unmarked groups should
+#'   be removed from the network (TRUE) or retained (FALSE - default).
 #'
 #' @return a ggplot2 object
 #' @export
@@ -113,7 +115,8 @@ plotMsigNetwork <-
            nodeSF = 1,
            edgeSF = 1,
            lytFunc = 'graphopt',
-           lytParams = list()) {
+           lytParams = list(),
+           rmUnmarkedGroups = FALSE) {
     stopifnot(nodeSF > 0)
     stopifnot(edgeSF > 0)
     stopifnot(is.null(genesetStat) || !is.null(names(genesetStat)))
@@ -126,6 +129,12 @@ plotMsigNetwork <-
     
     #remove unconnected nodes
     ig = igraph::induced_subgraph(ig, V(ig)[igraph::degree(ig) > 0])
+    
+    #remove unmarked groups
+    if (!is.null(markGroups) & rmUnmarkedGroups) {
+      markednodes = unlist(markGroups)
+      ig = igraph::induced_subgraph(ig, markednodes)
+    }
     
     #add custom annotation is no category annotated
     if (!all(c('Category') %in% igraph::list.vertex.attributes(ig))) {
