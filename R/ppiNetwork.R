@@ -106,7 +106,8 @@ plotMsigPPI <-
         palname = 'tokyo'
       }
       p1 = p1 +
-        scico::scale_fill_scico(palette = palname, na.value = 'orchid', limits = lims, oob = scales::squish)
+        scico::scale_fill_scico(palette = palname, na.value = 'orchid', limits = lims, oob = scales::squish) +
+        ggplot::labs(fill = 'statName')
     }
     
     #plot
