@@ -107,7 +107,7 @@ plotMsigPPI <-
       }
       p1 = p1 +
         scico::scale_fill_scico(palette = palname, na.value = 'orchid', limits = lims, oob = scales::squish) +
-        ggplot::labs(fill = 'statName')
+        ggplot2::labs(fill = 'statName')
     }
     
     #plot
