@@ -1,4 +1,5 @@
 test_that("PPI network gets computed", {
+  library(msigdb)
   data('hgsc')
   ppihs = getIMEX('hs')
   ppimm = getIMEX('mm')

@@ -1,7 +1,8 @@
 # version 1.4.0
 
-* Added feature to only plot gene-sets that are marked in the plotMsigNetwork function.
 * Added the adjusted rand index as a measure of gene-set overlap (now the default measure of overlap).
+* Added feature to only plot gene-sets that are marked in the plotMsigNetwork function.
+* Added function to identify and prioritise gene-set clusters (findMsigClusters)
 
 # version 1.2.0
 
