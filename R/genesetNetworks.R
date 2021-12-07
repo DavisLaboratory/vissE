@@ -12,9 +12,9 @@ NULL
 #'   to be computed.
 #' @param thresh a numeric, specifying the threshold to discard pairs of gene
 #'   sets.
-#' @param measure a character, specifying the similarity measure to use:
-#'   `jaccard` for the Jaccard Index and `ovlapcoef` for the Overlap
-#'   Coefficient.
+#' @param measure a character, specifying the similarity measure to use: `ari`
+#'   for the Adjusted Rand Index, `jaccard` for the Jaccard Index and
+#'   `ovlapcoef` for the Overlap Coefficient.
 #'
 #' @return a data.frame, containing the overlap structure of gene sets
 #'   represented as a network in the simple interaction format (SIF).
@@ -22,8 +22,8 @@ NULL
 #' @examples
 #' data(hgsc)
 #' ovlap <- computeMsigOverlap(hgsc)
-#'
-computeMsigOverlap <- function(msigGsc1, msigGsc2 = NULL, thresh = 0.25, measure = c('jaccard', 'ovlapcoef')) {
+#' 
+computeMsigOverlap <- function(msigGsc1, msigGsc2 = NULL, thresh = 0.25, measure = c('ari', 'jaccard', 'ovlapcoef')) {
   #check collection size
   stopifnot(length(msigGsc1) > 0)
   stopifnot(all(sapply(lapply(msigGsc1, GSEABase::geneIds), length) > 0))
@@ -32,7 +32,6 @@ computeMsigOverlap <- function(msigGsc1, msigGsc2 = NULL, thresh = 0.25, measure
     stopifnot(all(sapply(lapply(msigGsc2, GSEABase::geneIds), length) > 0))
   }
   #check threshold
-  stopifnot(thresh >= 0 & thresh <= 1)
   measure = match.arg(measure)
   
   #combine genesets
@@ -58,10 +57,13 @@ computeMsigOverlap <- function(msigGsc1, msigGsc2 = NULL, thresh = 0.25, measure
   }
   
   #overlap coef
-  if (measure %in% 'jaccard') {
-    mat = ovlap / (outer(len1, len2, '+') - ovlap)
+  total = ncol(imat)
+  if (measure %in% 'ari') {
+    mat = overlap.ari(len1, len2, ovlap, total)
+  } else if (measure %in% 'jaccard') {
+    mat = overlap.jaccard(len1, len2, ovlap, total)
   } else {
-    mat = ovlap / outer(len1, len2, pmin)
+    mat = overlap.ovlapcoef(len1, len2, ovlap, total)
   }
 
   #convert to data.frame
@@ -77,6 +79,65 @@ computeMsigOverlap <- function(msigGsc1, msigGsc2 = NULL, thresh = 0.25, measure
 
   rownames(mat) = NULL
 
+  return(mat)
+}
+
+overlap.ari <-  function(len1, len2, ovlap, total) {
+  #----design----
+  # n = length(v1) # total genes
+  # x = sum(v1 & v2) # intersection
+  # a = sum(v1) # length of geneset 1
+  # b = sum(v2) # length of geneset 2
+  # 
+  # sum_a = c(a, n - a)
+  # sum_a = sum(sum_a * (sum_a - 1))
+  # 
+  # sum_b = c(b, n - b)
+  # sum_b = sum(sum_b * (sum_b - 1))
+  # 
+  # prod_ab = sum_a * sum_b / (n * (n - 1))
+  # 
+  # sum_nij = c(x, n - (a + b - x), a - x, b - x)
+  # sum_nij = sum(sum_nij * (sum_nij - 1))
+  # 
+  # (sum_nij - prod_ab) / ((sum_a + sum_b) / 2 - prod_ab)
+  
+  #define components of the equation
+  n = total # total genes
+  x = ovlap # intersection of gene-sets
+  a = len1 # lengths of the first gene-set
+  b = len2 # lengths of the second gene-set
+  
+  #compute sums of pairs within and outside each gene-set (first)
+  sum_a = cbind(a, n - a) * cbind(a - 1, n - a - 1)
+  sum_a = sum_a[, 1] + sum_a[, 2]
+  sum_b = cbind(b, n - b) * cbind(b - 1, n - b - 1)
+  sum_b = sum_b[, 1] + sum_b[, 2]
+  sum_ab = outer(sum_a, sum_b, '+')
+  prod_ab = outer(sum_a, sum_b, '*') / (n * (n - 1))
+  
+  #compute sums of shared pairs within or outside two gene-sets
+  sum_nij = x * (x - 1)
+  tmp = n - outer(a, b, '+') + x
+  sum_nij = sum_nij + (tmp * (tmp - 1))
+  tmp = a - x
+  sum_nij = sum_nij + (tmp * (tmp - 1))
+  tmp = t(b - t(x))
+  sum_nij = sum_nij + (tmp * (tmp - 1))
+  
+  #ARI
+  ari = (sum_nij - prod_ab) / ((sum_ab) / 2 - prod_ab)
+  
+  return(ari)
+}
+
+overlap.jaccard <- function(len1, len2, ovlap, total) {
+  mat = ovlap / (outer(len1, len2, '+') - ovlap)
+  return(mat)
+}
+
+overlap.ovlapcoef <- function(len1, len2, ovlap, total) {
+  mat = ovlap / outer(len1, len2, pmin)
   return(mat)
 }
 
