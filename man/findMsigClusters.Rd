@@ -13,6 +13,9 @@ findMsigClusters(
 )
 }
 \arguments{
+\item{ig}{an igraph object, containing a network of gene set overlaps computed
+using \code{\link[=computeMsigNetwork]{computeMsigNetwork()}}.}
+
 \item{genesetStat}{a named numeric, containing statistics for each gene-set
 that are to be used in cluster prioritisation. If NULL, clusters are
 prioritised based on their size (number of gene-sets in them).}
@@ -26,9 +29,6 @@ function should produce a \code{communities} object.}
 
 \item{algparams}{a list, specifying additional parameters that are to be
 passed to the graph clustering algorithm.}
-
-\item{igan}{igraph object, containing a network of gene set overlaps computed
-using \code{\link[=computeMsigNetwork]{computeMsigNetwork()}}.}
 }
 \value{
 a list, containing gene-sets that belong to each cluster. Items in

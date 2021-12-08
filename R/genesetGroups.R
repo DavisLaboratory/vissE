@@ -6,7 +6,7 @@
 #' sorted based on their size and a given statistic of interest (absolute of the
 #' statistic is maximised per cluster).
 #'
-#' @param igan igraph object, containing a network of gene set overlaps computed
+#' @param ig an igraph object, containing a network of gene set overlaps computed
 #'   using [computeMsigNetwork()].
 #' @param alg a function, from the `igraph` package that should be used to
 #'   perform graph-clustering (default is `igraph::cluster_walktrap`). The
