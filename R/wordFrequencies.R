@@ -170,6 +170,9 @@ getMsigBlacklist <- function(custom = c()) {
     'gene',
     'genes',
     'gnf2',
+    'gobp',
+    'gomf',
+    'gocc',
     'gse',
     'hallmark',
     'kegg',
@@ -177,11 +180,10 @@ getMsigBlacklist <- function(custom = c()) {
     'morf',
     'neighborhood',
     'pathway',
+    'pid',
     'reactome',
     'up',
-    'gobp',
-    'gomf',
-    'gocc'
+    'wp'
   )
 
   #add custom words
