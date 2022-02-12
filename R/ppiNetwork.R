@@ -225,7 +225,7 @@ computeMsigGroupPPI <- function(ppidf,
   #add labels
   #identify outliers
   nodedf = plyr::ddply(nodedf, 'Group', function(x) {
-    if (is.na(x$name)) {
+    if (all(is.na(x$name))) {
       x$Rank = Inf
       x$Label = ''
       return(x)
