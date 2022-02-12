@@ -20,7 +20,7 @@ overlaps) and have a strong statistic (e.g. log fold-chage or p-value)."><!-- ma
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">vissE</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.11</span>
       </span>
     </div>
 
@@ -61,15 +61,16 @@ over-represented in a cluster of gene-sets (identified based on gene-set
 overlaps) and have a strong statistic (e.g. log fold-chage or p-value).</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">plotGeneStats</span><span class="op">(</span>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">plotGeneStats</span><span class="op">(</span>
   <span class="va">geneStat</span>,
   <span class="va">msigGsc</span>,
   <span class="va">groups</span>,
   statName <span class="op">=</span> <span class="st">"Gene-level statistic"</span>,
   topN <span class="op">=</span> <span class="fl">5</span>
 <span class="op">)</span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>geneStat</dt>
@@ -95,11 +96,10 @@ are those with the largest count and statistic.</p></dd>
     <p>a ggplot object, plotting the gene-level statistic against gene
 frequencies in the cluster of gene sets.</p>
     </div>
-    </div>
 
-    <div id="examples">
+    <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">GSEABase</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">GSEABase</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">hgsc</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">groups</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">'g1'</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">hgsc</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">25</span><span class="op">]</span>, <span class="st">'g2'</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">hgsc</span><span class="op">)</span><span class="op">[</span><span class="fl">26</span><span class="op">:</span><span class="fl">50</span><span class="op">]</span><span class="op">)</span></span>
@@ -111,7 +111,7 @@ frequencies in the cluster of gene sets.</p>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">#plot</span></span>
 <span class="r-in"><span class="fu">plotGeneStats</span><span class="op">(</span><span class="va">gstats</span>, <span class="va">hgsc</span>, <span class="va">groups</span><span class="op">)</span></span>
-<span class="r-plt"><img src="plotGeneStats-1.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="plotGeneStats-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>
@@ -127,7 +127,7 @@ frequencies in the cluster of gene sets.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.9000.</p>
 </div>
 
       </footer></div>
