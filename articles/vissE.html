@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">vissE</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.11</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.12</span>
       </span>
     </div>
 
@@ -69,10 +69,12 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>vissE: Visualising Set Enrichment Analysis Results.</h1>
-                        <h4 data-toc-skip class="author">Dharmesh D. Bhuva</h4>
+      <h1 data-toc-skip>vissE: Visualising Set Enrichment Analysis
+Results.</h1>
+                        <h4 data-toc-skip class="author">Dharmesh D.
+Bhuva</h4>
             
-            <h4 data-toc-skip class="date">12 February 2022</h4>
+            <h4 data-toc-skip class="date">28 February 2022</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/DavisLaboratory/vissE/blob/HEAD/vignettes/vissE.Rmd" class="external-link"><code>vignettes/vissE.Rmd</code></a></small>
       <div class="hidden name"><code>vissE.Rmd</code></div>
@@ -82,16 +84,43 @@
     
         <div class="abstract">
       <p class="abstract">Abstract</p>
-      <p>This package enables the interpretation and analysis of results from a gene set enrichment analysis using network-based and text-mining approaches. Most enrichment analyses result in large lists of significant gene sets that are difficult to interpret. Tools in this package help build a similarity-based network of significant gene sets from a gene set enrichment analysis that can then be investigated for their biological function using text-mining approaches.</p>
+      <p>This package enables the interpretation and analysis of results
+      from a gene set enrichment analysis using network-based and
+      text-mining approaches. Most enrichment analyses result in large
+      lists of significant gene sets that are difficult to interpret.
+      Tools in this package help build a similarity-based network of
+      significant gene sets from a gene set enrichment analysis that can
+      then be investigated for their biological function using
+      text-mining approaches.</p>
     </div>
     
 <div class="section level2">
 <h2 id="visse">vissE<a class="anchor" aria-label="anchor" href="#visse"></a>
 </h2>
-<p>This package implements the vissE algorithm to summarise results of gene-set analyses. Usually, the results of a gene-set enrichment analysis (e.g using limma::fry, singscore or GSEA) consist of a long list of gene-sets. Biologists then have to search through these lists to determines emerging themes to explain the altered biological processes. This task can be labour intensive therefore we need solutions to summarise large sets of results from such analyses.</p>
-<p>This package provides an approach to provide summaries of results from gene-set enrichment analyses. It exploits the relatedness between gene-sets and the inherent hierarchical structure that may exist in pathway databases and gene ontologies to cluster results. For each cluster of gene-sets vissE identifies, it performs text-mining to automate characterisation of biological functions and processes represented by the cluster.</p>
-<p>An additional power of vissE is to perform a novel type of gene-set enrichment analysis based on the network of similarity between gene-sets. Given a list of genes (e.g. from a DE analysis), vissE can characterise said list by first identifying all other gene-sets that are similar to it, following up with clustering the resulting gene-sets and finally performing text-mining to reveal emerging themes.</p>
-<p>In addition to these analyses, it provides visualisations to assist the users in understanding the results of their experiment. This document will demonstrate these functions across the two use-cases. The vissE package can be downloaded as follows:</p>
+<p>This package implements the vissE algorithm to summarise results of
+gene-set analyses. Usually, the results of a gene-set enrichment
+analysis (e.g using limma::fry, singscore or GSEA) consist of a long
+list of gene-sets. Biologists then have to search through these lists to
+determines emerging themes to explain the altered biological processes.
+This task can be labour intensive therefore we need solutions to
+summarise large sets of results from such analyses.</p>
+<p>This package provides an approach to provide summaries of results
+from gene-set enrichment analyses. It exploits the relatedness between
+gene-sets and the inherent hierarchical structure that may exist in
+pathway databases and gene ontologies to cluster results. For each
+cluster of gene-sets vissE identifies, it performs text-mining to
+automate characterisation of biological functions and processes
+represented by the cluster.</p>
+<p>An additional power of vissE is to perform a novel type of gene-set
+enrichment analysis based on the network of similarity between
+gene-sets. Given a list of genes (e.g. from a DE analysis), vissE can
+characterise said list by first identifying all other gene-sets that are
+similar to it, following up with clustering the resulting gene-sets and
+finally performing text-mining to reveal emerging themes.</p>
+<p>In addition to these analyses, it provides visualisations to assist
+the users in understanding the results of their experiment. This
+document will demonstrate these functions across the two use-cases. The
+vissE package can be downloaded as follows:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
     <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span>
@@ -101,8 +130,15 @@
 <div class="section level2">
 <h2 id="summarising-the-results-of-a-gene-set-enrichment-analysis">Summarising the results of a gene-set enrichment analysis<a class="anchor" aria-label="anchor" href="#summarising-the-results-of-a-gene-set-enrichment-analysis"></a>
 </h2>
-<p>Often, the results of a gene-set enrichment analysis (be it an over representation analysis of a functional class scoring approach) is a list of gene-sets that are accompanied by their statistics and p-values or false discovery rates (FDR). These results are mostly scanned through by biologists who then extract relevant themes pertaining to the experiment of interest. The approach here, vissE, will allow automated extraction of themes.</p>
-<p>The example below can be used with the results of any enrichment analysis. The data below is simulated to demonstrate the workflow.</p>
+<p>Often, the results of a gene-set enrichment analysis (be it an over
+representation analysis of a functional class scoring approach) is a
+list of gene-sets that are accompanied by their statistics and p-values
+or false discovery rates (FDR). These results are mostly scanned through
+by biologists who then extract relevant themes pertaining to the
+experiment of interest. The approach here, vissE, will allow automated
+extraction of themes.</p>
+<p>The example below can be used with the results of any enrichment
+analysis. The data below is simulated to demonstrate the workflow.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://davislaboratory.github.io/msigdb" class="external-link">msigdb</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">GSEABase</span><span class="op">)</span>
@@ -137,7 +173,11 @@
 <div class="section level3">
 <h3 id="compute-gene-set-overlap">Compute gene-set overlap<a class="anchor" aria-label="anchor" href="#compute-gene-set-overlap"></a>
 </h3>
-<p>The default approach to computing overlaps is using the Jaccard index. Overlap is computed based on the gene overlap between gene-sets. Alternatively, the overlap coefficient can be used. The latter can be used to highlight hierarchical overlaps (such as those present in the gene ontology).</p>
+<p>The default approach to computing overlaps is using the Jaccard
+index. Overlap is computed based on the gene overlap between gene-sets.
+Alternatively, the overlap coefficient can be used. The latter can be
+used to highlight hierarchical overlaps (such as those present in the
+gene ontology).</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://davislaboratory.github.io/vissE" class="external-link">vissE</a></span><span class="op">)</span>
 
@@ -149,7 +189,10 @@
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">36</span><span class="op">)</span> <span class="co">#set seed for reproducible layout</span>
 <span class="fu"><a href="../reference/plotMsigNetwork.html">plotMsigNetwork</a></span><span class="op">(</span><span class="va">gs_ovnet</span><span class="op">)</span></code></pre></div>
 <p><img src="vissE_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
-<p>The overlap network plot above is annotated using the MSigDB category. If gene-set statistics are available, they can be projected onto the network too. Gene-set statistics can be passed onto the plotting function as a named vector.</p>
+<p>The overlap network plot above is annotated using the MSigDB
+category. If gene-set statistics are available, they can be projected
+onto the network too. Gene-set statistics can be passed onto the
+plotting function as a named vector.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#simulate gene-set statistics</span>
 <span class="va">geneset_stats</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">2500</span><span class="op">)</span>
@@ -176,7 +219,14 @@
 <div class="section level3">
 <h3 id="identify-clusters-of-gene-sets">Identify clusters of gene-sets<a class="anchor" aria-label="anchor" href="#identify-clusters-of-gene-sets"></a>
 </h3>
-<p>Related gene-sets likely represent related processes. The next step is to identify clusters of gene-sets so that they can be assessed for biological themes. The specific clustering approach can be selected by the user though we recommend graph clustering approaches to use the information provided in the overlap graph. We recommend using the <code><a href="https://rdrr.io/pkg/igraph/man/cluster_walktrap.html" class="external-link">igraph::cluster_walktrap()</a></code> algorithm as it works well with dense graphs. Many other algorithms are implemented in the igraph package and these can be used instead of the walktrap algorithm.</p>
+<p>Related gene-sets likely represent related processes. The next step
+is to identify clusters of gene-sets so that they can be assessed for
+biological themes. The specific clustering approach can be selected by
+the user though we recommend graph clustering approaches to use the
+information provided in the overlap graph. We recommend using the
+<code><a href="https://rdrr.io/pkg/igraph/man/cluster_walktrap.html" class="external-link">igraph::cluster_walktrap()</a></code> algorithm as it works well with
+dense graphs. Many other algorithms are implemented in the igraph
+package and these can be used instead of the walktrap algorithm.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://igraph.org" class="external-link">igraph</a></span><span class="op">)</span>
 
@@ -194,7 +244,12 @@
 <div class="section level3">
 <h3 id="characterise-gene-set-clusters">Characterise gene-set clusters<a class="anchor" aria-label="anchor" href="#characterise-gene-set-clusters"></a>
 </h3>
-<p>Gene-set clusters identified can be assessed for their biological similarities using text-mining approaches. Here, we perform a frequency analysis (adjusted for using the inverse document frequency) on the gene-set names or their short descriptions to assess recurring biological themes in clusters. These results are then presented as word clouds.</p>
+<p>Gene-set clusters identified can be assessed for their biological
+similarities using text-mining approaches. Here, we perform a frequency
+analysis (adjusted for using the inverse document frequency) on the
+gene-set names or their short descriptions to assess recurring
+biological themes in clusters. These results are then presented as word
+clouds.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#compute and plot the results of text-mining</span>
 <span class="co">#using gene-set Names</span>
@@ -208,7 +263,11 @@
 <div class="section level3">
 <h3 id="visualise-gene-level-statistics-for-gene-set-clusters">Visualise gene-level statistics for gene-set clusters<a class="anchor" aria-label="anchor" href="#visualise-gene-level-statistics-for-gene-set-clusters"></a>
 </h3>
-<p>Gene-level statistics for each gene-set cluster can be visualised to better understand the genes contributing to significance of gene-sets. Gene-level statistics can be passed onto the plotting function as a named vector. A jitter is applied on the x-axis (due to its discrete nature).</p>
+<p>Gene-level statistics for each gene-set cluster can be visualised to
+better understand the genes contributing to significance of gene-sets.
+Gene-level statistics can be passed onto the plotting function as a
+named vector. A jitter is applied on the x-axis (due to its discrete
+nature).</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
 
@@ -229,8 +288,21 @@
 <div class="section level3">
 <h3 id="visualise-protein-protein-interactions-ppi-in-each-cluster">Visualise protein-protein interactions (PPI) in each cluster<a class="anchor" aria-label="anchor" href="#visualise-protein-protein-interactions-ppi-in-each-cluster"></a>
 </h3>
-<p>An alternative line of evidence for a common functional role of genes are the protein-protein interactions between them. Genes involved in a biological process are likely to interact with each other to achieve the desired function. We can therefore investigate protein-protein interactions within each cluster and thus assess evidence of a common process. In vissE, this can be done by inducing the protein-protein interaction of all genes in a gene-set cluster. Furthermore, the individual nodes in the network can be mapped onto properties such as the gene-level statistic. Networks can then be filtered based on the gene-level statistic, the confidence value of each interaction and the frequency of each gene in the cluster (i.e., how many gene-sets it belongs to).</p>
-<p>We will retrieve the PPI from the <code>msigdb</code> R/Bioconductor package. Setting inferred to TRUE will allow PPIs inferred from across organisms to be used in the analysis.</p>
+<p>An alternative line of evidence for a common functional role of genes
+are the protein-protein interactions between them. Genes involved in a
+biological process are likely to interact with each other to achieve the
+desired function. We can therefore investigate protein-protein
+interactions within each cluster and thus assess evidence of a common
+process. In vissE, this can be done by inducing the protein-protein
+interaction of all genes in a gene-set cluster. Furthermore, the
+individual nodes in the network can be mapped onto properties such as
+the gene-level statistic. Networks can then be filtered based on the
+gene-level statistic, the confidence value of each interaction and the
+frequency of each gene in the cluster (i.e., how many gene-sets it
+belongs to).</p>
+<p>We will retrieve the PPI from the <code>msigdb</code> R/Bioconductor
+package. Setting inferred to TRUE will allow PPIs inferred from across
+organisms to be used in the analysis.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#load PPI from the msigdb package</span>
 <span class="va">ppi</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/msigdb/man/getIMEX.html" class="external-link">getIMEX</a></span><span class="op">(</span><span class="st">'hs'</span>, inferred <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
@@ -249,7 +321,9 @@
 <div class="section level3">
 <h3 id="combine-results-to-interpret-results">Combine results to interpret results<a class="anchor" aria-label="anchor" href="#combine-results-to-interpret-results"></a>
 </h3>
-<p>Results of a vissE analysis are best presented and interpreted as paneled plots that combine all of the above plots. This allows for collective interpretation of the gene-set clusters.</p>
+<p>Results of a vissE analysis are best presented and interpreted as
+paneled plots that combine all of the above plots. This allows for
+collective interpretation of the gene-set clusters.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span>
 
@@ -278,7 +352,7 @@
 </h2>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; R Under development (unstable) (2022-02-10 r81713)</span>
+<span class="co">#&gt; R Under development (unstable) (2022-02-25 r81808)</span>
 <span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span>
 <span class="co">#&gt; Running under: Ubuntu 20.04.3 LTS</span>
 <span class="co">#&gt; </span>
@@ -299,8 +373,8 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; other attached packages:</span>
 <span class="co">#&gt;  [1] patchwork_1.1.1      ggplot2_3.3.5        igraph_1.2.11       </span>
-<span class="co">#&gt;  [4] vissE_1.3.11         GSEABase_1.57.0      graph_1.73.0        </span>
-<span class="co">#&gt;  [7] annotate_1.73.0      XML_3.99-0.8         AnnotationDbi_1.57.1</span>
+<span class="co">#&gt;  [4] vissE_1.3.12         GSEABase_1.57.0      graph_1.73.0        </span>
+<span class="co">#&gt;  [7] annotate_1.73.0      XML_3.99-0.9         AnnotationDbi_1.57.1</span>
 <span class="co">#&gt; [10] IRanges_2.29.1       S4Vectors_0.33.10    Biobase_2.55.0      </span>
 <span class="co">#&gt; [13] BiocGenerics_0.41.2  msigdb_1.3.1        </span>
 <span class="co">#&gt; </span>
@@ -313,12 +387,12 @@
 <span class="co">#&gt;  [11] memoise_2.0.1                 tm_0.7-8                     </span>
 <span class="co">#&gt;  [13] Biostrings_2.63.1             graphlayouts_0.8.0           </span>
 <span class="co">#&gt;  [15] textshape_1.7.3               pkgdown_2.0.2.9000           </span>
-<span class="co">#&gt;  [17] colorspace_2.0-2              blob_1.2.2                   </span>
+<span class="co">#&gt;  [17] colorspace_2.0-3              blob_1.2.2                   </span>
 <span class="co">#&gt;  [19] rappdirs_0.3.3                ggrepel_0.9.1                </span>
 <span class="co">#&gt;  [21] sylly_0.1-6                   textshaping_0.3.6            </span>
 <span class="co">#&gt;  [23] xfun_0.29                     dplyr_1.0.8                  </span>
-<span class="co">#&gt;  [25] crayon_1.4.2                  RCurl_1.98-1.6               </span>
-<span class="co">#&gt;  [27] jsonlite_1.7.3                glue_1.6.1                   </span>
+<span class="co">#&gt;  [25] crayon_1.5.0                  RCurl_1.98-1.6               </span>
+<span class="co">#&gt;  [27] jsonlite_1.8.0                glue_1.6.2                   </span>
 <span class="co">#&gt;  [29] polyclip_1.10-0               gtable_0.3.0                 </span>
 <span class="co">#&gt;  [31] zlibbioc_1.41.0               XVector_0.35.0               </span>
 <span class="co">#&gt;  [33] scico_1.3.0                   scales_1.1.1                 </span>
@@ -330,15 +404,15 @@
 <span class="co">#&gt;  [45] ellipsis_0.3.2                pkgconfig_2.0.3              </span>
 <span class="co">#&gt;  [47] farver_2.1.0                  sass_0.4.0                   </span>
 <span class="co">#&gt;  [49] dbplyr_2.1.1                  utf8_1.2.2                   </span>
-<span class="co">#&gt;  [51] tidyselect_1.1.1              labeling_0.4.2               </span>
+<span class="co">#&gt;  [51] tidyselect_1.1.2              labeling_0.4.2               </span>
 <span class="co">#&gt;  [53] rlang_1.0.1                   reshape2_1.4.4               </span>
 <span class="co">#&gt;  [55] later_1.3.0                   munsell_0.5.0                </span>
 <span class="co">#&gt;  [57] BiocVersion_3.15.0            tools_4.2.0                  </span>
-<span class="co">#&gt;  [59] cachem_1.0.6                  cli_3.1.1                    </span>
-<span class="co">#&gt;  [61] generics_0.1.2                RSQLite_2.2.9                </span>
-<span class="co">#&gt;  [63] ExperimentHub_2.3.5           evaluate_0.14                </span>
+<span class="co">#&gt;  [59] cachem_1.0.6                  cli_3.2.0                    </span>
+<span class="co">#&gt;  [61] generics_0.1.2                RSQLite_2.2.10               </span>
+<span class="co">#&gt;  [63] ExperimentHub_2.3.5           evaluate_0.15                </span>
 <span class="co">#&gt;  [65] stringr_1.4.0                 fastmap_1.1.0                </span>
-<span class="co">#&gt;  [67] yaml_2.2.2                    ragg_1.2.1                   </span>
+<span class="co">#&gt;  [67] yaml_2.3.5                    ragg_1.2.2                   </span>
 <span class="co">#&gt;  [69] textstem_0.1.4                org.Hs.eg.db_3.14.0          </span>
 <span class="co">#&gt;  [71] knitr_1.37                    bit64_4.0.5                  </span>
 <span class="co">#&gt;  [73] fs_1.5.2                      tidygraph_1.2.0              </span>
@@ -387,7 +461,8 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.9000.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.9000.</p>
 </div>
 
       </footer>
