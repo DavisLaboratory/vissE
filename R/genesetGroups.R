@@ -69,7 +69,7 @@ findMsigClusters <- function(ig, genesetStat = NULL, minSize = 2, alg = igraph::
   #rank by cluster size
   rnk = rank(grp.size)
   if (!is.null(genesetStat)) {
-    if (all(names(genesetStat) %in% igraph::V(ig)$name)){
+    if (all(igraph::V(ig)$name %in% names(genesetStat))){
       #rank by cluster statistics
       rnk.stat = rank(sapply(grps, function(x) stats::median(abs(genesetStat[x]))))
       #combine and compute rank of product-of-ranks
