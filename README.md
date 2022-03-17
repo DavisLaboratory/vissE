@@ -1,6 +1,8 @@
 # vissE - Visualising Set Enrichment Analysis Results <img src="https://github.com/Bioconductor/BiocStickers/blob/master/vissE/vissE.png?raw=true" alt="logo" align="right" height="140" width="120"/>
 
-[![R-CMD-check](https://github.com/DavisLaboratory/vissE/workflows/R-CMD-check-bioc/badge.svg)](https://github.com/DavisLaboratory/vissE/actions) [![BioC status](https://bioconductor.org/shields/years-in-bioc/vissE.svg)](https://bioconductor.org/packages/vissE/)
+[![R-CMD-check](https://github.com/DavisLaboratory/vissE/workflows/R-CMD-check-bioc/badge.svg)](https://github.com/DavisLaboratory/vissE/actions)
+[![codecov](https://codecov.io/gh/DavisLaboratory/vissE/branch/main/graph/badge.svg?token=8JHZB1GN26)](https://codecov.io/gh/DavisLaboratory/vissE)
+[![BioC status](https://bioconductor.org/shields/years-in-bioc/vissE.svg)](https://bioconductor.org/packages/vissE/)
 
 This package implements the vissE algorithm to summarise results of gene-set analyses. Usually, the results of a gene-set enrichment analysis (e.g using limma::fry, singscore or GSEA) consist of a long list of gene-sets. Biologists then have to search through these lists to determines emerging themes to explain the altered biological processes. This task can be labour intensive therefore we need solutions to summarise large sets of results from such analyses.
 
