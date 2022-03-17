@@ -56,8 +56,8 @@ library(GSEABase)
 
 #load the MSigDB from the msigdb package
 msigdb_hs = getMsigdb()
-#append KEGG gene-sets
-msigdb_hs = appendKEGG(msigdb_hs)
+#append KEGG gene-sets - comment out to run
+# msigdb_hs = appendKEGG(msigdb_hs)
 #select h, c2, and c5 collections (recommended)
 msigdb_hs = subsetCollection(msigdb_hs, c('h', 'c2', 'c5'))
 
@@ -113,16 +113,28 @@ Related gene-sets likely represent related processes. The next step is to identi
 ```{r}
 library(igraph)
 
-#identify clusters
-grps = cluster_walktrap(gs_ovnet)
-#extract clustering results
-grps = groups(grps)
-#sort by cluster size
-grps = grps[order(sapply(grps, length), decreasing = TRUE)]
+#identify clusters - order based on cluster size and avg gene-set stats
+grps = findMsigClusters(gs_ovnet,
+                        genesetStat = geneset_stats,
+                        alg = cluster_walktrap,
+                        minSize = 5)
 #plot the top 12 clusters
 set.seed(36) #set seed for reproducible layout
 plotMsigNetwork(gs_ovnet, markGroups = grps[1:6], genesetStat = geneset_stats)
 ```
+
+Instead of exploring the full network of gene-sets, the subgraph of nodes that form part of the groups can be plot. This allows for a more focused investigation into the relatedness of clusters identified using vissE.
+
+```{r}
+set.seed(36) #set seed for reproducible layout
+plotMsigNetwork(
+  gs_ovnet,
+  markGroups = grps[1:6],
+  genesetStat = geneset_stats,
+  rmUnmarkedGroups = TRUE
+)
+```
+
 
 ## Characterise gene-set clusters
 
@@ -143,7 +155,7 @@ Gene-level statistics for each gene-set cluster can be visualised to better unde
 ```{r}
 library(ggplot2)
 
-#simulate gene-set statistics
+#simulate gene statistics
 set.seed(36)
 genes = unique(unlist(geneIds(geneset_gsc)))
 gene_stats = rnorm(length(genes))
@@ -171,8 +183,8 @@ plotMsigPPI(
   msigdb_hs,
   grps[1:6],
   geneStat = gene_stats,
-  threshStatistic = 1.5,
-  threshConfidence = 0.5
+  threshStatistic = 0.2,
+  threshConfidence = 0.2
 )
 ```
 
@@ -194,8 +206,8 @@ p4 = plotMsigPPI(
   msigdb_hs,
   grps[1:6],
   geneStat = gene_stats,
-  threshStatistic = 1.5,
-  threshConfidence = 0.5
+  threshStatistic = 0.2,
+  threshConfidence = 0.2
 )
 
 #combine using functions from ggpubr
