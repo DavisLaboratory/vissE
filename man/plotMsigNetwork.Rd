@@ -12,7 +12,8 @@ plotMsigNetwork(
   edgeSF = 1,
   lytFunc = "graphopt",
   lytParams = list(),
-  rmUnmarkedGroups = FALSE
+  rmUnmarkedGroups = FALSE,
+  maxGrp = 12
 )
 }
 \arguments{
@@ -41,6 +42,8 @@ the layout (see \code{ggraph::create_layout()}).}
 
 \item{rmUnmarkedGroups}{a logical, indicating whether unmarked groups should
 be removed from the network (TRUE) or retained (FALSE - default).}
+
+\item{maxGrp}{a numeric, specifying the maximum number of groups to plot.}
 }
 \value{
 a ggplot2 object

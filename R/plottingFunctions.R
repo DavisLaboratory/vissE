@@ -93,6 +93,7 @@ plotMsigWordcloud <-
 #'   the layout (see `ggraph::create_layout()`).
 #' @param rmUnmarkedGroups a logical, indicating whether unmarked groups should
 #'   be removed from the network (TRUE) or retained (FALSE - default).
+#' @param maxGrp a numeric, specifying the maximum number of groups to plot.
 #'
 #' @return a ggplot2 object
 #' @export
@@ -116,15 +117,16 @@ plotMsigNetwork <-
            edgeSF = 1,
            lytFunc = 'graphopt',
            lytParams = list(),
-           rmUnmarkedGroups = FALSE) {
+           rmUnmarkedGroups = FALSE,
+           maxGrp = 12) {
     stopifnot(nodeSF > 0)
     stopifnot(edgeSF > 0)
     stopifnot(is.null(genesetStat) || !is.null(names(genesetStat)))
     stopifnot(is.null(markGroups) || checkGroups(markGroups, V(ig)$name))
     
-    if (length(markGroups) > 12) {
-      warning("Only the first 12 components will be plot")
-      markGroups = markGroups[seq_len(12)]
+    if (length(markGroups) > maxGrp) {
+      warning(sprintf("Only the first %s components will be plot", maxGrp))
+      markGroups = markGroups[seq_len(maxGrp)]
     }
     
     #remove unconnected nodes
