@@ -19,7 +19,7 @@ network of gene set overlaps."><!-- mathjax --><script src="https://cdnjs.cloudf
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">vissE</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.13</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.1</span>
       </span>
     </div>
 
@@ -60,40 +60,49 @@ network of gene set overlaps.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">computeMsigOverlap</span><span class="op">(</span>
-  <span class="va">msigGsc1</span>,
-  msigGsc2 <span class="op">=</span> <span class="cn">NULL</span>,
-  thresh <span class="op">=</span> <span class="fl">0.25</span>,
-  measure <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ari"</span>, <span class="st">"jaccard"</span>, <span class="st">"ovlapcoef"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">computeMsigOverlap</span><span class="op">(</span></span>
+<span>  <span class="va">msigGsc1</span>,</span>
+<span>  msigGsc2 <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  thresh <span class="op">=</span> <span class="fl">0.25</span>,</span>
+<span>  measure <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ari"</span>, <span class="st">"jaccard"</span>, <span class="st">"ovlapcoef"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>msigGsc1</dt>
 <dd><p>a GeneSetCollection object.</p></dd>
+
+
 <dt>msigGsc2</dt>
 <dd><p>a GeneSetCollection object or NULL if pairwise overlaps are
 to be computed.</p></dd>
+
+
 <dt>thresh</dt>
 <dd><p>a numeric, specifying the threshold to discard pairs of gene
 sets.</p></dd>
+
+
 <dt>measure</dt>
 <dd><p>a character, specifying the similarity measure to use: <code>ari</code>
 for the Adjusted Rand Index, <code>jaccard</code> for the Jaccard Index and
 <code>ovlapcoef</code> for the Overlap Coefficient.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>a data.frame, containing the overlap structure of gene sets
+    
+
+<p>a data.frame, containing the overlap structure of gene sets
 represented as a network in the simple interaction format (SIF).</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">hgsc</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">ovlap</span> <span class="op">&lt;-</span> <span class="fu">computeMsigOverlap</span><span class="op">(</span><span class="va">hgsc</span><span class="op">)</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">hgsc</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ovlap</span> <span class="op">&lt;-</span> <span class="fu">computeMsigOverlap</span><span class="op">(</span><span class="va">hgsc</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -108,8 +117,7 @@ represented as a network in the simple interaction format (SIF).</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.9000.</p>
 </div>
 
       </footer></div>

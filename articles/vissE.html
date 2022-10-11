@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">vissE</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.13</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.1</span>
       </span>
     </div>
 
@@ -74,7 +74,7 @@ Results.</h1>
                         <h4 data-toc-skip class="author">Dharmesh D.
 Bhuva</h4>
             
-            <h4 data-toc-skip class="date">17 March 2022</h4>
+            <h4 data-toc-skip class="date">11 October 2022</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/DavisLaboratory/vissE/blob/HEAD/vignettes/vissE.Rmd" class="external-link"><code>vignettes/vissE.Rmd</code></a></small>
       <div class="hidden name"><code>vissE.Rmd</code></div>
@@ -122,10 +122,10 @@ the users in understanding the results of their experiment. This
 document will demonstrate these functions across the two use-cases. The
 vissE package can be downloaded as follows:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
-    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span>
-
-<span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"vissE"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"vissE"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="summarising-the-results-of-a-gene-set-enrichment-analysis">Summarising the results of a gene-set enrichment analysis<a class="anchor" aria-label="anchor" href="#summarising-the-results-of-a-gene-set-enrichment-analysis"></a>
@@ -140,29 +140,29 @@ extraction of themes.</p>
 <p>The example below can be used with the results of any enrichment
 analysis. The data below is simulated to demonstrate the workflow.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://davislaboratory.github.io/msigdb" class="external-link">msigdb</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">GSEABase</span><span class="op">)</span>
-
-<span class="co">#load the MSigDB from the msigdb package</span>
-<span class="va">msigdb_hs</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/msigdb/man/getMsigdb.html" class="external-link">getMsigdb</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#append KEGG gene-sets - comment out to run</span>
-<span class="co"># msigdb_hs = appendKEGG(msigdb_hs)</span>
-<span class="co">#select h, c2, and c5 collections (recommended)</span>
-<span class="va">msigdb_hs</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/msigdb/man/subsetCollection.html" class="external-link">subsetCollection</a></span><span class="op">(</span><span class="va">msigdb_hs</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'h'</span>, <span class="st">'c2'</span>, <span class="st">'c5'</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co">#randomly sample gene-sets to simulate the results of an enrichment analysis</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">360</span><span class="op">)</span>
-<span class="va">geneset_res</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">msigdb_hs</span>, <span class="va">setName</span><span class="op">)</span>, <span class="fl">2500</span><span class="op">)</span>
-
-<span class="co">#create a GeneSetCollection using the gene-set analysis results</span>
-<span class="va">geneset_gsc</span> <span class="op">=</span> <span class="va">msigdb_hs</span><span class="op">[</span><span class="va">geneset_res</span><span class="op">]</span>
-<span class="va">geneset_gsc</span>
-<span class="co">#&gt; GeneSetCollection</span>
-<span class="co">#&gt;   names: GOMF_GLUCOSE_6-PHOSPHATE:INORGANIC_PHOSPHATE_ANTIPORTER_ACTIVITY, GOCC_MULTIVESICULAR_BODY,_INTERNAL_VESICLE, ..., VALK_AML_WITH_11Q23_REARRANGED (2500 total)</span>
-<span class="co">#&gt;   unique identifiers: SLC37A4, SLC37A1, ..., AC138649.1 (19216 total)</span>
-<span class="co">#&gt;   types in collection:</span>
-<span class="co">#&gt;     geneIdType: SymbolIdentifier (1 total)</span>
-<span class="co">#&gt;     collectionType: BroadCollection (1 total)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://davislaboratory.github.io/msigdb" class="external-link">msigdb</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">GSEABase</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#load the MSigDB from the msigdb package</span></span>
+<span><span class="va">msigdb_hs</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/msigdb/man/getMsigdb.html" class="external-link">getMsigdb</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#append KEGG gene-sets - comment out to run</span></span>
+<span><span class="co"># msigdb_hs = appendKEGG(msigdb_hs)</span></span>
+<span><span class="co">#select h, c2, and c5 collections (recommended)</span></span>
+<span><span class="va">msigdb_hs</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/msigdb/man/subsetCollection.html" class="external-link">subsetCollection</a></span><span class="op">(</span><span class="va">msigdb_hs</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'h'</span>, <span class="st">'c2'</span>, <span class="st">'c5'</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#randomly sample gene-sets to simulate the results of an enrichment analysis</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">360</span><span class="op">)</span></span>
+<span><span class="va">geneset_res</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">msigdb_hs</span>, <span class="va">setName</span><span class="op">)</span>, <span class="fl">2500</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#create a GeneSetCollection using the gene-set analysis results</span></span>
+<span><span class="va">geneset_gsc</span> <span class="op">=</span> <span class="va">msigdb_hs</span><span class="op">[</span><span class="va">geneset_res</span><span class="op">]</span></span>
+<span><span class="va">geneset_gsc</span></span>
+<span><span class="co">#&gt; GeneSetCollection</span></span>
+<span><span class="co">#&gt;   names: GOMF_GLUCOSE_1-DEHYDROGENASE_(NADP+)_ACTIVITY, GOCC_PROTON-TRANSPORTING_ATP_SYNTHASE,_CATALYTIC_CORE, ..., GOBP_KUPFFER'S_VESICLE_DEVELOPMENT (2500 total)</span></span>
+<span><span class="co">#&gt;   unique identifiers: H6PD, ATP5F1A, ..., SAMD15 (19300 total)</span></span>
+<span><span class="co">#&gt;   types in collection:</span></span>
+<span><span class="co">#&gt;     geneIdType: SymbolIdentifier (1 total)</span></span>
+<span><span class="co">#&gt;     collectionType: BroadCollection (1 total)</span></span></code></pre></div>
 <p>A vissE analysis involves 3 steps:</p>
 <ol style="list-style-type: decimal">
 <li>Compute gene-set overlaps and the gene-set overlap network</li>
@@ -179,41 +179,41 @@ Alternatively, the overlap coefficient can be used. The latter can be
 used to highlight hierarchical overlaps (such as those present in the
 gene ontology).</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://davislaboratory.github.io/vissE" class="external-link">vissE</a></span><span class="op">)</span>
-
-<span class="co">#compute gene-set overlap</span>
-<span class="va">gs_ovlap</span> <span class="op">=</span> <span class="fu"><a href="../reference/computeMsigOverlap.html">computeMsigOverlap</a></span><span class="op">(</span><span class="va">geneset_gsc</span>, thresh <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span>
-<span class="co">#create an overlap network</span>
-<span class="va">gs_ovnet</span> <span class="op">=</span> <span class="fu"><a href="../reference/computeMsigNetwork.html">computeMsigNetwork</a></span><span class="op">(</span><span class="va">gs_ovlap</span>, <span class="va">msigdb_hs</span><span class="op">)</span>
-<span class="co">#plot the network</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">36</span><span class="op">)</span> <span class="co">#set seed for reproducible layout</span>
-<span class="fu"><a href="../reference/plotMsigNetwork.html">plotMsigNetwork</a></span><span class="op">(</span><span class="va">gs_ovnet</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://davislaboratory.github.io/vissE" class="external-link">vissE</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#compute gene-set overlap</span></span>
+<span><span class="va">gs_ovlap</span> <span class="op">=</span> <span class="fu"><a href="../reference/computeMsigOverlap.html">computeMsigOverlap</a></span><span class="op">(</span><span class="va">geneset_gsc</span>, thresh <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span></span>
+<span><span class="co">#create an overlap network</span></span>
+<span><span class="va">gs_ovnet</span> <span class="op">=</span> <span class="fu"><a href="../reference/computeMsigNetwork.html">computeMsigNetwork</a></span><span class="op">(</span><span class="va">gs_ovlap</span>, <span class="va">msigdb_hs</span><span class="op">)</span></span>
+<span><span class="co">#plot the network</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">36</span><span class="op">)</span> <span class="co">#set seed for reproducible layout</span></span>
+<span><span class="fu"><a href="../reference/plotMsigNetwork.html">plotMsigNetwork</a></span><span class="op">(</span><span class="va">gs_ovnet</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vissE_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
 <p>The overlap network plot above is annotated using the MSigDB
 category. If gene-set statistics are available, they can be projected
 onto the network too. Gene-set statistics can be passed onto the
 plotting function as a named vector.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co">#simulate gene-set statistics</span>
-<span class="va">geneset_stats</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">2500</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">geneset_stats</span><span class="op">)</span> <span class="op">=</span> <span class="va">geneset_res</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">geneset_stats</span><span class="op">)</span>
-<span class="co">#&gt; GOMF_GLUCOSE_6-PHOSPHATE:INORGANIC_PHOSPHATE_ANTIPORTER_ACTIVITY </span>
-<span class="co">#&gt;                                                       -0.5191669 </span>
-<span class="co">#&gt;                       GOCC_MULTIVESICULAR_BODY,_INTERNAL_VESICLE </span>
-<span class="co">#&gt;                                                        2.3537577 </span>
-<span class="co">#&gt;          HP_APLASIA_HYPOPLASIA_OF_THE_ABDOMINAL_WALL_MUSCULATURE </span>
-<span class="co">#&gt;                                                        1.4520166 </span>
-<span class="co">#&gt;              GOBP_REGULATION_OF_ANTIBACTERIAL_PEPTIDE_PRODUCTION </span>
-<span class="co">#&gt;                                                        0.5466009 </span>
-<span class="co">#&gt;       GOBP_POSITIVE_REGULATION_OF_NITRIC-OXIDE_SYNTHASE_ACTIVITY </span>
-<span class="co">#&gt;                                                       -0.2060802 </span>
-<span class="co">#&gt;                                            GOCC_PCNA-P21_COMPLEX </span>
-<span class="co">#&gt;                                                       -1.5210543</span>
-
-<span class="co">#plot the network and overlay gene-set statistics</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">36</span><span class="op">)</span> <span class="co">#set seed for reproducible layout</span>
-<span class="fu"><a href="../reference/plotMsigNetwork.html">plotMsigNetwork</a></span><span class="op">(</span><span class="va">gs_ovnet</span>, genesetStat <span class="op">=</span> <span class="va">geneset_stats</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co">#simulate gene-set statistics</span></span>
+<span><span class="va">geneset_stats</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">2500</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">geneset_stats</span><span class="op">)</span> <span class="op">=</span> <span class="va">geneset_res</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">geneset_stats</span><span class="op">)</span></span>
+<span><span class="co">#&gt;                GOMF_GLUCOSE_1-DEHYDROGENASE_(NADP+)_ACTIVITY </span></span>
+<span><span class="co">#&gt;                                                   1.38997154 </span></span>
+<span><span class="co">#&gt;        GOCC_PROTON-TRANSPORTING_ATP_SYNTHASE,_CATALYTIC_CORE </span></span>
+<span><span class="co">#&gt;                                                   0.07643696 </span></span>
+<span><span class="co">#&gt;             GOMF_HISTONE_KINASE_ACTIVITY_(H2A-T120_SPECIFIC) </span></span>
+<span><span class="co">#&gt;                                                  -1.21057015 </span></span>
+<span><span class="co">#&gt;                                      HP_BUDD_CHIARI_SYNDROME </span></span>
+<span><span class="co">#&gt;                                                  -0.76771773 </span></span>
+<span><span class="co">#&gt;                                 GOBP_IMMUNE_EFFECTOR_PROCESS </span></span>
+<span><span class="co">#&gt;                                                   1.29679357 </span></span>
+<span><span class="co">#&gt; GOBP_POSITIVE_REGULATION_OF_SMOOTH_MUSCLE_CELL_PROLIFERATION </span></span>
+<span><span class="co">#&gt;                                                  -0.89653508</span></span>
+<span></span>
+<span><span class="co">#plot the network and overlay gene-set statistics</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">36</span><span class="op">)</span> <span class="co">#set seed for reproducible layout</span></span>
+<span><span class="fu"><a href="../reference/plotMsigNetwork.html">plotMsigNetwork</a></span><span class="op">(</span><span class="va">gs_ovnet</span>, genesetStat <span class="op">=</span> <span class="va">geneset_stats</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vissE_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 </div>
 <div class="section level3">
@@ -228,29 +228,29 @@ information provided in the overlap graph. We recommend using the
 dense graphs. Many other algorithms are implemented in the igraph
 package and these can be used instead of the walktrap algorithm.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://igraph.org" class="external-link">igraph</a></span><span class="op">)</span>
-
-<span class="co">#identify clusters - order based on cluster size and avg gene-set stats</span>
-<span class="va">grps</span> <span class="op">=</span> <span class="fu"><a href="../reference/findMsigClusters.html">findMsigClusters</a></span><span class="op">(</span><span class="va">gs_ovnet</span>,
-                        genesetStat <span class="op">=</span> <span class="va">geneset_stats</span>,
-                        alg <span class="op">=</span> <span class="va">cluster_walktrap</span>,
-                        minSize <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
-<span class="co">#plot the top 12 clusters</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">36</span><span class="op">)</span> <span class="co">#set seed for reproducible layout</span>
-<span class="fu"><a href="../reference/plotMsigNetwork.html">plotMsigNetwork</a></span><span class="op">(</span><span class="va">gs_ovnet</span>, markGroups <span class="op">=</span> <span class="va">grps</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>, genesetStat <span class="op">=</span> <span class="va">geneset_stats</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://igraph.org" class="external-link">igraph</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#identify clusters - order based on cluster size and avg gene-set stats</span></span>
+<span><span class="va">grps</span> <span class="op">=</span> <span class="fu"><a href="../reference/findMsigClusters.html">findMsigClusters</a></span><span class="op">(</span><span class="va">gs_ovnet</span>,</span>
+<span>                        genesetStat <span class="op">=</span> <span class="va">geneset_stats</span>,</span>
+<span>                        alg <span class="op">=</span> <span class="va">cluster_walktrap</span>,</span>
+<span>                        minSize <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+<span><span class="co">#plot the top 12 clusters</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">36</span><span class="op">)</span> <span class="co">#set seed for reproducible layout</span></span>
+<span><span class="fu"><a href="../reference/plotMsigNetwork.html">plotMsigNetwork</a></span><span class="op">(</span><span class="va">gs_ovnet</span>, markGroups <span class="op">=</span> <span class="va">grps</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>, genesetStat <span class="op">=</span> <span class="va">geneset_stats</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vissE_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 <p>Instead of exploring the full network of gene-sets, the subgraph of
 nodes that form part of the groups can be plot. This allows for a more
 focused investigation into the relatedness of clusters identified using
 vissE.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">36</span><span class="op">)</span> <span class="co">#set seed for reproducible layout</span>
-<span class="fu"><a href="../reference/plotMsigNetwork.html">plotMsigNetwork</a></span><span class="op">(</span>
-  <span class="va">gs_ovnet</span>,
-  markGroups <span class="op">=</span> <span class="va">grps</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>,
-  genesetStat <span class="op">=</span> <span class="va">geneset_stats</span>,
-  rmUnmarkedGroups <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">36</span><span class="op">)</span> <span class="co">#set seed for reproducible layout</span></span>
+<span><span class="fu"><a href="../reference/plotMsigNetwork.html">plotMsigNetwork</a></span><span class="op">(</span></span>
+<span>  <span class="va">gs_ovnet</span>,</span>
+<span>  markGroups <span class="op">=</span> <span class="va">grps</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>,</span>
+<span>  genesetStat <span class="op">=</span> <span class="va">geneset_stats</span>,</span>
+<span>  rmUnmarkedGroups <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p><img src="vissE_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 </div>
 <div class="section level3">
@@ -263,13 +263,13 @@ gene-set names or their short descriptions to assess recurring
 biological themes in clusters. These results are then presented as word
 clouds.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co">#compute and plot the results of text-mining</span>
-<span class="co">#using gene-set Names</span>
-<span class="fu"><a href="../reference/plotMsigWordcloud.html">plotMsigWordcloud</a></span><span class="op">(</span><span class="va">msigdb_hs</span>, <span class="va">grps</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>, type <span class="op">=</span> <span class="st">'Name'</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co">#compute and plot the results of text-mining</span></span>
+<span><span class="co">#using gene-set Names</span></span>
+<span><span class="fu"><a href="../reference/plotMsigWordcloud.html">plotMsigWordcloud</a></span><span class="op">(</span><span class="va">msigdb_hs</span>, <span class="va">grps</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>, type <span class="op">=</span> <span class="st">'Name'</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vissE_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co">#using gene-set Short descriptions</span>
-<span class="fu"><a href="../reference/plotMsigWordcloud.html">plotMsigWordcloud</a></span><span class="op">(</span><span class="va">msigdb_hs</span>, <span class="va">grps</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>, type <span class="op">=</span> <span class="st">'Short'</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co">#using gene-set Short descriptions</span></span>
+<span><span class="fu"><a href="../reference/plotMsigWordcloud.html">plotMsigWordcloud</a></span><span class="op">(</span><span class="va">msigdb_hs</span>, <span class="va">grps</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>, type <span class="op">=</span> <span class="st">'Short'</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vissE_files/figure-html/unnamed-chunk-8-2.png" width="700"></p>
 </div>
 <div class="section level3">
@@ -281,20 +281,20 @@ Gene-level statistics can be passed onto the plotting function as a
 named vector. A jitter is applied on the x-axis (due to its discrete
 nature).</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
-
-<span class="co">#simulate gene statistics</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">36</span><span class="op">)</span>
-<span class="va">genes</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/GSEABase/man/GeneSet-class.html" class="external-link">geneIds</a></span><span class="op">(</span><span class="va">geneset_gsc</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-<span class="va">gene_stats</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">genes</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">gene_stats</span><span class="op">)</span> <span class="op">=</span> <span class="va">genes</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">gene_stats</span><span class="op">)</span>
-<span class="co">#&gt;    SLC37A4    SLC37A1    SLC37A2       CD63       EGFR    LAPTM4B </span>
-<span class="co">#&gt;  0.3117314  0.8498291  0.7055331  1.6999284 -1.3455710 -0.5698134</span>
-
-<span class="co">#plot the gene-level statistics</span>
-<span class="fu"><a href="../reference/plotGeneStats.html">plotGeneStats</a></span><span class="op">(</span><span class="va">gene_stats</span>, <span class="va">msigdb_hs</span>, <span class="va">grps</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0</span>, colour <span class="op">=</span> <span class="fl">2</span>, lty <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#simulate gene statistics</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">36</span><span class="op">)</span></span>
+<span><span class="va">genes</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/GSEABase/man/GeneSet-class.html" class="external-link">geneIds</a></span><span class="op">(</span><span class="va">geneset_gsc</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">gene_stats</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">genes</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">gene_stats</span><span class="op">)</span> <span class="op">=</span> <span class="va">genes</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">gene_stats</span><span class="op">)</span></span>
+<span><span class="co">#&gt;       H6PD    ATP5F1A    ATP5F1B      DCAF1        MPL       JAK2 </span></span>
+<span><span class="co">#&gt;  0.3117314  0.8498291  0.7055331  1.6999284 -1.3455710 -0.5698134</span></span>
+<span></span>
+<span><span class="co">#plot the gene-level statistics</span></span>
+<span><span class="fu"><a href="../reference/plotGeneStats.html">plotGeneStats</a></span><span class="op">(</span><span class="va">gene_stats</span>, <span class="va">msigdb_hs</span>, <span class="va">grps</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0</span>, colour <span class="op">=</span> <span class="fl">2</span>, lty <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vissE_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
 </div>
 <div class="section level3">
@@ -316,18 +316,18 @@ belongs to).</p>
 package. Setting inferred to TRUE will allow PPIs inferred from across
 organisms to be used in the analysis.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co">#load PPI from the msigdb package</span>
-<span class="va">ppi</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/msigdb/man/getIMEX.html" class="external-link">getIMEX</a></span><span class="op">(</span><span class="st">'hs'</span>, inferred <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#create the PPI plot</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">36</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plotMsigPPI.html">plotMsigPPI</a></span><span class="op">(</span>
-  <span class="va">ppi</span>,
-  <span class="va">msigdb_hs</span>,
-  <span class="va">grps</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>,
-  geneStat <span class="op">=</span> <span class="va">gene_stats</span>,
-  threshStatistic <span class="op">=</span> <span class="fl">0.2</span>,
-  threshConfidence <span class="op">=</span> <span class="fl">0.2</span>
-<span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co">#load PPI from the msigdb package</span></span>
+<span><span class="va">ppi</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/msigdb/man/getIMEX.html" class="external-link">getIMEX</a></span><span class="op">(</span><span class="st">'hs'</span>, inferred <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#create the PPI plot</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">36</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plotMsigPPI.html">plotMsigPPI</a></span><span class="op">(</span></span>
+<span>  <span class="va">ppi</span>,</span>
+<span>  <span class="va">msigdb_hs</span>,</span>
+<span>  <span class="va">grps</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>,</span>
+<span>  geneStat <span class="op">=</span> <span class="va">gene_stats</span>,</span>
+<span>  threshStatistic <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>  threshConfidence <span class="op">=</span> <span class="fl">0.2</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p><img src="vissE_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 </div>
 <div class="section level3">
@@ -337,25 +337,25 @@ organisms to be used in the analysis.</p>
 paneled plots that combine all of the above plots. This allows for
 collective interpretation of the gene-set clusters.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span>
-
-<span class="co">#create independent plots</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">36</span><span class="op">)</span> <span class="co">#set seed for reproducible layout</span>
-<span class="va">p1</span> <span class="op">=</span> <span class="fu"><a href="../reference/plotMsigWordcloud.html">plotMsigWordcloud</a></span><span class="op">(</span><span class="va">msigdb_hs</span>, <span class="va">grps</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>, type <span class="op">=</span> <span class="st">'Name'</span><span class="op">)</span>
-<span class="va">p2</span> <span class="op">=</span> <span class="fu"><a href="../reference/plotMsigNetwork.html">plotMsigNetwork</a></span><span class="op">(</span><span class="va">gs_ovnet</span>, markGroups <span class="op">=</span> <span class="va">grps</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>, genesetStat <span class="op">=</span> <span class="va">geneset_stats</span><span class="op">)</span>
-<span class="va">p3</span> <span class="op">=</span> <span class="fu"><a href="../reference/plotGeneStats.html">plotGeneStats</a></span><span class="op">(</span><span class="va">gene_stats</span>, <span class="va">msigdb_hs</span>, <span class="va">grps</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0</span>, colour <span class="op">=</span> <span class="fl">2</span>, lty <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
-<span class="va">p4</span> <span class="op">=</span> <span class="fu"><a href="../reference/plotMsigPPI.html">plotMsigPPI</a></span><span class="op">(</span>
-  <span class="va">ppi</span>,
-  <span class="va">msigdb_hs</span>,
-  <span class="va">grps</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>,
-  geneStat <span class="op">=</span> <span class="va">gene_stats</span>,
-  threshStatistic <span class="op">=</span> <span class="fl">0.2</span>,
-  threshConfidence <span class="op">=</span> <span class="fl">0.2</span>
-<span class="op">)</span>
-
-<span class="co">#combine using functions from ggpubr</span>
-<span class="va">p1</span> <span class="op">+</span> <span class="va">p2</span> <span class="op">+</span> <span class="va">p3</span> <span class="op">+</span> <span class="va">p4</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#create independent plots</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">36</span><span class="op">)</span> <span class="co">#set seed for reproducible layout</span></span>
+<span><span class="va">p1</span> <span class="op">=</span> <span class="fu"><a href="../reference/plotMsigWordcloud.html">plotMsigWordcloud</a></span><span class="op">(</span><span class="va">msigdb_hs</span>, <span class="va">grps</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>, type <span class="op">=</span> <span class="st">'Name'</span><span class="op">)</span></span>
+<span><span class="va">p2</span> <span class="op">=</span> <span class="fu"><a href="../reference/plotMsigNetwork.html">plotMsigNetwork</a></span><span class="op">(</span><span class="va">gs_ovnet</span>, markGroups <span class="op">=</span> <span class="va">grps</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>, genesetStat <span class="op">=</span> <span class="va">geneset_stats</span><span class="op">)</span></span>
+<span><span class="va">p3</span> <span class="op">=</span> <span class="fu"><a href="../reference/plotGeneStats.html">plotGeneStats</a></span><span class="op">(</span><span class="va">gene_stats</span>, <span class="va">msigdb_hs</span>, <span class="va">grps</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0</span>, colour <span class="op">=</span> <span class="fl">2</span>, lty <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="va">p4</span> <span class="op">=</span> <span class="fu"><a href="../reference/plotMsigPPI.html">plotMsigPPI</a></span><span class="op">(</span></span>
+<span>  <span class="va">ppi</span>,</span>
+<span>  <span class="va">msigdb_hs</span>,</span>
+<span>  <span class="va">grps</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>,</span>
+<span>  geneStat <span class="op">=</span> <span class="va">gene_stats</span>,</span>
+<span>  threshStatistic <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>  threshConfidence <span class="op">=</span> <span class="fl">0.2</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#combine using functions from ggpubr</span></span>
+<span><span class="va">p1</span> <span class="op">+</span> <span class="va">p2</span> <span class="op">+</span> <span class="va">p3</span> <span class="op">+</span> <span class="va">p4</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vissE_files/figure-html/unnamed-chunk-11-1.png" width="1152"></p>
 </div>
 </div>
@@ -363,96 +363,97 @@ collective interpretation of the gene-set clusters.</p>
 <h2 id="session-information">Session information<a class="anchor" aria-label="anchor" href="#session-information"></a>
 </h2>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; R Under development (unstable) (2022-03-10 r81874)</span>
-<span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span>
-<span class="co">#&gt; Running under: Ubuntu 20.04.4 LTS</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Matrix products: default</span>
-<span class="co">#&gt; BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.8.so</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; locale:</span>
-<span class="co">#&gt;  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span>
-<span class="co">#&gt;  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    </span>
-<span class="co">#&gt;  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   </span>
-<span class="co">#&gt;  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span>
-<span class="co">#&gt;  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span>
-<span class="co">#&gt; [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; attached base packages:</span>
-<span class="co">#&gt; [1] stats4    stats     graphics  grDevices utils     datasets  methods  </span>
-<span class="co">#&gt; [8] base     </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; other attached packages:</span>
-<span class="co">#&gt;  [1] patchwork_1.1.1      ggplot2_3.3.5        igraph_1.2.11       </span>
-<span class="co">#&gt;  [4] vissE_1.3.13         GSEABase_1.57.0      graph_1.73.0        </span>
-<span class="co">#&gt;  [7] annotate_1.73.0      XML_3.99-0.9         AnnotationDbi_1.57.1</span>
-<span class="co">#&gt; [10] IRanges_2.29.1       S4Vectors_0.33.11    Biobase_2.55.0      </span>
-<span class="co">#&gt; [13] BiocGenerics_0.41.2  msigdb_1.3.1        </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; loaded via a namespace (and not attached):</span>
-<span class="co">#&gt;   [1] AnnotationHub_3.3.9           BiocFileCache_2.3.4          </span>
-<span class="co">#&gt;   [3] systemfonts_1.0.4             plyr_1.8.6                   </span>
-<span class="co">#&gt;   [5] GenomeInfoDb_1.31.5           digest_0.6.29                </span>
-<span class="co">#&gt;   [7] htmltools_0.5.2               viridis_0.6.2                </span>
-<span class="co">#&gt;   [9] fansi_1.0.2                   magrittr_2.0.2               </span>
-<span class="co">#&gt;  [11] memoise_2.0.1                 tm_0.7-8                     </span>
-<span class="co">#&gt;  [13] Biostrings_2.63.2             graphlayouts_0.8.0           </span>
-<span class="co">#&gt;  [15] textshape_1.7.3               pkgdown_2.0.2.9000           </span>
-<span class="co">#&gt;  [17] colorspace_2.0-3              blob_1.2.2                   </span>
-<span class="co">#&gt;  [19] rappdirs_0.3.3                ggrepel_0.9.1                </span>
-<span class="co">#&gt;  [21] sylly_0.1-6                   textshaping_0.3.6            </span>
-<span class="co">#&gt;  [23] xfun_0.30                     dplyr_1.0.8                  </span>
-<span class="co">#&gt;  [25] crayon_1.5.0                  RCurl_1.98-1.6               </span>
-<span class="co">#&gt;  [27] jsonlite_1.8.0                glue_1.6.2                   </span>
-<span class="co">#&gt;  [29] polyclip_1.10-0               gtable_0.3.0                 </span>
-<span class="co">#&gt;  [31] zlibbioc_1.41.0               XVector_0.35.0               </span>
-<span class="co">#&gt;  [33] scico_1.3.0                   scales_1.1.1                 </span>
-<span class="co">#&gt;  [35] DBI_1.1.2                     qdapRegex_0.7.2              </span>
-<span class="co">#&gt;  [37] Rcpp_1.0.8.2                  viridisLite_0.4.0            </span>
-<span class="co">#&gt;  [39] xtable_1.8-4                  bit_4.0.4                    </span>
-<span class="co">#&gt;  [41] textclean_0.9.3               httr_1.4.2                   </span>
-<span class="co">#&gt;  [43] ggwordcloud_0.5.0             RColorBrewer_1.1-2           </span>
-<span class="co">#&gt;  [45] ellipsis_0.3.2                pkgconfig_2.0.3              </span>
-<span class="co">#&gt;  [47] farver_2.1.0                  sass_0.4.0                   </span>
-<span class="co">#&gt;  [49] dbplyr_2.1.1                  utf8_1.2.2                   </span>
-<span class="co">#&gt;  [51] tidyselect_1.1.2              labeling_0.4.2               </span>
-<span class="co">#&gt;  [53] rlang_1.0.2                   reshape2_1.4.4               </span>
-<span class="co">#&gt;  [55] later_1.3.0                   munsell_0.5.0                </span>
-<span class="co">#&gt;  [57] BiocVersion_3.15.0            tools_4.2.0                  </span>
-<span class="co">#&gt;  [59] cachem_1.0.6                  cli_3.2.0                    </span>
-<span class="co">#&gt;  [61] generics_0.1.2                RSQLite_2.2.10               </span>
-<span class="co">#&gt;  [63] ExperimentHub_2.3.5           evaluate_0.15                </span>
-<span class="co">#&gt;  [65] stringr_1.4.0                 fastmap_1.1.0                </span>
-<span class="co">#&gt;  [67] yaml_2.3.5                    ragg_1.2.2                   </span>
-<span class="co">#&gt;  [69] textstem_0.1.4                org.Hs.eg.db_3.14.0          </span>
-<span class="co">#&gt;  [71] knitr_1.37                    bit64_4.0.5                  </span>
-<span class="co">#&gt;  [73] fs_1.5.2                      tidygraph_1.2.0              </span>
-<span class="co">#&gt;  [75] purrr_0.3.4                   KEGGREST_1.35.0              </span>
-<span class="co">#&gt;  [77] ggraph_2.0.5                  koRpus_0.13-8                </span>
-<span class="co">#&gt;  [79] mime_0.12                     slam_0.1-50                  </span>
-<span class="co">#&gt;  [81] xml2_1.3.3                    BiocStyle_2.23.1             </span>
-<span class="co">#&gt;  [83] compiler_4.2.0                filelock_1.0.2               </span>
-<span class="co">#&gt;  [85] curl_4.3.2                    png_0.1-7                    </span>
-<span class="co">#&gt;  [87] interactiveDisplayBase_1.33.0 koRpus.lang.en_0.1-4         </span>
-<span class="co">#&gt;  [89] syuzhet_1.0.6                 tibble_3.1.6                 </span>
-<span class="co">#&gt;  [91] tweenr_1.0.2                  bslib_0.3.1                  </span>
-<span class="co">#&gt;  [93] stringi_1.7.6                 highr_0.9                    </span>
-<span class="co">#&gt;  [95] desc_1.4.1                    lattice_0.20-45              </span>
-<span class="co">#&gt;  [97] Matrix_1.4-0                  vctrs_0.3.8                  </span>
-<span class="co">#&gt;  [99] pillar_1.7.0                  lifecycle_1.0.1              </span>
-<span class="co">#&gt; [101] BiocManager_1.30.16           jquerylib_0.1.4              </span>
-<span class="co">#&gt; [103] data.table_1.14.2             bitops_1.0-7                 </span>
-<span class="co">#&gt; [105] httpuv_1.6.5                  sylly.en_0.1-3               </span>
-<span class="co">#&gt; [107] R6_2.5.1                      promises_1.2.0.1             </span>
-<span class="co">#&gt; [109] gridExtra_2.3                 lexicon_1.2.1                </span>
-<span class="co">#&gt; [111] MASS_7.3-55                   assertthat_0.2.1             </span>
-<span class="co">#&gt; [113] rprojroot_2.0.2               withr_2.5.0                  </span>
-<span class="co">#&gt; [115] GenomeInfoDbData_1.2.7        parallel_4.2.0               </span>
-<span class="co">#&gt; [117] grid_4.2.0                    prettydoc_0.4.1              </span>
-<span class="co">#&gt; [119] tidyr_1.2.0                   rmarkdown_2.13               </span>
-<span class="co">#&gt; [121] ggforce_0.3.3                 NLP_0.2-1                    </span>
-<span class="co">#&gt; [123] shiny_1.7.1</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; R version 4.2.1 (2022-06-23)</span></span>
+<span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
+<span><span class="co">#&gt; Running under: Ubuntu 20.04.5 LTS</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Matrix products: default</span></span>
+<span><span class="co">#&gt; BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3</span></span>
+<span><span class="co">#&gt; LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/liblapack.so.3</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; locale:</span></span>
+<span><span class="co">#&gt;  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span></span>
+<span><span class="co">#&gt;  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    </span></span>
+<span><span class="co">#&gt;  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   </span></span>
+<span><span class="co">#&gt;  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span></span>
+<span><span class="co">#&gt;  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span></span>
+<span><span class="co">#&gt; [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; attached base packages:</span></span>
+<span><span class="co">#&gt; [1] stats4    stats     graphics  grDevices utils     datasets  methods  </span></span>
+<span><span class="co">#&gt; [8] base     </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; other attached packages:</span></span>
+<span><span class="co">#&gt;  [1] patchwork_1.1.2      ggplot2_3.3.6        igraph_1.3.5        </span></span>
+<span><span class="co">#&gt;  [4] vissE_1.5.1          GSEABase_1.58.0      graph_1.74.0        </span></span>
+<span><span class="co">#&gt;  [7] annotate_1.74.0      XML_3.99-0.11        AnnotationDbi_1.58.0</span></span>
+<span><span class="co">#&gt; [10] IRanges_2.30.1       S4Vectors_0.34.0     Biobase_2.56.0      </span></span>
+<span><span class="co">#&gt; [13] BiocGenerics_0.42.0  msigdb_1.4.0        </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
+<span><span class="co">#&gt;   [1] AnnotationHub_3.4.0           BiocFileCache_2.4.0          </span></span>
+<span><span class="co">#&gt;   [3] systemfonts_1.0.4             plyr_1.8.7                   </span></span>
+<span><span class="co">#&gt;   [5] GenomeInfoDb_1.32.4           digest_0.6.29                </span></span>
+<span><span class="co">#&gt;   [7] htmltools_0.5.3               viridis_0.6.2                </span></span>
+<span><span class="co">#&gt;   [9] fansi_1.0.3                   magrittr_2.0.3               </span></span>
+<span><span class="co">#&gt;  [11] memoise_2.0.1                 tm_0.7-8                     </span></span>
+<span><span class="co">#&gt;  [13] Biostrings_2.64.1             graphlayouts_0.8.2           </span></span>
+<span><span class="co">#&gt;  [15] textshape_1.7.3               pkgdown_2.0.6.9000           </span></span>
+<span><span class="co">#&gt;  [17] colorspace_2.0-3              blob_1.2.3                   </span></span>
+<span><span class="co">#&gt;  [19] rappdirs_0.3.3                ggrepel_0.9.1                </span></span>
+<span><span class="co">#&gt;  [21] sylly_0.1-6                   textshaping_0.3.6            </span></span>
+<span><span class="co">#&gt;  [23] xfun_0.33                     dplyr_1.0.10                 </span></span>
+<span><span class="co">#&gt;  [25] crayon_1.5.2                  RCurl_1.98-1.9               </span></span>
+<span><span class="co">#&gt;  [27] jsonlite_1.8.2                glue_1.6.2                   </span></span>
+<span><span class="co">#&gt;  [29] polyclip_1.10-0               gtable_0.3.1                 </span></span>
+<span><span class="co">#&gt;  [31] zlibbioc_1.42.0               XVector_0.36.0               </span></span>
+<span><span class="co">#&gt;  [33] scico_1.3.1                   scales_1.2.1                 </span></span>
+<span><span class="co">#&gt;  [35] DBI_1.1.3                     qdapRegex_0.7.5              </span></span>
+<span><span class="co">#&gt;  [37] Rcpp_1.0.9                    viridisLite_0.4.1            </span></span>
+<span><span class="co">#&gt;  [39] xtable_1.8-4                  bit_4.0.4                    </span></span>
+<span><span class="co">#&gt;  [41] textclean_0.9.3               httr_1.4.4                   </span></span>
+<span><span class="co">#&gt;  [43] ggwordcloud_0.5.0             RColorBrewer_1.1-3           </span></span>
+<span><span class="co">#&gt;  [45] ellipsis_0.3.2                pkgconfig_2.0.3              </span></span>
+<span><span class="co">#&gt;  [47] farver_2.1.1                  sass_0.4.2                   </span></span>
+<span><span class="co">#&gt;  [49] dbplyr_2.2.1                  utf8_1.2.2                   </span></span>
+<span><span class="co">#&gt;  [51] tidyselect_1.1.2              labeling_0.4.2               </span></span>
+<span><span class="co">#&gt;  [53] rlang_1.0.6                   reshape2_1.4.4               </span></span>
+<span><span class="co">#&gt;  [55] later_1.3.0                   munsell_0.5.0                </span></span>
+<span><span class="co">#&gt;  [57] BiocVersion_3.15.2            tools_4.2.1                  </span></span>
+<span><span class="co">#&gt;  [59] cachem_1.0.6                  cli_3.4.1                    </span></span>
+<span><span class="co">#&gt;  [61] generics_0.1.3                RSQLite_2.2.18               </span></span>
+<span><span class="co">#&gt;  [63] ExperimentHub_2.4.0           evaluate_0.16                </span></span>
+<span><span class="co">#&gt;  [65] stringr_1.4.1                 fastmap_1.1.0                </span></span>
+<span><span class="co">#&gt;  [67] yaml_2.3.5                    ragg_1.2.3                   </span></span>
+<span><span class="co">#&gt;  [69] textstem_0.1.4                org.Hs.eg.db_3.15.0          </span></span>
+<span><span class="co">#&gt;  [71] knitr_1.40                    bit64_4.0.5                  </span></span>
+<span><span class="co">#&gt;  [73] fs_1.5.2                      tidygraph_1.2.2              </span></span>
+<span><span class="co">#&gt;  [75] purrr_0.3.5                   KEGGREST_1.36.3              </span></span>
+<span><span class="co">#&gt;  [77] ggraph_2.0.6                  koRpus_0.13-8                </span></span>
+<span><span class="co">#&gt;  [79] mime_0.12                     slam_0.1-50                  </span></span>
+<span><span class="co">#&gt;  [81] xml2_1.3.3                    BiocStyle_2.24.0             </span></span>
+<span><span class="co">#&gt;  [83] compiler_4.2.1                filelock_1.0.2               </span></span>
+<span><span class="co">#&gt;  [85] curl_4.3.3                    png_0.1-7                    </span></span>
+<span><span class="co">#&gt;  [87] interactiveDisplayBase_1.34.0 koRpus.lang.en_0.1-4         </span></span>
+<span><span class="co">#&gt;  [89] syuzhet_1.0.6                 tibble_3.1.8                 </span></span>
+<span><span class="co">#&gt;  [91] tweenr_2.0.2                  bslib_0.4.0                  </span></span>
+<span><span class="co">#&gt;  [93] stringi_1.7.8                 highr_0.9                    </span></span>
+<span><span class="co">#&gt;  [95] desc_1.4.2                    lattice_0.20-45              </span></span>
+<span><span class="co">#&gt;  [97] Matrix_1.5-1                  vctrs_0.4.2                  </span></span>
+<span><span class="co">#&gt;  [99] pillar_1.8.1                  lifecycle_1.0.2              </span></span>
+<span><span class="co">#&gt; [101] BiocManager_1.30.18           jquerylib_0.1.4              </span></span>
+<span><span class="co">#&gt; [103] data.table_1.14.2             bitops_1.0-7                 </span></span>
+<span><span class="co">#&gt; [105] httpuv_1.6.6                  sylly.en_0.1-3               </span></span>
+<span><span class="co">#&gt; [107] R6_2.5.1                      promises_1.2.0.1             </span></span>
+<span><span class="co">#&gt; [109] gridExtra_2.3                 lexicon_1.2.1                </span></span>
+<span><span class="co">#&gt; [111] MASS_7.3-58.1                 assertthat_0.2.1             </span></span>
+<span><span class="co">#&gt; [113] rprojroot_2.0.3               withr_2.5.0                  </span></span>
+<span><span class="co">#&gt; [115] GenomeInfoDbData_1.2.8        parallel_4.2.1               </span></span>
+<span><span class="co">#&gt; [117] grid_4.2.1                    prettydoc_0.4.1              </span></span>
+<span><span class="co">#&gt; [119] tidyr_1.2.1                   rmarkdown_2.16               </span></span>
+<span><span class="co">#&gt; [121] ggforce_0.4.1                 NLP_0.2-1                    </span></span>
+<span><span class="co">#&gt; [123] shiny_1.7.2</span></span></code></pre></div>
 </div>
   </div>
 
@@ -473,8 +474,7 @@ collective interpretation of the gene-set clusters.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.9000.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.9000.</p>
 </div>
 
       </footer>

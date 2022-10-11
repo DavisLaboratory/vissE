@@ -21,7 +21,7 @@ statistic is maximised per cluster)."><!-- mathjax --><script src="https://cdnjs
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">vissE</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.13</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.1</span>
       </span>
     </div>
 
@@ -64,13 +64,13 @@ statistic is maximised per cluster).</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">findMsigClusters</span><span class="op">(</span>
-  <span class="va">ig</span>,
-  genesetStat <span class="op">=</span> <span class="cn">NULL</span>,
-  minSize <span class="op">=</span> <span class="fl">2</span>,
-  alg <span class="op">=</span> <span class="fu">igraph</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/igraph/man/cluster_walktrap.html" class="external-link">cluster_walktrap</a></span>,
-  algparams <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">findMsigClusters</span><span class="op">(</span></span>
+<span>  <span class="va">ig</span>,</span>
+<span>  genesetStat <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  minSize <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  alg <span class="op">=</span> <span class="fu">igraph</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/igraph/man/cluster_walktrap.html" class="external-link">cluster_walktrap</a></span>,</span>
+<span>  algparams <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -78,24 +78,35 @@ statistic is maximised per cluster).</p>
     <dl><dt>ig</dt>
 <dd><p>an igraph object, containing a network of gene set overlaps computed
 using <code><a href="computeMsigNetwork.html">computeMsigNetwork()</a></code>.</p></dd>
+
+
 <dt>genesetStat</dt>
 <dd><p>a named numeric, containing statistics for each gene-set
 that are to be used in cluster prioritisation. If NULL, clusters are
 prioritised based on their size (number of gene-sets in them).</p></dd>
+
+
 <dt>minSize</dt>
 <dd><p>a numeric, stating the minimum size a cluster can be (default
 is 2).</p></dd>
+
+
 <dt>alg</dt>
 <dd><p>a function, from the <code>igraph</code> package that should be used to
 perform graph-clustering (default is <code><a href="https://rdrr.io/pkg/igraph/man/cluster_walktrap.html" class="external-link">igraph::cluster_walktrap</a></code>). The
 function should produce a <code>communities</code> object.</p></dd>
+
+
 <dt>algparams</dt>
 <dd><p>a list, specifying additional parameters that are to be
 passed to the graph clustering algorithm.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>a list, containing gene-sets that belong to each cluster. Items in
+    
+
+<p>a list, containing gene-sets that belong to each cluster. Items in
 the list are organised based on prioritisation.</p>
     </div>
     <div id="details">
@@ -116,10 +127,10 @@ cluster prioritisation.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">hgsc</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">ovlap</span> <span class="op">&lt;-</span> <span class="fu"><a href="computeMsigOverlap.html">computeMsigOverlap</a></span><span class="op">(</span><span class="va">hgsc</span>, thresh <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">ig</span> <span class="op">&lt;-</span> <span class="fu"><a href="computeMsigNetwork.html">computeMsigNetwork</a></span><span class="op">(</span><span class="va">ovlap</span>, <span class="va">hgsc</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">findMsigClusters</span><span class="op">(</span><span class="va">ig</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">hgsc</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ovlap</span> <span class="op">&lt;-</span> <span class="fu"><a href="computeMsigOverlap.html">computeMsigOverlap</a></span><span class="op">(</span><span class="va">hgsc</span>, thresh <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ig</span> <span class="op">&lt;-</span> <span class="fu"><a href="computeMsigNetwork.html">computeMsigNetwork</a></span><span class="op">(</span><span class="va">ovlap</span>, <span class="va">hgsc</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">findMsigClusters</span><span class="op">(</span><span class="va">ig</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`1`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "HALLMARK_BILE_ACID_METABOLISM" "HALLMARK_PEROXISOME"          </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -152,8 +163,7 @@ cluster prioritisation.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.9000.</p>
 </div>
 
       </footer></div>

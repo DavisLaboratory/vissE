@@ -19,7 +19,7 @@ gene-set cluster identified using vissE. The international molecular exchange
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">vissE</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.13</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.1</span>
       </span>
     </div>
 
@@ -60,22 +60,22 @@ gene-set cluster identified using vissE. The international molecular exchange
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">plotMsigPPI</span><span class="op">(</span>
-  <span class="va">ppidf</span>,
-  <span class="va">msigGsc</span>,
-  <span class="va">groups</span>,
-  geneStat <span class="op">=</span> <span class="cn">NULL</span>,
-  statName <span class="op">=</span> <span class="st">"Gene-level statistic"</span>,
-  threshConfidence <span class="op">=</span> <span class="fl">0</span>,
-  threshFrequency <span class="op">=</span> <span class="fl">0.25</span>,
-  threshStatistic <span class="op">=</span> <span class="fl">0</span>,
-  threshUseAbsolute <span class="op">=</span> <span class="cn">TRUE</span>,
-  topN <span class="op">=</span> <span class="fl">5</span>,
-  nodeSF <span class="op">=</span> <span class="fl">1</span>,
-  edgeSF <span class="op">=</span> <span class="fl">1</span>,
-  lytFunc <span class="op">=</span> <span class="st">"graphopt"</span>,
-  lytParams <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plotMsigPPI</span><span class="op">(</span></span>
+<span>  <span class="va">ppidf</span>,</span>
+<span>  <span class="va">msigGsc</span>,</span>
+<span>  <span class="va">groups</span>,</span>
+<span>  geneStat <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  statName <span class="op">=</span> <span class="st">"Gene-level statistic"</span>,</span>
+<span>  threshConfidence <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  threshFrequency <span class="op">=</span> <span class="fl">0.25</span>,</span>
+<span>  threshStatistic <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  threshUseAbsolute <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  topN <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  nodeSF <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  edgeSF <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  lytFunc <span class="op">=</span> <span class="st">"graphopt"</span>,</span>
+<span>  lytParams <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -83,74 +83,103 @@ gene-set cluster identified using vissE. The international molecular exchange
     <dl><dt>ppidf</dt>
 <dd><p>a data.frame, containing a protein-protein interaction from the
 IMEx database. This can be retrieved from the <code><a href="https://rdrr.io/pkg/msigdb/man/getIMEX.html" class="external-link">msigdb::getIMEX()</a></code> function.</p></dd>
+
+
 <dt>msigGsc</dt>
 <dd><p>a GeneSetCollection object, containing gene sets from the
 MSigDB. The <code><a href="https://rdrr.io/pkg/GSEABase/man/getObjects.html" class="external-link">GSEABase::getBroadSets()</a></code> function can be used to parse XML
 files downloaded from MSigDB.</p></dd>
+
+
 <dt>groups</dt>
 <dd><p>a named list, of character vectors or numeric indices
 specifying node groupings. Each element of the list represent a group and
 contains a character vector with node names.</p></dd>
+
+
 <dt>geneStat</dt>
 <dd><p>a named numeric, containing the statistic to be displayed.
 The vector must be named with either gene Symbols or Entrez IDs depending
 on annotations in msigGsc.</p></dd>
+
+
 <dt>statName</dt>
 <dd><p>a character, specifying the name of the statistic.</p></dd>
+
+
 <dt>threshConfidence</dt>
 <dd><p>a numeric, specifying the confidence threshold to
 apply to determine high confidence interactions. This should be a value
 between 0 and 1 (default is 0).</p></dd>
+
+
 <dt>threshFrequency</dt>
 <dd><p>a numeric, specifying the frequency threshold to apply
 to determine more frequent genes in the gene-set cluster. The frequecy of a
 gene is computed as the proportion of gene-sets to which the gene belongs.
 This should be a value between 0 and 1 (default is 0.25).</p></dd>
+
+
 <dt>threshStatistic</dt>
 <dd><p>a numeric, specifying the threshold to apply to
 gene-level statistics (e.g. a log fold-change). This should be a value
 between 0 and 1 (default is 0).</p></dd>
+
+
 <dt>threshUseAbsolute</dt>
 <dd><p>a logical, indicating whether the <code>threshStatistic</code>
 threshold should be applied to absolute values (default TRUE). This can be
 used to threshold on statistics such as the log fold-chage from a
 differential expression analysis.</p></dd>
+
+
 <dt>topN</dt>
 <dd><p>a numeric, specifying the number of genes to label. The top genes
 are those with the largest count and statistic.</p></dd>
+
+
 <dt>nodeSF</dt>
 <dd><p>a numeric, indicating the scaling factor to apply to node
 sizes.</p></dd>
+
+
 <dt>edgeSF</dt>
 <dd><p>a numeric, indicating the scaling factor to apply to edge
 widths.</p></dd>
+
+
 <dt>lytFunc</dt>
 <dd><p>a character, specifying the layout to use (see
 <code><a href="https://ggraph.data-imaginist.com/reference/ggraph.html" class="external-link">ggraph::create_layout()</a></code>).</p></dd>
+
+
 <dt>lytParams</dt>
 <dd><p>a named list, containing additional parameters needed for
 the layout (see <code><a href="https://ggraph.data-imaginist.com/reference/ggraph.html" class="external-link">ggraph::create_layout()</a></code>).</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>a ggplot object with the protein-protein interaction networks plot
+    
+
+<p>a ggplot object with the protein-protein interaction networks plot
 for each gene-set cluster.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">hgsc</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">grps</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">'early'</span> <span class="op">=</span> <span class="st">'HALLMARK_ESTROGEN_RESPONSE_EARLY'</span>, <span class="st">'late'</span> <span class="op">=</span> <span class="st">'HALLMARK_ESTROGEN_RESPONSE_LATE'</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">ppi</span> <span class="op">=</span> <span class="fu">msigdb</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/msigdb/man/getIMEX.html" class="external-link">getIMEX</a></span><span class="op">(</span>org <span class="op">=</span> <span class="st">'hs'</span>, inferred <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> snapshotDate(): 2022-03-16</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">hgsc</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">grps</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">'early'</span> <span class="op">=</span> <span class="st">'HALLMARK_ESTROGEN_RESPONSE_EARLY'</span>, <span class="st">'late'</span> <span class="op">=</span> <span class="st">'HALLMARK_ESTROGEN_RESPONSE_LATE'</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ppi</span> <span class="op">=</span> <span class="fu">msigdb</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/msigdb/man/getIMEX.html" class="external-link">getIMEX</a></span><span class="op">(</span>org <span class="op">=</span> <span class="st">'hs'</span>, inferred <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> snapshotDate(): 2022-04-26</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> see ?msigdb and browseVignettes('msigdb') for documentation</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> loading from cache</span>
-<span class="r-in"><span class="fu">plotMsigPPI</span><span class="op">(</span><span class="va">ppi</span>, <span class="va">hgsc</span>, <span class="va">grps</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">plotMsigPPI</span><span class="op">(</span><span class="va">ppi</span>, <span class="va">hgsc</span>, <span class="va">grps</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Assuming the organism to be human.</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Ignoring unknown parameters: size</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Ignoring unknown aesthetics: text</span>
 <span class="r-plt img"><img src="plotMsigPPI-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -165,8 +194,7 @@ for each gene-set cluster.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.9000.</p>
 </div>
 
       </footer></div>
