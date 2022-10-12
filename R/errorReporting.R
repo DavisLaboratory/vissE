@@ -4,14 +4,25 @@ checkGraph <- function(ig) {
   }
 }
 
-checkNumericRange <- function(pvalue, pname, pmin = -Inf, pmax = Inf) {
-  if (pvalue < pmin | pvalue > pmax) {
+checkNumericRange <- function(pvalue, pname, pmin = -Inf, pmax = Inf, eq = FALSE) {
+  if (!is.numeric(pvalue) | length(pvalue) > 1)
+    stop("'%s' should be a numeric of length 1", pvalue)
+  
+  if (eq) {
+    inrange = pvalue >= pmin & pvalue <= pmax
+    intstr = sprintf("[%s, %s]", pmin, pmax)
+  } else {
+    inrange = pvalue > pmin & pvalue < pmax
+    intstr = sprintf("(%s, %s)", pmin, pmax)
+  }
+  
+  if (!inrange) {
     if (is.infinite(pmin)) {
       stop(sprintf("'%s' should be < %s", pname, pmax))
     } else if (is.infinite(pmax)) {
       stop(sprintf("'%s' should be > %s", pname, pmin))
     } else {
-      stop(sprintf("'%s' should be in the interval (%s, %s)", pname, pmin, pmax))
+      stop(sprintf("'%s' should be in the interval %s", pname, intstr))
     }
   }
 }
@@ -43,7 +54,7 @@ checkGroups <- function(groups, gscnames) {
 
 checkGenesetCollection <- function(gsc, pname) {
   if (!is(gsc, 'GeneSetCollection'))
-    stop(sprintf("'%s' should be a GeneSetCollection object", pname))
+    stop(sprintf("'%s' should be a GSEABase::GeneSetCollection object", pname))
   
   #check collection size
   if (length(gsc) == 0)
@@ -54,7 +65,7 @@ checkGenesetCollection <- function(gsc, pname) {
   emptyGscs = names(gsc)[gscLen == 0]
   if (length(emptyGscs) > 0) {
     emptyGscs = paste(emptyGscs, collapse = ', ')
-    stop(sprintf("the following GeneSets in '%s' are empty: %s", pname, emptyGrps))
+    stop(sprintf("the following GeneSets in '%s' are empty: %s", pname, emptyGscs))
   }
 }
 
