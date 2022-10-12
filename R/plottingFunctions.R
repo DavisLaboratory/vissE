@@ -36,9 +36,11 @@ plotMsigWordcloud <-
            org = c('auto', 'hs', 'mm'),
            rmwords = getMsigBlacklist(),
            type = c('Name', 'Short')) {
-    checkGroups(groups, names(msigGsc))
+    #check params
+    if (!is.null(groups)) checkGroups(groups, names(msigGsc))
     
     measure = match.arg(measure)
+    version = match.arg(version)
     org = match.arg(org)
     type = match.arg(type)
     
@@ -119,10 +121,13 @@ plotMsigNetwork <-
            lytParams = list(),
            rmUnmarkedGroups = FALSE,
            maxGrp = 12) {
-    stopifnot(nodeSF > 0)
-    stopifnot(edgeSF > 0)
-    stopifnot(is.null(genesetStat) || !is.null(names(genesetStat)))
-    stopifnot(is.null(markGroups) || checkGroups(markGroups, V(ig)$name))
+    #check params
+    checkGraph(ig)
+    checkNumericRange(nodeSF, 'nodeSF', 0)
+    checkNumericRange(edgeSF, 'edgeSF', 0)
+    checkNumericRange(maxGrp, 'maxGrp', 0)
+    if (!is.null(genesetStat)) checkGenesetStat(genesetStat)
+    if (!is.null(markGroups)) checkGroups(markGroups, V(ig)$name)
     
     if (length(markGroups) > maxGrp) {
       warning(sprintf("Only the first %s components will be plot", maxGrp))
@@ -209,8 +214,6 @@ plotMsigNetwork <-
     
     #mark groups
     if (!is.null(markGroups)) {
-      checkGroups(markGroups, p1$data$name)
-      
       #add gene set counts for each group
       names(markGroups) = sapply(names(markGroups), function(x) {
         paste0(x, ' (n = ', length(markGroups[[x]]), ')')
@@ -272,8 +275,12 @@ plotMsigNetwork <-
 #' plotGeneStats(gstats, hgsc, groups)
 #' 
 plotGeneStats <- function(geneStat, msigGsc, groups, statName = 'Gene-level statistic', topN = 5) {
+  #check params
+  checkGeneStat(geneStat)
+  checkGenesetCollection(msigGsc)
   checkGroups(groups, names(msigGsc))
-  stopifnot(!is.null(names(geneStat)))
+  checkNumericRange(topN, 'topN', 0, eq = TRUE)
+  topN = as.integer(topN)
   
   #compute frequencies
   genefreq = plyr::ldply(groups, function (x) {
@@ -284,7 +291,8 @@ plotGeneStats <- function(geneStat, msigGsc, groups, statName = 'Gene-level stat
   
   #add stats
   genefreq$GeneStat = geneStat[genefreq$Gene]
-  stopifnot(any(!is.na(genefreq$GeneStat)))
+  if (all(is.na(genefreq$Gene)))
+    stop("none of the gene-level statistics in 'geneStat' match with the 'groups'")
   
   #identify outliers
   genefreq = plyr::ddply(genefreq, 'Group', function(x) {
@@ -332,17 +340,4 @@ bhuvad_theme = function (rl = 1.1) {
       legend.text = element_text(size = rel(rl)),
       legend.title = element_text(size = rel(rl), face = 'italic')
     )
-}
-
-checkGroups <- function(groups, gscnames) {
-  stopifnot(length(groups) > 0)
-  stopifnot(all(sapply(groups, length) > 0))
-  stopifnot(is.list(groups))
-  stopifnot(!is.null(names(groups)))
-  lapply(names(groups), function(grpname) {
-    if (!all(groups[[grpname]] %in% gscnames))
-      stop(sprintf('group "%s" contains unknown members', grpname))
-  })
-  
-  return(TRUE)
 }

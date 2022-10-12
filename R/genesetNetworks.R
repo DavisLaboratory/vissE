@@ -24,13 +24,10 @@ NULL
 #' ovlap <- computeMsigOverlap(hgsc)
 #' 
 computeMsigOverlap <- function(msigGsc1, msigGsc2 = NULL, thresh = 0.25, measure = c('ari', 'jaccard', 'ovlapcoef')) {
-  #check collection size
-  stopifnot(length(msigGsc1) > 0)
-  stopifnot(all(sapply(lapply(msigGsc1, GSEABase::geneIds), length) > 0))
-  if (!is.null(msigGsc2)) {
-    stopifnot(length(msigGsc2) > 0)
-    stopifnot(all(sapply(lapply(msigGsc2, GSEABase::geneIds), length) > 0))
-  }
+  #param checks
+  checkGenesetCollection(msigGsc1)
+  if (!is.null(msigGsc2)) checkGenesetCollection(msigGsc2)
+  
   #check threshold
   measure = match.arg(measure)
   
@@ -160,13 +157,22 @@ overlap.ovlapcoef <- function(len1, len2, ovlap, total) {
 #' ig <- computeMsigNetwork(ovlap, hgsc)
 #'
 computeMsigNetwork <- function(genesetOverlap, msigGsc) {
-  stopifnot(nrow(genesetOverlap) > 0)
+  #check params
+  checkGenesetCollection(msigGsc)
+  
+  if (!nrow(genesetOverlap) > 0)
+    stop("'genesetOverlap' should not be empty")
 
+  #check for unknown gene-set names
+  ovlapnames = c(genesetOverlap$gs1, genesetOverlap$gs2)
+  unknownSets = setdiff(ovlapnames, sapply(msigGsc, GSEABase::setName))
+  if (length(unknownSets > 0)) {
+    unknownSets = paste(unknownSets, collapse = ', ')
+    stop("the following gene-set names in 'genesetOverlap' are missing 'msigGsc': %s", unknownSets)
+  }
+  
   #select genesets in the network
-  setnames = sapply(msigGsc, GSEABase::setName)
-  setnames = intersect(setnames, c(genesetOverlap$gs1, genesetOverlap$gs2))
-  stopifnot(all(genesetOverlap$gs1 %in% setnames))
-  stopifnot(all(genesetOverlap$gs2 %in% setnames))
+  setnames = setdiff(ovlapnames, unknownSets)
   msigGsc = msigGsc[setnames]
 
   #check Broad collection
@@ -192,8 +198,8 @@ computeMsigNetwork <- function(genesetOverlap, msigGsc) {
 }
 
 getMsigNeighbour <- function(srcsig, ig, thresh = 0.15) {
-  stopifnot(thresh >= 0 & thresh <= 1)
-  stopifnot(srcsig %in% V(ig)$name)
+  if(!srcsig %in% V(ig)$name)
+    stop(sprintf("'%s' missing in the graph", srcsig))
 
   #select surrounding network
   sub_ig = igraph::induced_subgraph(ig, vids = igraph::neighborhood(ig, nodes = srcsig)[[1]])

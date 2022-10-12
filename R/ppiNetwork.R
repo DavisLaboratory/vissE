@@ -55,12 +55,9 @@ plotMsigPPI <-
            edgeSF = 1,
            lytFunc = 'graphopt',
            lytParams = list()) {
-    checkGroups(groups, names(msigGsc))
-    stopifnot(threshConfidence >= 0)
-    stopifnot(threshFrequency >= 0)
-    stopifnot(nodeSF > 0)
-    stopifnot(edgeSF > 0)
-    stopifnot(is.null(geneStat) || !is.null(names(geneStat)))
+    #check params
+    checkNumericRange(nodeSF, 'nodeSF', 0)
+    checkNumericRange(edgeSF, 'edgeSF', 0)
     
     #compute combined graph
     gr = computeMsigGroupPPI(
@@ -137,6 +134,14 @@ computeMsigGroupPPI <- function(ppidf,
                                 threshStatistic = 0,
                                 threshUseAbsolute = TRUE,
                                 topN = 5) {
+  #check params
+  checkGenesetCollection(msigGsc)
+  checkGroups(groups, names(msigGsc))
+  if (!is.null(geneStat)) checkGeneStat(geneStat)
+  checkNumericRange(threshConfidence, 'threshConfidence', 0, eq = TRUE)
+  checkNumericRange(threshFrequency, 'threshFrequency', 0, eq = TRUE)
+  checkNumericRange(topN, 'topN', 0, eq = TRUE)
+  
   #identify the organism
   idType = msigdb::getMsigIdType(msigGsc)
   org = msigdb::getMsigOrganism(msigGsc, idType)
@@ -147,7 +152,7 @@ computeMsigGroupPPI <- function(ppidf,
   if (any(isorg))
     ppidf = ppidf[isorg, , drop = FALSE]
   else
-    stop('No PPIs found for organism, please ensure that the correct PPI database has been loaded.')
+    stop('no PPIs found for organism, please ensure that the correct PPI database has been loaded.')
   
   #retrieve PPI
   if (is(idType, 'SymbolIdentifier')) {

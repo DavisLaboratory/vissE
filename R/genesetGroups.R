@@ -43,9 +43,10 @@
 #' ig <- computeMsigNetwork(ovlap, hgsc)
 #' findMsigClusters(ig)
 findMsigClusters <- function(ig, genesetStat = NULL, minSize = 2, alg = igraph::cluster_walktrap, algparams = list()) {
-  stopifnot(is(ig, 'igraph'))
-  stopifnot(minSize >= 0)
-  stopifnot(is.null(genesetStat) || !is.null(names(genesetStat)))
+  #param checks
+  checkGraph(ig)
+  checkNumericRange(minSize, 'minSize', pmin = 0)
+  if (!is.null(genesetStat)) checkGenesetStat(genesetStat)
   
   #identify clusters
   emsg = 'graph clustering algorithm provided is invalid'
@@ -75,7 +76,7 @@ findMsigClusters <- function(ig, genesetStat = NULL, minSize = 2, alg = igraph::
       #combine and compute rank of product-of-ranks
       rnk = rank(rnk.stat * rnk)
     } else {
-      warning('not using "genesetStat" because statistics for some genesets are missing')
+      warning("not using 'genesetStat' because statistics for some genesets are missing")
     }
   }
   grps = grps[order(rnk, decreasing = TRUE)]

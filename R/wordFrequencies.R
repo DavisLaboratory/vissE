@@ -31,19 +31,28 @@ computeMsigWordFreq <-
            version = msigdb::getMsigdbVersions(),
            org = c('auto', 'hs', 'mm'),
            rmwords = getMsigBlacklist()) {
-    
+  #check params  
   measure = match.arg(measure)
+  version = match.arg(version)
   org = match.arg(org)
-  stopifnot(is(msigGsc, 'GeneSetCollection'))
-  stopifnot(is.null(weight) || all(weight > 0))
-  stopifnot(is.null(weight) || all(names(msigGsc) %in% names(weight)))
+  checkGenesetCollection(msigGsc, 'msigGsc')
+  if (!is.null(weight)) {
+    if (any(weight <= 0))
+      stop("all weights in 'weight' should be greater than 0")
+    if (is.null(names(weight)))
+      stop("'weight' should be a named vector")
+    missingWeights = setdiff(names(msigGsc), names(weight))
+    if (length(missingWeights) > 0) {
+      missingWeights = paste(missingWeights, collapse = ', ')
+      stop('the following gene-sets are missing weights: %s', missingWeights)
+    }
+  }
 
   #check weights
   if (is.null(weight)) {
     weight = rep(1, length(msigGsc))
     names(weight) = sapply(msigGsc, GSEABase::setName)
   } else{
-    stopifnot(all(names(msigGsc) %in% names(weight)))
     weight = weight[names(msigGsc)]
   }
   

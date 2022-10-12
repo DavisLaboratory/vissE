@@ -1,12 +1,17 @@
 Package: vissE
 Title: Visualising Set Enrichment Analysis Results
-Version: 1.5.2
-Authors@R: 
-    person(given = "Dharmesh D.",
-           family = "Bhuva",
-           role = c("aut", "cre"),
-           email = "bhuva.d@wehi.edu.au",
-           comment = c(ORCID = "0000-0002-6398-9157"))
+Version: 1.5.3
+Authors@R: c(
+            person(given = "Dharmesh D.",
+                   family = "Bhuva",
+                   role = c("aut", "cre"),
+                   email = "bhuva.d@wehi.edu.au",
+                   comment = c(ORCID = "0000-0002-6398-9157")),
+            person(given = "Ahmed",
+                   family = "Mohamed",
+                   role = c("ctb"),
+                   email = "mohamed.a@wehi.edu.au")
+            )
 Description: This package enables the interpretation and analysis of results from a gene set enrichment analysis using network-based and text-mining approaches. Most enrichment analyses result in large lists of significant gene sets that are difficult to interpret. Tools in this package help build a similarity-based network of significant gene sets from a gene set enrichment analysis that can then be investigated for their biological function using text-mining approaches.
 biocViews: Software, GeneExpression, GeneSetEnrichment, NetworkEnrichment, Network
 License: GPL-3

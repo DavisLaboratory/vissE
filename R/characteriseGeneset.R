@@ -39,8 +39,13 @@ NULL
 #' }
 #' 
 characteriseGeneset <- function(gs, thresh = 0.2, measure = c('ovlapcoef', 'jaccard'), gscolcs = c('h', 'c2', 'c5'), org = c('auto', 'hs', 'mm')) {
+  #check params
   measure = match.arg(measure)
   org = match.arg(org)
+  if (!is(gs, 'GeneSet'))
+    stop("'gs' should be a GSEABase::GeneSet object")
+  if (!is.numeric(thresh) | length(thresh) != 1)
+    stop("'thresh' should be a numeric of length 1")
   
   #retrieve appropriate GeneSetCollection
   gsc_gs = GSEABase::GeneSetCollection(gs)
@@ -53,7 +58,6 @@ characteriseGeneset <- function(gs, thresh = 0.2, measure = c('ovlapcoef', 'jacc
   gsc = msigdb::appendKEGG(gsc)
   
   #subset collections to use
-  stopifnot(all(gscolcs %in% msigdb::listCollections(gsc)))
   gsc = msigdb::subsetCollection(gsc, gscolcs)
   
   #filter out large and small gene sets

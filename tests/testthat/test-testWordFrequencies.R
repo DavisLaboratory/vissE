@@ -5,27 +5,15 @@ test_that("word frequencies are computed correctly for edge cases", {
   
   #empty collections
   nullgsc = GSEABase::GeneSetCollection(list(), geneIdType = GSEABase::SymbolIdentifier())
-  freq = computeMsigWordFreq(nullgsc)
-
-  expect_length(freq, 2)
-  expect_equal(sapply(freq, ncol), c('Name' = 2, 'Short' = 2))
-  expect_equal(sapply(freq, nrow), c('Name' = 0, 'Short' = 0))
+  expect_error(computeMsigWordFreq(nullgsc))
 
   #non-empty gscs but empty gene sets
   emptygsc = GSEABase::GeneSetCollection(GSEABase::GeneSet(setName = 'A', geneIdType = GSEABase::SymbolIdentifier()))
-  freq = computeMsigWordFreq(emptygsc)
-
-  expect_length(freq, 2)
-  expect_equal(sapply(freq, ncol), c('Name' = 2, 'Short' = 2))
-  expect_equal(sapply(freq, nrow), c('Name' = 0, 'Short' = 0))
+  expect_error(computeMsigWordFreq(emptygsc))
 
   emptygsc = GSEABase::GeneSetCollection(GSEABase::GeneSet(setName = 'a', geneIdType = GSEABase::SymbolIdentifier()),
                                          GSEABase::GeneSet(c('ESR1', 'ESR2'), setName = 'b', geneIdType = GSEABase::SymbolIdentifier()))
-  freq = computeMsigWordFreq(emptygsc)
-
-  expect_length(freq, 2)
-  expect_equal(sapply(freq, ncol), c('Name' = 2, 'Short' = 2))
-  expect_equal(sapply(freq, nrow), c('Name' = 0, 'Short' = 0))
+  expect_error(computeMsigWordFreq(emptygsc))
 })
 
 test_that("word frequencies (TF) are computed correctly", {

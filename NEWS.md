@@ -1,3 +1,7 @@
+# version 1.6.0
+
+* Added informative error messages. Improved edge case handling.
+
 # version 1.4.0
 
 * Added the adjusted rand index as a measure of gene-set overlap (now the default measure of overlap).
