@@ -27,11 +27,11 @@ checkGroups <- function(groups, gscnames) {
     stop("'groups' must be a named list")
   
   #check for empty groups
-  grp_len = sapply(groups, length)
-  empty_grps = names(groups)[grp_len == 0]
-  if (length(empty_grps) > 0) {
-    empty_grps = paste(empty_grps, collapse = ', ')
-    stop(sprintf("the following 'groups' contain no gene-sets: %s", empty_grps))
+  grpLen = sapply(groups, length)
+  emptyGrps = names(groups)[grpLen == 0]
+  if (length(emptyGrps) > 0) {
+    emptyGrps = paste(emptyGrps, collapse = ', ')
+    stop(sprintf("the following 'groups' contain no gene-sets: %s", emptyGrps))
   }
   
   #check for unknown gene-sets
@@ -50,11 +50,11 @@ checkGenesetCollection <- function(gsc, pname) {
     stop(sprintf("'%s' cannot be an empty GeneSetCollection", pname))
   
   #check for empty gene-sets
-  grp_len =  sapply(lapply(gsc, GSEABase::geneIds), length)
-  empty_gscs = names(gsc)[grp_len == 0]
-  if (length(empty_gscs) > 0) {
-    empty_gscs = paste(empty_gscs, collapse = ', ')
-    stop(sprintf("the following GeneSets in '%s' are empty: %s", pname, empty_grps))
+  gscLen =  sapply(lapply(gsc, GSEABase::geneIds), length)
+  emptyGscs = names(gsc)[gscLen == 0]
+  if (length(emptyGscs) > 0) {
+    emptyGscs = paste(emptyGscs, collapse = ', ')
+    stop(sprintf("the following GeneSets in '%s' are empty: %s", pname, emptyGrps))
   }
 }
 
