@@ -1,6 +1,6 @@
 Package: vissE
 Title: Visualising Set Enrichment Analysis Results
-Version: 1.5.1
+Version: 1.5.2
 Authors@R: 
     person(given = "Dharmesh D.",
            family = "Bhuva",
@@ -13,7 +13,7 @@ License: GPL-3
 Encoding: UTF-8
 LazyDataCompression: bzip2
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0
 Depends: 
     R (>= 4.1)
 Imports: 
