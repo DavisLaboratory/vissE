@@ -128,6 +128,7 @@ plotMsigPPI <-
 computeMsigGroupPPI <- function(ppidf,
                                 msigGsc,
                                 groups,
+                                org = c('auto', 'hs', 'mm'),
                                 geneStat = NULL,
                                 threshConfidence = 0,
                                 threshFrequency = 0.25,
@@ -143,8 +144,11 @@ computeMsigGroupPPI <- function(ppidf,
   checkNumericRange(topN, 'topN', 0, eq = TRUE)
   
   #identify the organism
+  org = match.arg(org)
   idType = msigdb::getMsigIdType(msigGsc)
-  org = msigdb::getMsigOrganism(msigGsc, idType)
+  if (org == 'auto') {
+    org = msigdb::getMsigOrganism(msigGsc, idType)
+  }  
   
   #check PPI has records for organism of interest
   taxid = c('hs' = '9606', 'mm' = 10090)[org]
