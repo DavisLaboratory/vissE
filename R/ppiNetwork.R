@@ -128,13 +128,13 @@ plotMsigPPI <-
 computeMsigGroupPPI <- function(ppidf,
                                 msigGsc,
                                 groups,
-                                org = c('auto', 'hs', 'mm'),
                                 geneStat = NULL,
                                 threshConfidence = 0,
                                 threshFrequency = 0.25,
                                 threshStatistic = 0,
                                 threshUseAbsolute = TRUE,
-                                topN = 5) {
+                                topN = 5,
+                                org = c('auto', 'hs', 'mm')) {
   #check params
   checkGenesetCollection(msigGsc)
   checkGroups(groups, names(msigGsc))
