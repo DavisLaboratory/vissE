@@ -38,20 +38,20 @@ plotMsigWordcloud <-
            type = c('Name', 'Short')) {
     #check params
     if (!is.null(groups)) checkGroups(groups, names(msigGsc))
-    
+
     measure = match.arg(measure)
     version = match.arg(version)
     org = match.arg(org)
     type = match.arg(type)
-    
+
     #add gene set counts for each group
     names(groups) = sapply(names(groups), function(x) {
       paste0(x, ' (n = ', length(groups[[x]]), ')')
     })
-    
+
     #create list of genesets
     msigGsc_list = lapply(groups, function(x) msigGsc[x])
-    
+
     #compute word frequencies
     worddf = plyr::ldply(msigGsc_list, function(x) {
       df = computeMsigWordFreq(x, weight, measure, version, org, rmwords)[[type]]
@@ -60,7 +60,7 @@ plotMsigWordcloud <-
       df$angle = sample(c(0, 90), nrow(df), replace = TRUE, prob = c(0.65, 0.35))
       return(df)
     }, .id = 'NodeGroup')
-    
+
     #plot
     p1 = ggplot(worddf, aes(label = word, size = freq, color = freq, angle = angle)) +
       ggwordcloud::geom_text_wordcloud(rm_outside = TRUE, shape = 'circle', eccentricity = 0.65) +
@@ -68,7 +68,7 @@ plotMsigWordcloud <-
       scico::scale_colour_scico(palette = 'acton', direction = -1) +
       ggplot2::scale_size_area(max_size = 6 / log10(1 + length(msigGsc_list))) +
       bhuvad_theme()
-    
+
     return(p1)
   }
 
@@ -110,7 +110,7 @@ plotMsigWordcloud <-
 #' )
 #'
 #' plotMsigNetwork(ig, markGroups = groups)
-#' 
+#'
 plotMsigNetwork <-
   function(ig,
            markGroups = NULL,
@@ -128,30 +128,30 @@ plotMsigNetwork <-
     checkNumericRange(maxGrp, 'maxGrp', 0)
     if (!is.null(genesetStat)) checkGenesetStat(genesetStat)
     if (!is.null(markGroups)) checkGroups(markGroups, V(ig)$name)
-    
+
     if (length(markGroups) > maxGrp) {
       warning(sprintf("Only the first %s components will be plot", maxGrp))
       markGroups = markGroups[seq_len(maxGrp)]
     }
-    
+
     #remove unconnected nodes
     ig = igraph::induced_subgraph(ig, V(ig)[igraph::degree(ig) > 0])
-    
+
     #remove unmarked groups
     if (!is.null(markGroups) & rmUnmarkedGroups) {
       markednodes = unlist(markGroups)
       ig = igraph::induced_subgraph(ig, markednodes)
     }
-    
+
     #add custom annotation is no category annotated
     if (!all(c('Category') %in% igraph::list.vertex.attributes(ig))) {
       V(ig)$Category = rep('custom', length(V(ig)))
     }
-    
+
     #node colour map
     colmap_nodes = RColorBrewer::brewer.pal(10, 'Set3')
     names(colmap_nodes) = c('archived', 'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'h', 'custom')
-    
+
     #plot base graph
     lytParams = c(list(graph = igraph::as.directed(ig), layout = lytFunc), lytParams)
     p1 = do.call(ggraph::ggraph, lytParams) +
@@ -161,7 +161,7 @@ plotMsigNetwork <-
         colour = '#66666666'
       ) +
       ggraph::geom_node_point(aes(size = Size), colour = '#FFFFFF')
-    
+
     if (is.null(genesetStat)) {
       p1 = p1 +
         ggraph::geom_node_point(
@@ -175,7 +175,7 @@ plotMsigNetwork <-
     } else {
       #add stats
       p1$data$genesetStat = genesetStat[p1$data$name]
-      
+
       p1 = p1 +
         ggraph::geom_node_point(
           aes(fill = genesetStat, size = Size),
@@ -201,7 +201,7 @@ plotMsigNetwork <-
           direction = dir
         )
     }
-    
+
     #general theme settings
     p1 = p1 +
       guides(size = guide_legend(ncol = 2)) +
@@ -211,20 +211,20 @@ plotMsigNetwork <-
         legend.position = 'bottom',
         plot.title = element_text(hjust = 0.5, size = rel(1.5))
       )
-    
+
     #mark groups
     if (!is.null(markGroups)) {
       #add gene set counts for each group
       names(markGroups) = sapply(names(markGroups), function(x) {
         paste0(x, ' (n = ', length(markGroups[[x]]), ')')
       })
-      
+
       #complex hull for groups
       hulldf = plyr::ldply(markGroups, function(x) {
         df = p1$data[p1$data$name %in% x, ]
         df = df[grDevices::chull(df$x, df$y), ]
       }, .id = 'NodeGroup')
-      
+
       p1 = p1 +
         ggforce::geom_shape(
           aes(x, y, colour = NodeGroup),
@@ -236,7 +236,7 @@ plotMsigNetwork <-
         ggplot2::scale_colour_brewer(palette = 'Paired') +
         guides(colour = guide_legend(ncol = 4))
     }
-    
+
     return(p1)
   }
 
@@ -273,27 +273,27 @@ plotMsigNetwork <-
 #'
 #' #plot
 #' plotGeneStats(gstats, hgsc, groups)
-#' 
+#'
 plotGeneStats <- function(geneStat, msigGsc, groups, statName = 'Gene-level statistic', topN = 5) {
   #check params
   checkGeneStat(geneStat)
-  checkGenesetCollection(msigGsc)
+  checkGenesetCollection(msigGsc, 'msigGsc')
   checkGroups(groups, names(msigGsc))
   checkNumericRange(topN, 'topN', 0, eq = TRUE)
   topN = as.integer(topN)
-  
+
   #compute frequencies
   genefreq = plyr::ldply(groups, function (x) {
     gc = table(unlist(lapply(msigGsc[x], GSEABase::geneIds)))
     gc = data.frame('Gene' = names(gc), 'Count' = as.numeric(gc))
     return(gc)
   }, .id = 'Group')
-  
+
   #add stats
   genefreq$GeneStat = geneStat[genefreq$Gene]
   if (all(is.na(genefreq$Gene)))
     stop("none of the gene-level statistics in 'geneStat' match with the 'groups'")
-  
+
   #identify outliers
   genefreq = plyr::ddply(genefreq, 'Group', function(x) {
     x = x[!is.na(x$GeneStat) & !is.infinite(x$GeneStat), ]
@@ -301,7 +301,7 @@ plotGeneStats <- function(geneStat, msigGsc, groups, statName = 'Gene-level stat
     x$rank = rank(-st)
     return(x)
   })
-  
+
   #plot
   p1 = ggplot(genefreq, aes(Count, GeneStat)) +
     ggplot2::geom_jitter(data = genefreq[genefreq$rank > topN, ], shape = '.', colour = 'gray80') +
@@ -311,7 +311,7 @@ plotGeneStats <- function(geneStat, msigGsc, groups, statName = 'Gene-level stat
     ggplot2::ylab(statName) +
     ggplot2::facet_wrap(~ Group, scales = 'free_x') +
     bhuvad_theme()
-  
+
   return(p1)
 }
 

@@ -22,15 +22,15 @@ NULL
 #' @examples
 #' data(hgsc)
 #' ovlap <- computeMsigOverlap(hgsc)
-#' 
+#'
 computeMsigOverlap <- function(msigGsc1, msigGsc2 = NULL, thresh = 0.25, measure = c('ari', 'jaccard', 'ovlapcoef')) {
   #param checks
-  checkGenesetCollection(msigGsc1)
-  if (!is.null(msigGsc2)) checkGenesetCollection(msigGsc2)
-  
+  checkGenesetCollection(msigGsc1, , 'msigGsc1')
+  if (!is.null(msigGsc2)) checkGenesetCollection(msigGsc2, 'msigGsc2')
+
   #check threshold
   measure = match.arg(measure)
-  
+
   #combine genesets
   gsc = msigGsc1
   is1 = rep(TRUE, length(msigGsc1))
@@ -40,7 +40,7 @@ computeMsigOverlap <- function(msigGsc1, msigGsc2 = NULL, thresh = 0.25, measure
     gsc = GSEABase::GeneSetCollection(c(gsc, gsc2))
     is2 = names(gsc) %in% names(msigGsc2)
   }
-  
+
   #compute incidence matrix and split
   imat = GSEABase::incidence(gsc)
   if (is.null(msigGsc2)) {
@@ -52,7 +52,7 @@ computeMsigOverlap <- function(msigGsc1, msigGsc2 = NULL, thresh = 0.25, measure
     len1 = len[is1]
     len2 = len[is2]
   }
-  
+
   #overlap coef
   total = ncol(imat)
   if (measure %in% 'ari') {
@@ -85,26 +85,26 @@ overlap.ari <-  function(len1, len2, ovlap, total) {
   # x = sum(v1 & v2) # intersection
   # a = sum(v1) # length of geneset 1
   # b = sum(v2) # length of geneset 2
-  # 
+  #
   # sum_a = c(a, n - a)
   # sum_a = sum(sum_a * (sum_a - 1))
-  # 
+  #
   # sum_b = c(b, n - b)
   # sum_b = sum(sum_b * (sum_b - 1))
-  # 
+  #
   # prod_ab = sum_a * sum_b / (n * (n - 1))
-  # 
+  #
   # sum_nij = c(x, n - (a + b - x), a - x, b - x)
   # sum_nij = sum(sum_nij * (sum_nij - 1))
-  # 
+  #
   # (sum_nij - prod_ab) / ((sum_a + sum_b) / 2 - prod_ab)
-  
+
   #define components of the equation
   n = total # total genes
   x = ovlap # intersection of gene-sets
   a = len1 # lengths of the first gene-set
   b = len2 # lengths of the second gene-set
-  
+
   #compute sums of pairs within and outside each gene-set (first)
   sum_a = cbind(a, n - a) * cbind(a - 1, n - a - 1)
   sum_a = sum_a[, 1] + sum_a[, 2]
@@ -112,7 +112,7 @@ overlap.ari <-  function(len1, len2, ovlap, total) {
   sum_b = sum_b[, 1] + sum_b[, 2]
   sum_ab = outer(sum_a, sum_b, '+')
   prod_ab = outer(sum_a, sum_b, '*') / (n * (n - 1))
-  
+
   #compute sums of shared pairs within or outside two gene-sets
   sum_nij = x * (x - 1)
   tmp = n - outer(a, b, '+') + x
@@ -121,10 +121,10 @@ overlap.ari <-  function(len1, len2, ovlap, total) {
   sum_nij = sum_nij + (tmp * (tmp - 1))
   tmp = t(b - t(x))
   sum_nij = sum_nij + (tmp * (tmp - 1))
-  
+
   #ARI
   ari = (sum_nij - prod_ab) / ((sum_ab) / 2 - prod_ab)
-  
+
   return(ari)
 }
 
@@ -158,8 +158,8 @@ overlap.ovlapcoef <- function(len1, len2, ovlap, total) {
 #'
 computeMsigNetwork <- function(genesetOverlap, msigGsc) {
   #check params
-  checkGenesetCollection(msigGsc)
-  
+  checkGenesetCollection(msigGsc, 'msigGsc')
+
   if (!nrow(genesetOverlap) > 0)
     stop("'genesetOverlap' should not be empty")
 
@@ -170,7 +170,7 @@ computeMsigNetwork <- function(genesetOverlap, msigGsc) {
     unknownSets = paste(unknownSets, collapse = ', ')
     stop("the following gene-set names in 'genesetOverlap' are missing 'msigGsc': %s", unknownSets)
   }
-  
+
   #select genesets in the network
   setnames = setdiff(ovlapnames, unknownSets)
   msigGsc = msigGsc[setnames]
