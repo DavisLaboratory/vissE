@@ -25,7 +25,7 @@ NULL
 #'
 computeMsigOverlap <- function(msigGsc1, msigGsc2 = NULL, thresh = 0.25, measure = c('ari', 'jaccard', 'ovlapcoef')) {
   #param checks
-  checkGenesetCollection(msigGsc1, , 'msigGsc1')
+  checkGenesetCollection(msigGsc1, 'msigGsc1')
   if (!is.null(msigGsc2)) checkGenesetCollection(msigGsc2, 'msigGsc2')
 
   #check threshold
