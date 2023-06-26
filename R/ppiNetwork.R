@@ -143,8 +143,7 @@ computeMsigGroupPPI <- function(ppidf,
                                 threshFrequency = 0.25,
                                 threshStatistic = 0,
                                 threshUseAbsolute = TRUE,
-                                topN = 5,
-                                org = c('auto', 'hs', 'mm')) {
+                                topN = 5) {
   #check params
   checkGenesetCollection(msigGsc, 'msigGsc')
   checkGroups(groups, names(msigGsc))
@@ -153,26 +152,12 @@ computeMsigGroupPPI <- function(ppidf,
   checkNumericRange(threshFrequency, 'threshFrequency', 0, eq = TRUE)
   checkNumericRange(topN, 'topN', 0, eq = TRUE)
 
-  #identify the organism
-  org = match.arg(org)
+  #retrieve cols for ID type from PPI
   idType = msigdb::getMsigIdType(msigGsc)
-  if (org == 'auto') {
-    org = msigdb::getMsigOrganism(msigGsc, idType)
-  }
-
-  #check PPI has records for organism of interest
-  taxid = c('hs' = '9606', 'mm' = 10090)[org]
-  isorg = ppidf$Taxid %in% taxid
-  if (any(isorg))
-    ppidf = ppidf[isorg, , drop = FALSE]
-  else
-    stop('no PPIs found for organism, please ensure that the correct PPI database has been loaded.')
-
-  #retrieve PPI
-  if (is(idType, 'SymbolIdentifier')) {
-    colnames(ppidf)[colnames(ppidf) %in% c('SymbolA', 'SymbolB')] = c('from', 'to')
+  if (is(idType, "SymbolIdentifier")) {
+    colnames(ppidf)[colnames(ppidf) %in% c("SymbolA", "SymbolB")] = c("from", "to")
   } else {
-    colnames(ppidf)[colnames(ppidf) %in% c('EntrezA', 'EntrezB')] = c('from', 'to')
+    colnames(ppidf)[colnames(ppidf) %in% c("EntrezA", "EntrezB")] = c("from", "to")
   }
 
   #compute group-specific PPIs
