@@ -35,7 +35,8 @@ plotMsigWordcloud <-
            version = msigdb::getMsigdbVersions(),
            org = c('auto', 'hs', 'mm'),
            rmwords = getMsigBlacklist(),
-           type = c('Name', 'Short')) {
+           type = c('Name', 'Short'),
+           idf = NULL) {
     #check params
     if (!is.null(groups)) checkGroups(groups, names(msigGsc))
 

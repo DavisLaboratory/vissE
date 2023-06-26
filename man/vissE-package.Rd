@@ -39,5 +39,10 @@ Useful links:
 \author{
 \strong{Maintainer}: Dharmesh D. Bhuva \email{bhuva.d@wehi.edu.au} (\href{https://orcid.org/0000-0002-6398-9157}{ORCID})
 
+Other contributors:
+\itemize{
+  \item Ahmed Mohamed \email{mohamed.a@wehi.edu.au} [contributor]
+}
+
 }
 \keyword{internal}

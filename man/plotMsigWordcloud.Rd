@@ -12,7 +12,8 @@ plotMsigWordcloud(
   version = msigdb::getMsigdbVersions(),
   org = c("auto", "hs", "mm"),
   rmwords = getMsigBlacklist(),
-  type = c("Name", "Short")
+  type = c("Name", "Short"),
+  idf = NULL
 )
 }
 \arguments{
@@ -43,6 +44,8 @@ from the analysis.}
 
 \item{type}{a character, specifying the source of text mining. Either gene
 set names (\code{Name}) or descriptions (\code{Short}) can be used.}
+
+\item{idf}{a list of named numeric vectors, specifying inverse document frequencies to use to penalise terms from gene-set names and short descriptions. This should be a vector of length 2 with names "Name" and "Short". Numeric vectors should contain weights and names should represent the term. Precomputed versions can be retrieved using the \code{\link[msigdb:getMsigdbIDF]{msigdb::getMsigdbIDF()}}.}
 }
 \value{
 a ggplot object.

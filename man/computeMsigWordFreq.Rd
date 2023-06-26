@@ -10,7 +10,8 @@ computeMsigWordFreq(
   measure = c("tfidf", "tf"),
   version = msigdb::getMsigdbVersions(),
   org = c("auto", "hs", "mm"),
-  rmwords = getMsigBlacklist()
+  rmwords = getMsigBlacklist(),
+  idf = NULL
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ frequency weights to term frequencies.}
 
 \item{rmwords}{a character vector, containing a blacklist of words to discard
 from the analysis.}
+
+\item{idf}{a list of named numeric vectors, specifying inverse document frequencies to use to penalise terms from gene-set names and short descriptions. This should be a vector of length 2 with names "Name" and "Short". Numeric vectors should contain weights and names should represent the term. Precomputed versions can be retrieved using the \code{\link[msigdb:getMsigdbIDF]{msigdb::getMsigdbIDF()}}.}
 }
 \value{
 a list, containing two data.frames summarising the results of the

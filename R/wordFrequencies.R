@@ -15,6 +15,7 @@
 #'   `msigdb::getMsigdbVersions()`).
 #' @param org a character, specifying the organism to use. This can either be
 #'   "auto" (default), "hs" or "mm".
+#' @param idf a list of named numeric vectors, specifying inverse document frequencies to use to penalise terms from gene-set names and short descriptions. This should be a vector of length 2 with names "Name" and "Short". Numeric vectors should contain weights and names should represent the term. Precomputed versions can be retrieved using the [msigdb::getMsigdbIDF()].
 #'
 #' @return a list, containing two data.frames summarising the results of the
 #'   frequency analysis on gene set names and short descriptions.
