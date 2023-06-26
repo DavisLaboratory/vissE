@@ -37,7 +37,7 @@ test_that("word frequencies (TFIDF) are computed correctly", {
   #non-empty collections
   data(hgsc)
   estgsc = hgsc[grep("ESTROGEN", hgsc)]
-  idf = msigdb:::getMsigdbIDF("hs", "7.2")
+  idf = msigdb::getMsigdbIDF("hs", "7.2")
   freq = computeMsigWordFreq(estgsc, measure = 'tfidf', idf = idf)
 
   expect_length(freq, 2)

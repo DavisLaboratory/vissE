@@ -134,7 +134,7 @@ computeMsigWordFreq <-
   if (measure %in% 'tfidf'){
     #select pre-processed data for organism
     if (is.null(idf)) {
-      idf = msigdb:::getMsigdbIDF(org, version)
+      idf = msigdb::getMsigdbIDF(org, version)
     } else {
       if (
         !all(c('Name', 'Short') %in% names(idf)) |
