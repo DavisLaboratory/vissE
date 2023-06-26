@@ -19,7 +19,7 @@ test_that("word frequencies are computed correctly for edge cases", {
 test_that("word frequencies (TF) are computed correctly", {
   #non-empty collections
   data(hgsc)
-  estgsc = hgsc[grep('ESTROGEN', hgsc)]
+  estgsc = hgsc[grep("ESTROGEN", hgsc)]
   freq = computeMsigWordFreq(estgsc, measure = 'tf')
 
   expect_length(freq, 2)
@@ -36,16 +36,17 @@ test_that("word frequencies (TF) are computed correctly", {
 test_that("word frequencies (TFIDF) are computed correctly", {
   #non-empty collections
   data(hgsc)
-  estgsc = hgsc[grep('ESTROGEN', hgsc)]
-  freq = computeMsigWordFreq(estgsc, measure = 'tfidf')
+  estgsc = hgsc[grep("ESTROGEN", hgsc)]
+  idf = msigdb:::getMsigdbIDF("hs", "7.2")
+  freq = computeMsigWordFreq(estgsc, measure = 'tfidf', idf = idf)
 
   expect_length(freq, 2)
   expect_equal(sapply(freq, nrow), c('Name' = 4, 'Short' = 5))
   expect_equal(sapply(freq, class), c('Name' = 'data.frame', 'Short' = 'data.frame'))
-  expect_equal(freq$Name[freq$Name$word %in% c('late'), 2], as.numeric(log(vissE:::idf_hs$Name['late']) * log(1 + 1)), tolerance = 1e-5)
-  expect_equal(freq$Short[freq$Short$word %in% c('early'), 2], as.numeric(log(vissE:::idf_hs$Short['early']) * log(1 + 1)), tolerance = 1e-5)
-  expect_equal(freq$Name[freq$Name$word %in% c('estrogen'), 2], as.numeric(log(vissE:::idf_hs$Name['estrogen']) * log(2 + 1)), tolerance = 1e-5)
-  expect_equal(freq$Short[freq$Short$word %in% c('estrogen'), 2], as.numeric(log(vissE:::idf_hs$Short['estrogen']) * log(2 + 1)), tolerance = 1e-5)
+  expect_equal(freq$Name[freq$Name$word %in% c("late"), 2], as.numeric(log(idf$Name["late"]) * log(1 + 1)), tolerance = 1e-5)
+  expect_equal(freq$Short[freq$Short$word %in% c("early"), 2], as.numeric(log(idf$Short["early"]) * log(1 + 1)), tolerance = 1e-5)
+  expect_equal(freq$Name[freq$Name$word %in% c("estrogen"), 2], as.numeric(log(idf$Name["estrogen"]) * log(2 + 1)), tolerance = 1e-5)
+  expect_equal(freq$Short[freq$Short$word %in% c("estrogen"), 2], as.numeric(log(idf$Short["estrogen"]) * log(2 + 1)), tolerance = 1e-5)
   expect_false('HALLMARK' %in% freq$Name$word)
   expect_false('to' %in% freq$Short$word)
 })

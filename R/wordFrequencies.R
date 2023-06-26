@@ -30,7 +30,8 @@ computeMsigWordFreq <-
            measure = c('tfidf', 'tf'),
            version = msigdb::getMsigdbVersions(),
            org = c('auto', 'hs', 'mm'),
-           rmwords = getMsigBlacklist()) {
+           rmwords = getMsigBlacklist(),
+           idf = NULL) {
   #check params  
   measure = match.arg(measure)
   version = match.arg(version)
@@ -121,13 +122,6 @@ computeMsigWordFreq <-
   if (org %in% 'auto') {
     org = msigdb::getMsigOrganism(msigGsc, idType)
   }
-  #select pre-processed data for organism
-  if (org %in% 'hs') {
-    idf = idf_hs
-  } else {
-    idf = idf_mm
-  }
-  # idf = msigdb:::getMsigdbIDF(org, version)
   
   #compute log TF
   d = lapply(d, function(x) {
@@ -137,6 +131,19 @@ computeMsigWordFreq <-
   
   #compute tfidfs
   if (measure %in% 'tfidf'){
+    #select pre-processed data for organism
+    if (is.null(idf)) {
+      idf = msigdb:::getMsigdbIDF(org, version)
+    } else {
+      if (
+        !all(c('Name', 'Short') %in% names(idf)) |
+        !all(sapply(idf, \(x) !is.null(names(x)))) |
+        !all(sapply(idf, is.numeric))
+      ) {
+        stop('Invalid precomputed IDF object provided')
+      }
+    }
+
     d = mapply(function(x, i) {
       x$freq = log(i[x$word]) * x$freq
       return(x)
