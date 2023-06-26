@@ -1,3 +1,7 @@
+# version 1.10.0
+
+* Fixed bug where the wrong IDF was loaded for analysis.
+
 # version 1.6.0
 
 * Added informative error messages. Improved edge case handling.
