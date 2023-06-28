@@ -1,4 +1,4 @@
-# vissE - Visualising Set Enrichment Analysis Results <img src="https://github.com/Bioconductor/BiocStickers/blob/master/vissE/vissE.png?raw=true" alt="logo" align="right" height="140" width="120"/>
+# vissE - Visualising Set Enrichment Analysis Results <img src="https://github.com/Bioconductor/BiocStickers/blob/devel/vissE/vissE.png" alt="logo" align="right" height="140" width="120"/>
 
 [![R-CMD-check](https://github.com/DavisLaboratory/vissE/workflows/R-CMD-check-bioc/badge.svg)](https://github.com/DavisLaboratory/vissE/actions)
 [![codecov](https://codecov.io/gh/DavisLaboratory/vissE/branch/main/graph/badge.svg?token=8JHZB1GN26)](https://codecov.io/gh/DavisLaboratory/vissE)
