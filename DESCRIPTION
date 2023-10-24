@@ -1,6 +1,6 @@
 Package: vissE
 Title: Visualising Set Enrichment Analysis Results
-Version: 1.10.0
+Version: 1.11.0
 Authors@R: c(
             person(given = "Dharmesh D.",
                    family = "Bhuva",
