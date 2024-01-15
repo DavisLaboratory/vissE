@@ -51,8 +51,8 @@ test_that("word frequencies (TFIDF) are computed correctly", {
   expect_false('to' %in% freq$Short$word)
 })
 
-test_that("blacklist works", {
-  expect_true('blacklist' %in% getMsigBlacklist('blacklist'))
+test_that("exclusion list works", {
+  expect_true("remove" %in% getMsigExclusionList("remove"))
 })
 
 test_that("weights work", {

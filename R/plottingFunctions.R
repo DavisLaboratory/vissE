@@ -25,7 +25,7 @@ NULL
 #' @examples
 #' data("hgsc")
 #' groups <- list('g1' = names(hgsc)[1:25], 'g2' = names(hgsc)[26:50])
-#' plotMsigWordcloud(hgsc, groups, rmwords = getMsigBlacklist())
+#' plotMsigWordcloud(hgsc, groups, rmwords = getMsigExclusionList())
 #'
 plotMsigWordcloud <-
   function(msigGsc,
@@ -34,7 +34,7 @@ plotMsigWordcloud <-
            measure = c('tfidf', 'tf'),
            version = msigdb::getMsigdbVersions(),
            org = c('auto', 'hs', 'mm'),
-           rmwords = getMsigBlacklist(),
+           rmwords = getMsigExclusionList(),
            type = c('Name', 'Short'),
            idf = NULL) {
     #check params

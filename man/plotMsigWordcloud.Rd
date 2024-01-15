@@ -11,7 +11,7 @@ plotMsigWordcloud(
   measure = c("tfidf", "tf"),
   version = msigdb::getMsigdbVersions(),
   org = c("auto", "hs", "mm"),
-  rmwords = getMsigBlacklist(),
+  rmwords = getMsigExclusionList(),
   type = c("Name", "Short"),
   idf = NULL
 )
@@ -39,7 +39,7 @@ frequency weights to term frequencies.}
 \item{org}{a character, specifying the organism to use. This can either be
 "auto" (default), "hs" or "mm".}
 
-\item{rmwords}{a character vector, containing a blacklist of words to discard
+\item{rmwords}{a character vector, containing an exclusion list of words to discard
 from the analysis.}
 
 \item{type}{a character, specifying the source of text mining. Either gene
@@ -59,6 +59,6 @@ attached with each gene set object.
 \examples{
 data("hgsc")
 groups <- list('g1' = names(hgsc)[1:25], 'g2' = names(hgsc)[26:50])
-plotMsigWordcloud(hgsc, groups, rmwords = getMsigBlacklist())
+plotMsigWordcloud(hgsc, groups, rmwords = getMsigExclusionList())
 
 }

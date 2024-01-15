@@ -6,7 +6,7 @@
 #' @param measure a character, specifying how frequencies should be computed.
 #'   "tf" uses term frequencies and "tfidf" (default) applies inverse document
 #'   frequency weights to term frequencies.
-#' @param rmwords a character vector, containing a blacklist of words to discard
+#' @param rmwords a character vector, containing an exclusion list of words to discard
 #'   from the analysis.
 #' @param weight a named numeric vector, containing weights to apply to each
 #'   gene-set. This can be -log10(FDR), -log10(p-value) or an enrichment score
@@ -31,7 +31,7 @@ computeMsigWordFreq <-
            measure = c('tfidf', 'tf'),
            version = msigdb::getMsigdbVersions(),
            org = c('auto', 'hs', 'mm'),
-           rmwords = getMsigBlacklist(),
+           rmwords = getMsigExclusionList(),
            idf = NULL) {
   #check params  
   measure = match.arg(measure)
@@ -162,21 +162,21 @@ computeMsigWordFreq <-
   return(d)
 }
 
-#' Blacklist words for MSigDB gene set text mining
+#' Exclusion list of words for MSigDB gene set text mining
 #'
 #' List of words to discard when performing text mining MSigDB gene set names
 #' and short descriptions.
 #'
 #' @param custom a character vector, containing list of words to add onto
-#'   existing blacklist.
+#'   existing exclusion list.
 #'
-#' @return a character vector, containing list of blacklist works
+#' @return a character vector, containing words to be excluded from the text mining analysis.
 #' @export
 #'
 #' @examples
-#' getMsigBlacklist('blacklist')
+#' getMsigExclusionList('remove')
 #'
-getMsigBlacklist <- function(custom = c()) {
+getMsigExclusionList <- function(custom = c()) {
   rmwords = c(
     'biocarta',
     'car',
